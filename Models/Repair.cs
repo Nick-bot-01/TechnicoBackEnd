@@ -15,7 +15,7 @@ public class Repair
     public int Id { get; set; }
 
     [Required]
-    public required DateOnly Date { get; set; }
+    public DateTime ScheduledDate { get; set; }
 
     [Required]
     public required RepairType RType { get; set; }
