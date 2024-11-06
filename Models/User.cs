@@ -33,5 +33,7 @@ public class User
     public UserType Type { get; set; } = UserType.Owner;
 
     public List<Property> Properties { get; set; } = [];
+
+    public bool IsActive { get; set; } = true;
 }
 public enum UserType { Owner, Admin };
