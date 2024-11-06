@@ -30,6 +30,8 @@ public class Property
     public string OwnerVAT => Owner.VATNum;
 
     public List<Repair> Repairs { get; set; } = [];
+
+    public bool IsActive { get; set; } = true;
 }
 
 public enum PropertyType { Default, Detached_house, Maisonet, Apartment_building };
