@@ -4,13 +4,13 @@ using TechnicoBackEnd.Repositories;
 namespace TechnicoBackEnd.Services;
 
 public class UserService{
-    private TechnicoDbContext _dbContext;
+    private readonly TechnicoDbContext _dbContext;
     public UserService(TechnicoDbContext repairApplicationDbContext) => _dbContext = repairApplicationDbContext;
 
-    public bool DeleteOwnerHard(User user){
+    public bool DeleteOwnerHard(User? user){
         if (user is null) return false;
 
-        User? ownerQueryResult = _dbContext.Users.FirstOrDefault(c => c.VATNum == user.VATNum);
+        User? ownerQueryResult = _dbContext.Users.FirstOrDefault(c => c.VATNum == user.VATNum); //todo async
         if (ownerQueryResult == null) return false;
 
         //Delete user from the db
@@ -19,10 +19,10 @@ public class UserService{
         return true;
     }
 
-    public bool DeleteOwnerSoft(User user){
+    public bool DeleteOwnerSoft(User? user){
         if (user is null) return false;
 
-        User? ownerQueryResult = _dbContext.Users.FirstOrDefault(c => c.VATNum == user.VATNum);
+        User? ownerQueryResult = _dbContext.Users.FirstOrDefault(c => c.VATNum == user.VATNum); //todo async
         if (ownerQueryResult == null) return false;
 
         //Deactivate user from the db
