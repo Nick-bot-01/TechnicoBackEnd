@@ -31,12 +31,12 @@ public class UserService
 
     public User? GetUserDetailsById(int id) //change argument to dto
     {
-        return _dbContext.Users.FirstOrDefault(u => u.Id == id);   //make async
+        return _dbContext.Users.Where(u => u.IsActive == true).FirstOrDefault(u => u.Id == id);   //make async
     }
 
     public List<User> GetAllUsers()
     {
-        return _dbContext.Users.ToList();  //make async
+        return _dbContext.Users.Where(u => u.IsActive == true).ToList();  //make async
     }
     
 }
