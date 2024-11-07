@@ -22,4 +22,17 @@ public static class DTOConverters
             Owner = property.Owner
         };
     }
+
+    public static UserDTO ConvertUser(this User user){
+        return new UserDTO()
+        {
+            Id = user.Id,
+            VAT = user.VATNum,
+            Name = user.Name,
+            Surname = user.Surname,
+            Address = user.Address,
+            Phone = user.Phone,
+            Email = user.Email,
+        };
+    }
 }
