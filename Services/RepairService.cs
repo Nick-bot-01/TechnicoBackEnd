@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
 using TechnicoBackEnd.ResponsesGT;
@@ -15,30 +16,38 @@ public class RepairService
         this.db = db;
     }
 
-    public ResponseApi<Repair> CreateRepair(Repair repair, int propertyId)
+    public async Task<ResponseApi<RepairDTO>> CreateRepair(RepairDTO repairDto, int propertyId)
     {
         // check if the property item exists
-        var propertyItem = db.Properties.FirstOrDefault(p => p.Id == propertyId);
+        var propertyItem = await db.Properties.FirstOrDefaultAsync(p => p.Id == propertyId);
         if (propertyItem == null)
-            return new ResponseApi<Repair> { Status = 1, Description = $"Repair creation failed. Property with id {propertyId} was not found." };
+            return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair creation failed. Property with id {propertyId} was not found." };
 
-        // Validate required fields
-        if (repair.ScheduledDate == default || repair.ScheduledDate < DateTime.Now.AddHours(1) || repair.RType == RepairType.Other ||
-            string.IsNullOrWhiteSpace(repair.Description) || repair.Cost <= 0)
-            return new ResponseApi<Repair> { Status = 1, Description = $"Creation of repair for property with id {propertyId} failed. All Repair fields must be filled." };
+        // Validate required fields (repairs must be scheduled at least one hour in the future)
+        if (repairDto.ScheduledDate == default || repairDto.ScheduledDate < DateTime.Now.AddHours(1) || repairDto.RType == RepairType.Other ||
+            string.IsNullOrWhiteSpace(repairDto.Description) || repairDto.Cost <= 0)
+            return new ResponseApi<RepairDTO> { Status = 1, Description = $"Creation of repair for property with id {propertyId} failed. All Repair fields must be filled." };
 
-        // Set propertyitemid col for the repair entry - EF will connect the dots
-        repair.Property = propertyItem;
+        // Map DTO to a new Repair entity
+        var repair = new Repair
+        {
+            ScheduledDate = repairDto.ScheduledDate,
+            RType = repairDto.RType,
+            Description = repairDto.Description,
+            Status = repairDto.Status,
+            Cost = repairDto.Cost,
+            Property = propertyItem // Set PropertyId field(col) value for the new repair instance(row) - EF will connect the dots
+        };
 
         try
         {
-            db.Repairs.Add(repair);
-            db.SaveChanges();
-            return new ResponseApi<Repair> { Status = 0, Description = $"Repair for property with id {propertyId} was created successfully.", Value = repair };
+            await db.Repairs.AddAsync(repair);
+            await db.SaveChangesAsync();
+            return new ResponseApi<RepairDTO> { Status = 0, Description = $"Repair for property with id {propertyId} was created successfully.", Value = repair.ConvertRepair() };
         }
         catch (Exception e)
         {
-            return new ResponseApi<Repair> { Status = 1, Description = $"Repair creation for property with id {propertyId} failed due to a database error: '{e.Message}'" };
+            return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair creation for property with id {propertyId} failed due to a database error: '{e.Message}'" };
         }
     }
 
