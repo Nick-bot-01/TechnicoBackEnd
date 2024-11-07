@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TechnicoBackEnd.DTOs;
+using TechnicoBackEnd.Helpers;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
+using TechnicoBackEnd.ResponsesGT;
 
 
 namespace TechnicoBackEnd.Services;
@@ -9,36 +12,37 @@ public class UserService{
     private readonly TechnicoDbContext _dbContext;
     public UserService(TechnicoDbContext repairApplicationDbContext) => _dbContext = repairApplicationDbContext;
 
-    public bool DeleteOwnerHard(string? vat)
-    {
-        if (vat is null || vat == string.Empty) return false;
+    public async Task<ResponseApi<UserDTO>> DeleteOwnerHard(string? vat){
+        if (vat is null || vat == string.Empty) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
 
-        User? ownerQueryResult = _dbContext.Users.FirstOrDefault(c => c.VATNum == vat); //todo async
-        if (ownerQueryResult == null) return false;
+        User? ownerQueryResult = await _dbContext.Users.FirstOrDefaultAsync(c => c.VATNum == vat); //todo async
+        if (ownerQueryResult == null) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
 
         //Delete user from the db
         _dbContext.Users.Remove(ownerQueryResult);
-        _dbContext.SaveChanges(); //todo async
-        return true;
+        await _dbContext.SaveChangesAsync(); //todo async
+        return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!" };
     }
 
-    public bool DeleteOwnerSoft(string? vat){
-        if (vat is null || vat == string.Empty) return false;
+    public async Task<ResponseApi<UserDTO>> DeleteOwnerSoft(string? vat){
+        if (vat is null || vat == string.Empty) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
 
-        User? ownerQueryResult = _dbContext.Users.FirstOrDefault(c => c.VATNum == vat); //todo async
-        if (ownerQueryResult == null) return false;
+        User? ownerQueryResult = await _dbContext.Users.FirstOrDefaultAsync(c => c.VATNum == vat);
+        if (ownerQueryResult == null) return new ResponseApi<UserDTO> {Status = 1, Description = "User Not Found" };
 
         //Deactivate user from the db
         ownerQueryResult.IsActive = false;
-        _dbContext.SaveChanges();//todo async
-        return true;
+        await _dbContext.SaveChangesAsync();
+        return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!"};
     }
 
-    public User? SearchUser(string? vat, string? email){
-        if (vat == null && email == null) return null;
-        User? userQuery = _dbContext.Users.Where(c => c.VATNum == vat || c.Email == email).FirstOrDefault(); //todo async
-        if(userQuery != null && userQuery.IsActive == true) return userQuery; //todo async
-        else return null;
+    public async Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email){
+        if (vat == null && email == null) return new ResponseApi<UserDTO> { Status = 1, Description = "Vat and Email arguments not found!" };
+
+        User? userQuery = await _dbContext.Users.Where(c => c.VATNum == vat || c.Email == email).FirstOrDefaultAsync(); //todo async
+        
+        if(userQuery != null && userQuery.IsActive == true) return new ResponseApi<UserDTO> { Status = 0, Description = "User has been found!", Value = userQuery.ConvertUser()};
+        else return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
     }
 
     public User? Register(User? user) //change argument to dto
