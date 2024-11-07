@@ -15,7 +15,7 @@ public class Repair
     public int Id { get; set; }
 
     [Required]
-    public required DateOnly Date { get; set; }
+    public DateTime ScheduledDate { get; set; }
 
     [Required]
     public required RepairType RType { get; set; }
@@ -38,6 +38,8 @@ public class Repair
 
     [NotMapped]
     public string Address => Property.Address;
+
+    public bool IsActive { get; set; } = true;
 }
 
 public enum RepairType { Other, Painting, Insulation, Frames, Plumbing, Electrical };
