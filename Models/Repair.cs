@@ -38,6 +38,8 @@ public class Repair
 
     [NotMapped]
     public string Address => Property.Address;
+
+    public bool IsActive { get; set; } = true;
 }
 
 public enum RepairType { Other, Painting, Insulation, Frames, Plumbing, Electrical };

@@ -33,15 +33,15 @@ public class PropertyService
     }
     public List<PropertyDTO> GetAllProperties()
     {
-        return db.Properties.Select(x => x.ConvertProperty()).ToList();
+        return db.Properties.Where(x => x.IsActive).Select(x => x.ConvertProperty()).ToList();
     }
     public PropertyDTO? GetPropertyById(int id)
     {
-        return db.Properties.Where(x => x.Id == id).Select(x => x.ConvertProperty()).FirstOrDefault();
+        return db.Properties.Where(x => x.Id == id && x.IsActive).Select(x => x.ConvertProperty()).FirstOrDefault();
     }
     public List<PropertyDTO> GetPropertiesByOwner(string vat)
     {
-        return db.Properties.Where(x => x.OwnerVAT == vat).Select(x => x.ConvertProperty()).ToList();
+        return db.Properties.Where(x => x.OwnerVAT == vat && x.IsActive).Select(x => x.ConvertProperty()).ToList();
     }
     public List<PropertyDTO> SearchProperties(string? pin = null, string? vat = null)
     {
@@ -80,7 +80,7 @@ public class PropertyService
         {
             foreach (var repair in dbproperty.Repairs)
             {
-                repair.Status = RepairStatus.Complete;
+                repair.IsActive = false;
             }
             dbproperty.IsActive = false;
             db.SaveChanges();
@@ -90,10 +90,10 @@ public class PropertyService
     }
     public bool DeleteProperty(int id)
     {
-        Property? item = db.Properties.FirstOrDefault(x => x.Id == id);
-        if (item != null)
+        Property? dbproperty = db.Properties.FirstOrDefault(x => x.Id == id);
+        if (dbproperty != null)
         {
-            db.Properties.Remove(item);
+            db.Properties.Remove(dbproperty);
             db.SaveChanges();
             return true;
         }
