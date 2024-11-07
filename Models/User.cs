@@ -20,7 +20,10 @@ public class User
 
     [Required]
     public required string Surname { get; set; }
-    
+
+    [Required]
+    public required string Address { get; set; }
+
     [Required]
     public required string Phone { get; set; }
 
