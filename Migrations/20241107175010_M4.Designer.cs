@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechnicoBackEnd.Repositories;
 
@@ -11,9 +12,11 @@ using TechnicoBackEnd.Repositories;
 namespace TechnicoBackEnd.Migrations
 {
     [DbContext(typeof(TechnicoDbContext))]
-    partial class TechnicoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241107175010_M4")]
+    partial class M4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,32 +139,6 @@ namespace TechnicoBackEnd.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -5,
-                            Email = "someMail@example.com",
-                            IsActive = true,
-                            Name = "Josh",
-                            Password = "1234567890",
-                            Phone = "2345412412",
-                            Surname = "Brown",
-                            Type = 0,
-                            VATNum = "J0SH_BR0WN"
-                        },
-                        new
-                        {
-                            Id = -4,
-                            Email = "someOtherMail@example.com",
-                            IsActive = true,
-                            Name = "Jane",
-                            Password = "12341234",
-                            Phone = "23656456745",
-                            Surname = "Black",
-                            Type = 0,
-                            VATNum = "J43_BL4CK"
-                        });
                 });
 
             modelBuilder.Entity("TechnicoBackEnd.Models.Property", b =>
