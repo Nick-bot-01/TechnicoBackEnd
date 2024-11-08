@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TechnicoBackEnd.ResponsesGT;
+namespace TechnicoBackEnd.Responses;
 public class ResponseApi<T>
 {
     public int Status { get; set; }

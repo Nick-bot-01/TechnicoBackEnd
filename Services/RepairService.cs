@@ -4,7 +4,7 @@ using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Helpers;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
-using TechnicoBackEnd.ResponsesGT;
+using TechnicoBackEnd.Responses;
 using TechnicoBackEnd.Validators;
 
 namespace TechnicoBackEnd.Services;

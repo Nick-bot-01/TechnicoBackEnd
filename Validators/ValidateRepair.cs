@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Models;
-using TechnicoBackEnd.ResponsesGT;
+using TechnicoBackEnd.Responses;
 
 namespace TechnicoBackEnd.Validators;
 public static class RepairValidator

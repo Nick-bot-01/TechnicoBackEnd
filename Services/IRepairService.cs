@@ -1,6 +1,6 @@
 ﻿using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Models;
-using TechnicoBackEnd.ResponsesGT;
+using TechnicoBackEnd.Responses;
 
 namespace TechnicoBackEnd.Services;
 public interface IRepairService
