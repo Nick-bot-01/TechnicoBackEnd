@@ -35,4 +35,20 @@ public static class DTOConverters
             Email = user.Email,
         };
     }
+
+    public static RepairDTO ConvertRepair(this Repair repair)
+    {
+        return new RepairDTO
+        {
+            Id = repair.Id,
+            ScheduledDate = repair.ScheduledDate,
+            RType = repair.RType,
+            Description = repair.Description,
+            Status = repair.Status,
+            Cost = repair.Cost,
+            PropertyId = repair.Property.Id,
+            OwnerName = repair.Property.Owner.Name, // Assuming Owner has a Name property
+            Address = repair.Property.Address
+        };
+    }
 }

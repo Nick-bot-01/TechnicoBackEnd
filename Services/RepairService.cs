@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TechnicoBackEnd.DTOs;
+using TechnicoBackEnd.Helpers;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
 using TechnicoBackEnd.ResponsesGT;
@@ -8,7 +9,7 @@ using TechnicoBackEnd.Validators;
 
 namespace TechnicoBackEnd.Services;
 
-public class RepairService
+public class RepairService : IRepairService
 {
     private readonly TechnicoDbContext db;
 
