@@ -21,5 +21,5 @@ public class PropertyDTO
 
     public PropertyType? PType { get; set; }
 
-    public User? Owner { get; set; }
+    public int? OwnerId { get; set; }
 }

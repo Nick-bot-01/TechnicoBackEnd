@@ -1,7 +1,9 @@
-﻿using TechnicoBackEnd.DTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Helpers;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
+using TechnicoBackEnd.Responses;
 
 public class PropertyService
 {
@@ -12,70 +14,145 @@ public class PropertyService
         this.db = db;
     }
 
-    public PropertyDTO? CreateProperty(PropertyDTO property)
+    public async Task<ResponseApi<PropertyDTO>> CreateProperty(PropertyDTO property)
     {
-        if (string.IsNullOrWhiteSpace(property.PIN)) return null;
-        if (string.IsNullOrWhiteSpace(property.Address)) return null;
-        if (db.Properties.Any(x => x.PIN == property.PIN)) return null;
-        if (property.ConstructionYear > DateTime.Now.Year) return null;
+        if (string.IsNullOrWhiteSpace(property.PIN))
+            return new ResponseApi<PropertyDTO> {
+                Status = 1,
+                Description = "Property creation failed: No PIN given."
+            };
+        if (string.IsNullOrWhiteSpace(property.Address))
+            return new ResponseApi<PropertyDTO>
+            {
+                Status = 1,
+                Description = "Property creation failed: No Address given."
+            };
+        if (db.Properties.Any(x => x.PIN == property.PIN && x.IsActive))
+            return new ResponseApi<PropertyDTO>
+            {
+                Status = 1,
+                Description = "Property creation failed: Duplicate PIN."
+            };
+        if (property.ConstructionYear > DateTime.Now.Year)
+            return new ResponseApi<PropertyDTO>
+            {
+                Status = 1,
+                Description = "Property creation failed: Invalid construction year."
+            };
+
+        User? owner = await db.Users.FirstOrDefaultAsync(x => x.Id == property.OwnerId && x.IsActive);
+
+        if (owner is null)
+            return new ResponseApi<PropertyDTO>
+            {
+                Status = 1,
+                Description = $"Property creation failed: Owner with id {property.OwnerId} not found."
+            };
 
         Property dbproperty = new Property()
         {
             PIN = property.PIN,
             PType = (PropertyType)property.PType!,
             Address = property.Address!,
-            Owner = property.Owner!,
+            Owner = owner,
             ConstructionYear = (int)property.ConstructionYear!
         };
-        db.Properties.Add(dbproperty);
-        db.SaveChanges();
-        return dbproperty.ConvertProperty();
+        await db.Properties.AddAsync(dbproperty);
+        await db.SaveChangesAsync();
+        return new ResponseApi<PropertyDTO>
+        {
+            Status = 0,
+            Description = "Property created succesfully.",
+            Value = dbproperty.ConvertProperty()
+        };
     }
-    public List<PropertyDTO> GetAllProperties()
+    public ResponseApi<List<PropertyDTO>> GetAllProperties()
     {
-        return db.Properties.Where(x => x.IsActive).Select(x => x.ConvertProperty()).ToList();
+        return new ResponseApi<List<PropertyDTO>>
+        {
+            Status = 0,
+            Description = "Properties fetched successfully.",
+            Value = db.Properties.Where(x => x.IsActive).Select(x => x.ConvertProperty()).ToList()
+        }; 
     }
-    public PropertyDTO? GetPropertyById(int id)
+    public async Task<ResponseApi<PropertyDTO>> GetPropertyById(int id)
     {
-        return db.Properties.Where(x => x.Id == id && x.IsActive).Select(x => x.ConvertProperty()).FirstOrDefault();
+        return new ResponseApi<PropertyDTO>
+        {
+            Status = 0,
+            Description = $"Property with id {id} fetched succesfully.",
+            Value = await db.Properties.Where(x => x.Id == id && x.IsActive).Select(x => x.ConvertProperty()).FirstOrDefaultAsync()
+        };
     }
-    public List<PropertyDTO> GetPropertiesByOwner(string vat)
+    public ResponseApi<List<PropertyDTO>> GetPropertiesByOwner(string vat)
     {
-        return db.Properties.Where(x => x.OwnerVAT == vat && x.IsActive).Select(x => x.ConvertProperty()).ToList();
+        return new ResponseApi<List<PropertyDTO>>
+        {
+            Status = 0,
+            Description = $"Properties for owner with VAT {vat} fetched succesfully.",
+            Value = db.Properties.Where(x => x.OwnerVAT == vat && x.IsActive).Select(x => x.ConvertProperty()).ToList()
+        };
     }
-    public List<PropertyDTO> SearchProperties(string? pin = null, string? vat = null)
+    public ResponseApi<List<PropertyDTO>> SearchProperties(string? pin = null, string? vat = null)
     {
-        if (pin is null && vat is null) return [];
+        if (pin is null && vat is null)
+            return new ResponseApi<List<PropertyDTO>>
+            {
+                Status = 1,
+                Description = "No search parameters.",
+                Value = []
+            };
 
         var results = db.Properties.Select(x => x);
 
         if (pin is not null) results = results.Where(x => x.PIN == pin);
         if (vat is not null) results = results.Where(x => x.OwnerVAT == vat);
-
-        return results.Select(x => x.ConvertProperty()).ToList();
+        
+        return new ResponseApi<List<PropertyDTO>>
+        {
+            Status = 1,
+            Description = "Search results fetched successfully.",
+            Value = results.Select(x => x.ConvertProperty()).ToList()
+        };
     }
-    public PropertyDTO? UpdateProperty(PropertyDTO property)
+    public async Task<ResponseApi<PropertyDTO>> UpdateProperty(PropertyDTO property)
     {
-        if (string.IsNullOrWhiteSpace(property.PIN)) return null;
-        if (string.IsNullOrWhiteSpace(property.Address)) return null;
-        if (db.Properties.Any(x => x.PIN == property.PIN)) return null;
-        if (property.ConstructionYear > DateTime.Now.Year) return null;
+        if (db.Properties.Any(x => x.PIN == property.PIN && x.IsActive))
+            return new ResponseApi<PropertyDTO>
+            {
+                Status = 1,
+                Description = "Property update failed: Duplicate PIN."
+            };
+        if (property.ConstructionYear > DateTime.Now.Year)
+            return new ResponseApi<PropertyDTO>
+            {
+                Status = 1,
+                Description = "Property update failed: Invalid construction year."
+            };
 
         Property? dbproperty = db.Properties.FirstOrDefault(x => x.Id == property.Id);
         if (dbproperty != null)
         {
             if (property.PIN != null) { dbproperty.PIN = property.PIN; }
             if (property.Address != null) { dbproperty.Address = property.Address; }
-            if (property.Owner != null) { dbproperty.Owner = property.Owner; }
             if (property.ConstructionYear != null) { dbproperty.ConstructionYear = (int)property.ConstructionYear; }
-            db.SaveChanges();
-            return dbproperty.ConvertProperty();
+            await db.SaveChangesAsync();
+            return new ResponseApi<PropertyDTO>
+            {
+                Status = 1,
+                Description = $"Property update failed : Property with id {property.Id} not found.",
+                Value = dbproperty.ConvertProperty()
+            }; 
         }
-        return null;
+        return new ResponseApi<PropertyDTO>
+        {
+            Status = 1,
+            Description = $"Property update failed : Property with id {property.Id} not found."
+        };
     }
-    public bool DeactivateProperty(int id)
+    public async Task<ResponseApi<PropertyDTO>> DeactivateProperty(int id)
     {
-        Property? dbproperty = db.Properties.FirstOrDefault(x => x.Id == id);
+        Property? dbproperty = await db.Properties.FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
         if (dbproperty != null)
         {
             foreach (var repair in dbproperty.Repairs)
@@ -83,21 +160,37 @@ public class PropertyService
                 repair.IsActive = false;
             }
             dbproperty.IsActive = false;
-            db.SaveChanges();
-            return true;
+            await db.SaveChangesAsync();
+            return new ResponseApi<PropertyDTO>()
+            {
+                Status = 0,
+                Description = $"Property with id {id} deactivated succesfully."
+            };
         }
-        return false;
+        return new ResponseApi<PropertyDTO>()
+        {
+            Status = 1,
+            Description = $"Deactivation failed: Property with id {id} not found."
+        };
     }
-    public bool DeleteProperty(int id)
+    public async Task<ResponseApi<PropertyDTO>> DeleteProperty(int id)
     {
-        Property? dbproperty = db.Properties.FirstOrDefault(x => x.Id == id);
+        Property? dbproperty = await db.Properties.FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
         if (dbproperty != null)
         {
             db.Properties.Remove(dbproperty);
-            db.SaveChanges();
-            return true;
+            await db.SaveChangesAsync();
+            return new ResponseApi<PropertyDTO>()
+            {
+                Status = 0,
+                Description = $"Property with id {id} deleted succesfully."
+            };
         }
-        return false;
+        return new ResponseApi<PropertyDTO>()
+        {
+            Status = 1,
+            Description = $"Deletion failed: Property with id {id} not found."
+        };
     }
 
 }
