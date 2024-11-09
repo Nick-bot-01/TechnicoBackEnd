@@ -12,10 +12,12 @@ namespace TechnicoBackEnd.Services;
 public class RepairService : IRepairService
 {
     private readonly TechnicoDbContext db;
+    private readonly IRepairValidation validation;
 
-    public RepairService(TechnicoDbContext db) // Dependency Injection
+    public RepairService(TechnicoDbContext db, IRepairValidation validation) // Dependency Injection
     {
         this.db = db;
+        this.validation = validation;
     }
 
     public async Task<ResponseApi<RepairDTO>> CreateRepair(RepairDTO repairDto, int propertyId)
@@ -25,8 +27,8 @@ public class RepairService : IRepairService
         if (propertyItem == null)
             return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair creation failed. Property with id {propertyId} was not found." };
 
-        // Update fields if validation passes
-        var validationResponse = RepairValidator.ValidateRepair(repairDto);
+        // Validate the user input values
+        var validationResponse = validation.RepairValidator(repairDto);
         if (validationResponse != null)
         {
             return validationResponse;
@@ -160,7 +162,7 @@ public class RepairService : IRepairService
         }
 
         // Validate the DTO
-        var validationResponse = RepairValidator.ValidateRepair(updatedRepairDto);
+        var validationResponse = RepairValidation.RepairValidator(updatedRepairDto);
         if (validationResponse != null)
         {
             return validationResponse;

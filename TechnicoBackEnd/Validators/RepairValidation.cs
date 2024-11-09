@@ -9,11 +9,11 @@ using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Responses;
 
 namespace TechnicoBackEnd.Validators;
-public static class RepairValidator
+public class RepairValidation : IRepairValidation
 {
-    /*The method is of type ResponseApi so that we can have clear feedback on our requests - the parameter is of type repair in order to check the entity after
-    turning the dto to entity in our service. If we want to check on dto level we could have RepairDTO parameter. Discuss */
-    public static ResponseApi<RepairDTO>? ValidateRepair(RepairDTO repair)
+    /*The method is of type ResponseApi so that we can have clear feedback on our requests - the parameter is of type repairDTO in order to validate the 
+     * DTO right before turning the DTO into an entity in our service. If we wanted to validate on entity level we could have Repair parameter. */
+    public ResponseApi<RepairDTO>? RepairValidator(RepairDTO repair)
     {
         // 1. Validate repair status
         if (!Enum.IsDefined(typeof(RepairStatus), repair.Status))

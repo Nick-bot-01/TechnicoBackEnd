@@ -1,5 +1,6 @@
 using TechnicoBackEnd.Repositories;
 using TechnicoBackEnd.Services;
+using TechnicoBackEnd.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRepairService, RepairService>();
 builder.Services.AddDbContext<TechnicoDbContext>();
+builder.Services.AddScoped<IRepairValidation, RepairValidation>();
 
 var app = builder.Build();
 
