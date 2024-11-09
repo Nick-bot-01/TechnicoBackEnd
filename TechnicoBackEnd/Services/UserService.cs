@@ -61,8 +61,8 @@ public class UserService : IUserService
         if (userDto is null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. No user input was given" };
 
         //checks if user exists
-        var existingUserQuery = _dbContext.Users.FirstOrDefault(o => o.VATNum == userDto.VAT);
-        if (existingUserQuery != null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation with vat {userDto.VAT} failed. User already exists" };
+        var existingUserQuery = _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT);//changed to firstordefaultasync
+        if (existingUserQuery != null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. User already exists" };
 
         //checks if values are "" or " "
         if (string.IsNullOrWhiteSpace(userDto.VAT) ||
@@ -72,7 +72,7 @@ public class UserService : IUserService
             string.IsNullOrWhiteSpace(userDto.Phone) ||    //check if phone has alphabet characters
             string.IsNullOrWhiteSpace(userDto.Email) ||    //check if email has actual email structure
             string.IsNullOrWhiteSpace(userDto.Password))    //add regex or find better solution to check users credentials validity - add address
-            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation with vat {userDto.VAT} failed. The required fields must not be null, empty or whitespaces" };
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. The required fields must not be null, empty or whitespaces" };
 
         var user = new User
         {
@@ -93,7 +93,7 @@ public class UserService : IUserService
         }
         catch (Exception e)
         {
-            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation with vat {userDto.VAT} failed. Probable database error with message : '{e.Message}'" };
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. Probable database error with message : '{e.Message}'" };
         }
     }
 
