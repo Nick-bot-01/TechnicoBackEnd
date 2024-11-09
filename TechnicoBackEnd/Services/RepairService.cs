@@ -162,7 +162,7 @@ public class RepairService : IRepairService
         }
 
         // Validate the DTO
-        var validationResponse = RepairValidation.RepairValidator(updatedRepairDto);
+        var validationResponse = validation.RepairValidator(updatedRepairDto);
         if (validationResponse != null)
         {
             return validationResponse;
