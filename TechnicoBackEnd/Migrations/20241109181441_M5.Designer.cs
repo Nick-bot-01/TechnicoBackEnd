@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechnicoBackEnd.Repositories;
 
@@ -11,9 +12,11 @@ using TechnicoBackEnd.Repositories;
 namespace TechnicoBackEnd.Migrations
 {
     [DbContext(typeof(TechnicoDbContext))]
-    partial class TechnicoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241109181441_M5")]
+    partial class M5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,34 +143,6 @@ namespace TechnicoBackEnd.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -10,
-                            Address = "p0k3b4ll 43",
-                            Email = "m.tyson@aol.com",
-                            IsActive = true,
-                            Name = "Mike",
-                            Password = "Str0ngP4ssw0rd",
-                            Phone = "3423423423",
-                            Surname = "Tyson",
-                            Type = 0,
-                            VATNum = "M1K3_TYS0N"
-                        },
-                        new
-                        {
-                            Id = -9,
-                            Address = "zei sti thalassa se anana 85",
-                            Email = "ariel_onlyfans@gmail.com",
-                            IsActive = true,
-                            Name = "Mikri",
-                            Password = "NotFound",
-                            Phone = "34545343423",
-                            Surname = "Gorgona",
-                            Type = 0,
-                            VATNum = "Sp0ng3B0b"
-                        });
                 });
 
             modelBuilder.Entity("TechnicoBackEnd.Models.Property", b =>
