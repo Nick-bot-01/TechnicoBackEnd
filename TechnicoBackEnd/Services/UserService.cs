@@ -15,23 +15,29 @@ public class UserService : IUserService
 
     public async Task<ResponseApi<UserDTO>> DeleteOwnerHard(string? vat)
     {
-        if (vat is null || vat == string.Empty) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
+        if (string.IsNullOrEmpty(vat)) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
 
-        User? ownerQueryResult = await _dbContext.Users.FirstOrDefaultAsync(c => c.VATNum == vat); //todo async
+        User? ownerQueryResult = await _dbContext.Users.FirstOrDefaultAsync(c => c.VATNum == vat);
         if (ownerQueryResult == null) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
+
+        //Check if already inactive
+        if(ownerQueryResult.IsActive == false) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
 
         //Delete user from the db
         _dbContext.Users.Remove(ownerQueryResult);
-        await _dbContext.SaveChangesAsync(); //todo async
+        await _dbContext.SaveChangesAsync();
         return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!" };
     }
 
     public async Task<ResponseApi<UserDTO>> DeleteOwnerSoft(string? vat)
     {
-        if (vat is null || vat == string.Empty) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
+        if (string.IsNullOrEmpty(vat)) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
 
         User? ownerQueryResult = await _dbContext.Users.FirstOrDefaultAsync(c => c.VATNum == vat);
         if (ownerQueryResult == null) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
+
+        //Check if already inactive
+        if (ownerQueryResult.IsActive == false) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
 
         //Deactivate user from the db
         ownerQueryResult.IsActive = false;
@@ -43,7 +49,7 @@ public class UserService : IUserService
     {
         if (vat == null && email == null) return new ResponseApi<UserDTO> { Status = 1, Description = "Vat and Email arguments not found!" };
 
-        User? userQuery = await _dbContext.Users.Where(c => c.VATNum == vat || c.Email == email).FirstOrDefaultAsync(); //todo async
+        User? userQuery = await _dbContext.Users.Where(c => c.VATNum == vat || c.Email == email).FirstOrDefaultAsync();
 
         if (userQuery != null && userQuery.IsActive == true) return new ResponseApi<UserDTO> { Status = 0, Description = "User has been found!", Value = userQuery.ConvertUser() };
         else return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
@@ -52,7 +58,7 @@ public class UserService : IUserService
     public async Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto)
     {
         //checks if user input was given - maybe remove?
-        if (userDto is null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation with vat {userDto.VAT} failed. No user input was given" };
+        if (userDto is null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. No user input was given" };
 
         //checks if user exists
         var existingUserQuery = _dbContext.Users.FirstOrDefault(o => o.VATNum == userDto.VAT);

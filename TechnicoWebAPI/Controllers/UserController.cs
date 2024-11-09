@@ -29,7 +29,8 @@ namespace TechnicoWebAPI.Controllers
             return new ResponseApi<UserDTO> { Status = 1, Description = "UpdateUser Not Yet Implemented" };
         }
 
-        public ResponseApi<UserDTO> LoginUser([FromBody] UserDTO user)
+        [HttpPut("login_user")] //maybe this flag needs to change ??!?!
+        public ResponseApi<UserDTO> LoginUser([FromBody] UserDTO user)//todo change to async
         {
             return new ResponseApi<UserDTO> { Status = 1, Description = "LoginUser Not Yet Implemented" };
         }
@@ -41,7 +42,7 @@ namespace TechnicoWebAPI.Controllers
         public async Task<ResponseApi<UserDTO>> DeleteUserHard([FromRoute] string? vat) => await _userService.DeleteOwnerHard(vat);
 
         [HttpGet("search_user")]
-        public async Task<ResponseApi<UserDTO>> SearchUser([FromBody] string? vat, [FromBody] string? email){
+        public async Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email){
             return await _userService.SearchUser(vat, email);
         }
     }
