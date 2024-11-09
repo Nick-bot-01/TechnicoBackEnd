@@ -45,34 +45,62 @@ public class UserService{
         else return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
     }
 
-    public User? Register(User? user) //change argument to dto
+    public async Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto)
     {
-        if (user is null) return null;
+        //checks if user input was given - maybe remove?
+        if (userDto is null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation with vat {userDto.VAT} failed. No user input was given" };
 
-        var existingUserQuery = _dbContext.Users.FirstOrDefault(o => o.VATNum == user.VATNum);  //checks if user exists
-        if (existingUserQuery != null) return null;
+        //checks if user exists
+        var existingUserQuery = _dbContext.Users.FirstOrDefault(o => o.VATNum == userDto.VAT);
+        if (existingUserQuery != null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation with vat {userDto.VAT} failed. User already exists" };
 
-        if (string.IsNullOrWhiteSpace(user.VATNum) ||  //checks if values are "" or " "
-            string.IsNullOrWhiteSpace(user.Name) ||  //important - add address?
-            string.IsNullOrWhiteSpace(user.Surname) ||  //check if name or surnmae has numbers
-            string.IsNullOrWhiteSpace(user.Phone) ||    //check if phone has alphabet characters
-            string.IsNullOrWhiteSpace(user.Email) ||    //check if email has actual email structure
-            string.IsNullOrWhiteSpace(user.Password))
-            return null;
+        //checks if values are "" or " "
+        if (string.IsNullOrWhiteSpace(userDto.VAT) ||
+            string.IsNullOrWhiteSpace(userDto.Name) ||
+            string.IsNullOrWhiteSpace(userDto.Surname) ||  //check if name or surnmae has numbers
+            string.IsNullOrWhiteSpace(userDto.Address) ||
+            string.IsNullOrWhiteSpace(userDto.Phone) ||    //check if phone has alphabet characters
+            string.IsNullOrWhiteSpace(userDto.Email) ||    //check if email has actual email structure
+            string.IsNullOrWhiteSpace(userDto.Password))    //add regex or find better solution to check users credentials validity - add address
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation with vat {userDto.VAT} failed. The required fields must not be null, empty or whitespaces" };
 
-        _dbContext.Users.Add(user);
-        _dbContext.SaveChanges();   //make async
-        return user;
+        var user = new User
+        {
+            VATNum = userDto.VAT,
+            Name = userDto.Name,
+            Surname = userDto.Surname,
+            Address = userDto.Address,
+            Phone = userDto.Phone,
+            Email = userDto.Email,
+            Password = userDto.Password
+        };
+
+        try
+        {
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+            return new ResponseApi<UserDTO> { Status = 0, Description = $"User with vat {userDto.VAT} was created successfully.", Value = user.ConvertUser() };
+        }
+        catch (Exception e)
+        {
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation with vat {userDto.VAT} failed. Probable database error with message : '{e.Message}'" };
+        }
     }
 
-    public User? GetUserDetailsById(int id) //change argument to dto
+    public async Task<ResponseApi<UserDTO>> GetUserDetailsById(int id)
     {
-        return _dbContext.Users.Where(u => u.IsActive == true).FirstOrDefault(u => u.Id == id);   //make async
+        //returns the userdto with the specified id that is active
+        var user = await _dbContext.Users.Where(u => u.IsActive).FirstOrDefaultAsync(u => u.Id == id);
+        if (user == null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User search with id {id} failed. No user was found" };
+        return new ResponseApi<UserDTO> { Status = 0, Description = "", Value = user.ConvertUser() };
+
     }
 
-    public List<User> GetAllUsers()
+    public async Task<ResponseApi<List<UserDTO>>> GetAllUsers()
     {
-        return _dbContext.Users.Where(u => u.IsActive == true).ToList();  //make async
+        //returns all active users to a userdto list
+        var users = await _dbContext.Users.Where(u => u.IsActive).ToListAsync();
+        return new ResponseApi<List<UserDTO>> { Status = 0, Description = "", Value = users.Select(user => user.ConvertUser()).ToList() };
     }
-    
+
 }
