@@ -5,7 +5,7 @@ using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
 using TechnicoBackEnd.Responses;
 
-public class PropertyService
+public class PropertyService : IPropertyService
 {
     private readonly TechnicoDbContext db;
 
@@ -17,7 +17,8 @@ public class PropertyService
     public async Task<ResponseApi<PropertyDTO>> CreateProperty(PropertyDTO property)
     {
         if (string.IsNullOrWhiteSpace(property.PIN))
-            return new ResponseApi<PropertyDTO> {
+            return new ResponseApi<PropertyDTO>
+            {
                 Status = 1,
                 Description = "Property creation failed: No PIN given."
             };
@@ -66,14 +67,15 @@ public class PropertyService
             Value = dbproperty.ConvertProperty()
         };
     }
-    public ResponseApi<List<PropertyDTO>> GetAllProperties()
+    public async Task<ResponseApi<List<PropertyDTO>>> GetAllProperties()
     {
+        var properties = await db.Properties.Where(x => x.IsActive).Select(x => x.ConvertProperty()).ToListAsync();
         return new ResponseApi<List<PropertyDTO>>
         {
             Status = 0,
             Description = "Properties fetched successfully.",
-            Value = db.Properties.Where(x => x.IsActive).Select(x => x.ConvertProperty()).ToList()
-        }; 
+            Value = properties
+        };
     }
     public async Task<ResponseApi<PropertyDTO>> GetPropertyById(int id)
     {
@@ -84,16 +86,17 @@ public class PropertyService
             Value = await db.Properties.Where(x => x.Id == id && x.IsActive).Select(x => x.ConvertProperty()).FirstOrDefaultAsync()
         };
     }
-    public ResponseApi<List<PropertyDTO>> GetPropertiesByOwner(string vat)
+    public async Task<ResponseApi<List<PropertyDTO>>> GetPropertiesByOwner(string vat)
     {
+        var properties = await db.Properties.Where(x => x.OwnerVAT == vat && x.IsActive).Select(x => x.ConvertProperty()).ToListAsync();
         return new ResponseApi<List<PropertyDTO>>
         {
             Status = 0,
             Description = $"Properties for owner with VAT {vat} fetched succesfully.",
-            Value = db.Properties.Where(x => x.OwnerVAT == vat && x.IsActive).Select(x => x.ConvertProperty()).ToList()
+            Value = properties
         };
     }
-    public ResponseApi<List<PropertyDTO>> SearchProperties(string? pin = null, string? vat = null)
+    public async Task<ResponseApi<List<PropertyDTO>>> SearchProperties(string? pin = null, string? vat = null)
     {
         if (pin is null && vat is null)
             return new ResponseApi<List<PropertyDTO>>
@@ -107,12 +110,14 @@ public class PropertyService
 
         if (pin is not null) results = results.Where(x => x.PIN == pin);
         if (vat is not null) results = results.Where(x => x.OwnerVAT == vat);
-        
+
+        var properties = await results.Select(x => x.ConvertProperty()).ToListAsync();
+
         return new ResponseApi<List<PropertyDTO>>
         {
             Status = 1,
             Description = "Search results fetched successfully.",
-            Value = results.Select(x => x.ConvertProperty()).ToList()
+            Value = properties
         };
     }
     public async Task<ResponseApi<PropertyDTO>> UpdateProperty(PropertyDTO property)
@@ -142,7 +147,7 @@ public class PropertyService
                 Status = 1,
                 Description = $"Property update failed : Property with id {property.Id} not found.",
                 Value = dbproperty.ConvertProperty()
-            }; 
+            };
         }
         return new ResponseApi<PropertyDTO>
         {

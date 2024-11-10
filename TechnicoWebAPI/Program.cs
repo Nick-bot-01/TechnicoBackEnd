@@ -11,9 +11,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//DB Context must exist on Creation before Controllers (DI) -> Dependency Injection
+builder.Services.AddDbContext<TechnicoDbContext>(); 
+
 builder.Services.AddScoped<IRepairService, RepairService>();
-builder.Services.AddDbContext<TechnicoDbContext>();
 builder.Services.AddScoped<IRepairValidation, RepairValidation>();
+//todo add UserService/UserValidation
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserValidation, UserValidation>();
+
 
 var app = builder.Build();
 

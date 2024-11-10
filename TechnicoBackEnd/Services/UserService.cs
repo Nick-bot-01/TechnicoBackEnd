@@ -4,75 +4,114 @@ using TechnicoBackEnd.Helpers;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
 using TechnicoBackEnd.Responses;
+using TechnicoBackEnd.Validators;
 
 
 namespace TechnicoBackEnd.Services;
 
-public class UserService{
+public class UserService : IUserService
+{
     private readonly TechnicoDbContext _dbContext;
     public UserService(TechnicoDbContext repairApplicationDbContext) => _dbContext = repairApplicationDbContext;
 
     public async Task<ResponseApi<UserDTO>> DeleteOwnerHard(string? vat){
-        if (vat is null || vat == string.Empty) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
+        UserValidation userValidation = new();
 
-        User? ownerQueryResult = await _dbContext.Users.FirstOrDefaultAsync(c => c.VATNum == vat); //todo async
-        if (ownerQueryResult == null) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
+        if (string.IsNullOrEmpty(vat)) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
+
+        User? ownerQueryResult = await _dbContext.Users.FirstOrDefaultAsync(c => c.VATNum == vat);
+        if (GenericValidation.IsNull(ownerQueryResult).Value) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
+
+        //Check if already inactive
+        if(!userValidation.IsUserActive(ownerQueryResult!)) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
 
         //Delete user from the db
-        _dbContext.Users.Remove(ownerQueryResult);
-        await _dbContext.SaveChangesAsync(); //todo async
-        return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!" };
+        _dbContext.Users.Remove(ownerQueryResult!);
+        await _dbContext.SaveChangesAsync();
+        return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult!.VATNum} has been removed!" };
     }
 
     public async Task<ResponseApi<UserDTO>> DeleteOwnerSoft(string? vat){
-        if (vat is null || vat == string.Empty) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
+        UserValidation userValidation = new();
+        if (string.IsNullOrEmpty(vat)) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
 
         User? ownerQueryResult = await _dbContext.Users.FirstOrDefaultAsync(c => c.VATNum == vat);
-        if (ownerQueryResult == null) return new ResponseApi<UserDTO> {Status = 1, Description = "User Not Found" };
+        if (GenericValidation.IsNull(ownerQueryResult).Value) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
+
+        //Check if already inactive
+        if (!userValidation.IsUserActive(ownerQueryResult!)) return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
 
         //Deactivate user from the db
-        ownerQueryResult.IsActive = false;
+        ownerQueryResult!.IsActive = false;
         await _dbContext.SaveChangesAsync();
-        return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!"};
+        return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!" };
     }
 
     public async Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email){
-        if (vat == null && email == null) return new ResponseApi<UserDTO> { Status = 1, Description = "Vat and Email arguments not found!" };
+        UserValidation userValidation =new();
 
-        User? userQuery = await _dbContext.Users.Where(c => c.VATNum == vat || c.Email == email).FirstOrDefaultAsync(); //todo async
-        
-        if(userQuery != null && userQuery.IsActive == true) return new ResponseApi<UserDTO> { Status = 0, Description = "User has been found!", Value = userQuery.ConvertUser()};
-        else return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
+        if (string.IsNullOrEmpty(vat) && string.IsNullOrEmpty(email)) 
+            return new ResponseApi<UserDTO> { Status = 1, Description = "Vat and Email arguments not found!" };
+
+        User? userQuery = await _dbContext.Users.Where(c => c.VATNum == vat || c.Email == email).FirstOrDefaultAsync();
+
+        if (!GenericValidation.IsNull(userQuery).Value && userValidation.IsUserActive(userQuery!)) 
+            return new ResponseApi<UserDTO> { Status = 0, Description = "User has been found!", Value = userQuery!.ConvertUser() };
+        else 
+            return new ResponseApi<UserDTO> { Status = 1, Description = "User Not Found" };
     }
 
-    public User? Register(User? user) //change argument to dto
+    public async Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto)
     {
-        if (user is null) return null;
+        //checks if user input was given - maybe remove?
+        if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. No user input was given" };
 
-        var existingUserQuery = _dbContext.Users.FirstOrDefault(o => o.VATNum == user.VATNum);  //checks if user exists
-        if (existingUserQuery != null) return null;
+        //checks if user exists
+        var existingUserQuery = await _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT);
+        if (!GenericValidation.IsNull(existingUserQuery).Value) 
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. User already exists" };
 
-        if (string.IsNullOrWhiteSpace(user.VATNum) ||  //checks if values are "" or " "
-            string.IsNullOrWhiteSpace(user.Name) ||  //important - add address?
-            string.IsNullOrWhiteSpace(user.Surname) ||  //check if name or surnmae has numbers
-            string.IsNullOrWhiteSpace(user.Phone) ||    //check if phone has alphabet characters
-            string.IsNullOrWhiteSpace(user.Email) ||    //check if email has actual email structure
-            string.IsNullOrWhiteSpace(user.Password))
-            return null;
+        UserValidation uservalidation = new();
+        ResponseApi<UserDTO>? validationResponse = uservalidation.UserValidator(userDto);
+        if (validationResponse != null) return validationResponse;
 
-        _dbContext.Users.Add(user);
-        _dbContext.SaveChanges();   //make async
-        return user;
+        var user = new User
+        {
+            VATNum = userDto.VAT!,
+            Name = userDto.Name!,
+            Surname = userDto.Surname!,
+            Address = userDto.Address!,
+            Phone = userDto.Phone!,
+            Email = userDto.Email!,
+            Password = userDto.Password!
+        };
+
+        try
+        {
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+            return new ResponseApi<UserDTO> { Status = 0, Description = $"User with vat {userDto.VAT} was created successfully.", Value = user.ConvertUser() };
+        }
+        catch (Exception e)
+        {
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. Probable database error with message : '{e.Message}'" };
+        }
     }
 
-    public User? GetUserDetailsById(int id) //change argument to dto
-    {
-        return _dbContext.Users.Where(u => u.IsActive == true).FirstOrDefault(u => u.Id == id);   //make async
+    public async Task<ResponseApi<UserDTO>> GetUserDetailsById(int id){
+        //returns the userdto with the specified id that is active
+        var user = await _dbContext.Users.Where(u => u.IsActive).FirstOrDefaultAsync(u => u.Id == id);
+        if (GenericValidation.IsNull(user).Value) 
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User search with id {id} failed. No user was found" };
+
+        return new ResponseApi<UserDTO> { Status = 0, Description = "", Value = user!.ConvertUser() };
+
     }
 
-    public List<User> GetAllUsers()
-    {
-        return _dbContext.Users.Where(u => u.IsActive == true).ToList();  //make async
+    public async Task<ResponseApi<List<UserDTO>>> GetAllUsers(){
+        //returns all active users to a userdto list
+        var users = await _dbContext.Users.Where(u => u.IsActive).ToListAsync();
+        return new ResponseApi<List<UserDTO>> { Status = 0, Description = "", Value = users.Select(user => user.ConvertUser()).ToList() };
     }
-    
+
 }
