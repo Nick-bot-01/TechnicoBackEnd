@@ -25,7 +25,7 @@ public class PropertyController : ControllerBase
     public async Task<ResponseApi<List<PropertyDTO>>> GetPropertiesByOwner([FromRoute] string vat) => await _propertyService.GetPropertiesByOwner(vat);
 
     [HttpGet("search_properties")]
-    public async Task<ResponseApi<List<PropertyDTO>>> SearchUser([FromBody] string? pin, string? vat) => await _propertyService.SearchProperties(pin,vat);
+    public async Task<ResponseApi<List<PropertyDTO>>> SearchProperty([FromBody] string? pin, string? vat) => await _propertyService.SearchProperties(pin,vat);
 
     [HttpPost("create_property")]
     public async Task<ResponseApi<PropertyDTO>> CreateProperty([FromBody] PropertyDTO property) => await _propertyService.CreateProperty(property);
@@ -34,8 +34,8 @@ public class PropertyController : ControllerBase
     public async Task<ResponseApi<PropertyDTO>> UpdateProperty([FromBody] PropertyDTO property) => await _propertyService.UpdateProperty(property);
 
     [HttpDelete("delete/{id}")]
-    public async Task<ResponseApi<PropertyDTO>> DeleteUserSoft([FromRoute] int id) => await _propertyService.DeleteProperty(id);
+    public async Task<ResponseApi<PropertyDTO>> DeleteProperty([FromRoute] int id) => await _propertyService.DeleteProperty(id);
 
     [HttpDelete("deactivate/{id}")]
-    public async Task<ResponseApi<PropertyDTO>> DeleteUserHard([FromRoute] int  id) => await _propertyService.DeactivateProperty(id);
+    public async Task<ResponseApi<PropertyDTO>> DeactivateProperty([FromRoute] int  id) => await _propertyService.DeactivateProperty(id);
 }
