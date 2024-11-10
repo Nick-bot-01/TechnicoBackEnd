@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TechnicoBackEnd.DTOs;
-public class AdminCreateUpdateRepairDTO : RepairDTO
+public class RepairAdminCreateUpdateDTO : RepairDTO
 {
     public string? OwnerVAT { get; set; }
 }
