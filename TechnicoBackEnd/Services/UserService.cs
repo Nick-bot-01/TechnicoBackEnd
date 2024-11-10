@@ -63,7 +63,7 @@ public class UserService : IUserService
 
     public async Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto)
     {
-        //checks if user input was given - maybe remove?
+        //checks if user input was given
         if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. No user input was given" };
 
         //checks if user exists
