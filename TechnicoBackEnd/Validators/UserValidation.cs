@@ -24,22 +24,42 @@ public class UserValidation : IUserValidation
             return new ResponseApi<UserDTO> { Status = 1, Description = $"The user's phone must not be null, empty or whitespaces and must only contain numbers" };
         if (string.IsNullOrWhiteSpace(user.Email) && Regex.IsMatch(user.VAT, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")) 
             return new ResponseApi<UserDTO> { Status = 1, Description = $"The user's email must not be null, empty or whitespaces and it must be a valid email address" };
-        return null; //todo implement
+        return null;
     }
 
     public ResponseApi<UserDTO>? UserValidator(UserWithPropertiesDTO user)
     {
-        ResponseApi<UserDTO>? result = UserValidator(user);
-        //Check Additional properties
-        return null; //todo implement
+        ResponseApi<UserDTO>? BaseResult = UserValidator(new UserDTO() {
+            VAT = user.VAT,
+            Name = user.Name,
+            Address = user.Address,
+            Phone = user.Phone,
+            Surname = user.Surname,
+            Email = user.Email
+        });
+
+        return null;
     }
 
     public ResponseApi<UserDTO>? UserValidator(UserWithRequiredFieldsDTO user)
     {
-        ResponseApi<UserDTO>? result = UserValidator(user);
-        if (result == null && string.IsNullOrWhiteSpace(user.Password)) 
-            return new ResponseApi<UserDTO> { Status = 1, Description = $"The user's password must not be null, empty or whitespaces" };
-        return null; //todo implement
+        ResponseApi<UserDTO>? BaseResult = UserValidator(new UserDTO()
+        {
+            VAT = user.VAT,
+            Name = user.Name,
+            Address = user.Address,
+            Phone = user.Phone,
+            Surname = user.Surname,
+            Email = user.Email
+        });
+
+        if (BaseResult == null)
+        {
+            if (string.IsNullOrWhiteSpace(user.Password)) {
+                return new ResponseApi<UserDTO> { Status = 1, Description = $"The user's password must not be null, empty or whitespaces" };
+            }
+        }
+        return null;
     }
 
 }
