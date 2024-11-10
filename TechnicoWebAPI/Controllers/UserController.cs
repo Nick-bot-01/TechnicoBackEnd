@@ -42,7 +42,7 @@ namespace TechnicoWebAPI.Controllers
         public async Task<ResponseApi<UserDTO>> DeleteUserHard([FromRoute] string? vat) => await _userService.DeleteOwnerHard(vat);
 
         [HttpGet("search_user")]
-        public async Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email){
+        public async Task<ResponseApi<UserDTO>> SearchUser([FromBody] string? vat, string? email){
             return await _userService.SearchUser(vat, email);
         }
     }
