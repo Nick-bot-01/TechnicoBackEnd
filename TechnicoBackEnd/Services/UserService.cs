@@ -4,6 +4,7 @@ using TechnicoBackEnd.Helpers;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
 using TechnicoBackEnd.Responses;
+using TechnicoBackEnd.Validators;
 
 
 namespace TechnicoBackEnd.Services;
@@ -61,28 +62,22 @@ public class UserService : IUserService
         if (userDto is null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. No user input was given" };
 
         //checks if user exists
-        var existingUserQuery = _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT);//changed to firstordefaultasync
+        var existingUserQuery = await _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT);
         if (existingUserQuery != null) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. User already exists" };
 
-        //checks if values are "" or " "
-        if (string.IsNullOrWhiteSpace(userDto.VAT) ||
-            string.IsNullOrWhiteSpace(userDto.Name) ||
-            string.IsNullOrWhiteSpace(userDto.Surname) ||  //check if name or surnmae has numbers
-            string.IsNullOrWhiteSpace(userDto.Address) ||
-            string.IsNullOrWhiteSpace(userDto.Phone) ||    //check if phone has alphabet characters
-            string.IsNullOrWhiteSpace(userDto.Email) ||    //check if email has actual email structure
-            string.IsNullOrWhiteSpace(userDto.Password))    //add regex or find better solution to check users credentials validity - add address
-            return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. The required fields must not be null, empty or whitespaces" };
+        UserValidation uservalidation = new();
+        ResponseApi<UserDTO>? validationResponse = uservalidation.UserValidator(userDto);
+        if (validationResponse != null) return validationResponse;
 
         var user = new User
         {
-            VATNum = userDto.VAT,
-            Name = userDto.Name,
-            Surname = userDto.Surname,
-            Address = userDto.Address,
-            Phone = userDto.Phone,
-            Email = userDto.Email,
-            Password = userDto.Password
+            VATNum = userDto.VAT!,
+            Name = userDto.Name!,
+            Surname = userDto.Surname!,
+            Address = userDto.Address!,
+            Phone = userDto.Phone!,
+            Email = userDto.Email!,
+            Password = userDto.Password!
         };
 
         try
