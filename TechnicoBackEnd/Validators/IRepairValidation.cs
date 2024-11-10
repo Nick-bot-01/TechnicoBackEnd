@@ -5,5 +5,5 @@ namespace TechnicoBackEnd.Validators;
 public interface IRepairValidation
 {
     ResponseApi<RepairDTO>? RepairValidatorUser(RepairDTO repair);
-    ResponseApi<AdminCreateUpdateRepairDTO>? RepairValidatorAdmin(AdminCreateUpdateRepairDTO repair);
+    ResponseApi<RepairAdminCreateUpdateDTO>? RepairValidatorAdmin(RepairAdminCreateUpdateDTO repair);
 }

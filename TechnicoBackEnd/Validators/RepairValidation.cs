@@ -56,44 +56,44 @@ public class RepairValidation : IRepairValidation
         return null;
     }
 
-    public ResponseApi<AdminCreateUpdateRepairDTO>? RepairValidatorAdmin(AdminCreateUpdateRepairDTO repair)
+    public ResponseApi<RepairAdminCreateUpdateDTO>? RepairValidatorAdmin(RepairAdminCreateUpdateDTO repair)
     {
         if (repair != null)
         {
             // 1. Validate repair status
             if (!Enum.IsDefined(typeof(RepairStatus), repair.Status))
             {
-                return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"Invalid status value: {repair.Status}. Please provide a valid status (e.g., Pending, InProgress, Complete)." };
+                return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"Invalid status value: {repair.Status}. Please provide a valid status (e.g., Pending, InProgress, Complete)." };
             }
 
             // 2a. Validate ScheduledDate
             if (repair.ScheduledDate == default)
             {
-                return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = "ScheduledDate is required and cannot be the default date." };
+                return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = "ScheduledDate is required and cannot be the default date." };
             }
 
             // 2b. Validate ScheduledDate
             if (repair.ScheduledDate < DateTime.Now.AddHours(1))
             {
-                return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = "ScheduledDate must be at least one hour in the future." };
+                return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = "ScheduledDate must be at least one hour in the future." };
             }
 
             // 3. Validate RepairType
             if (!Enum.IsDefined(typeof(RepairType), repair.RType))
             {
-                return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"Invalid repair type value: {repair.RType}. Please provide a valid repair type (e.g., Painting, Insulation, Frames, Plumbing, Electrical)." };
+                return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"Invalid repair type value: {repair.RType}. Please provide a valid repair type (e.g., Painting, Insulation, Frames, Plumbing, Electrical)." };
             }
 
             // 4. Validate Description
             if (string.IsNullOrWhiteSpace(repair.Description))
             {
-                return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = "Description cannot be empty or whitespace." };
+                return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = "Description cannot be empty or whitespace." };
             }
 
             // 5. Validate Cost
             if (repair.Cost <= 0)
             {
-                return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = "Cost must be greater than zero." };
+                return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = "Cost must be greater than zero." };
             }
 
             // If everything is valid, return null (indicating no errors)

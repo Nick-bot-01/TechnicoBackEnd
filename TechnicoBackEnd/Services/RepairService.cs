@@ -59,17 +59,17 @@ public class RepairService : IRepairService
         }
     }
 
-    public async Task<ResponseApi<AdminCreateUpdateRepairDTO>> CreateRepairAdmin(AdminCreateUpdateRepairDTO repairDto)
+    public async Task<ResponseApi<RepairAdminCreateUpdateDTO>> CreateRepairAdmin(RepairAdminCreateUpdateDTO repairDto)
     {
         if (repairDto == null) 
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"Repair creation failed. The DTO argument that was given is null." };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"Repair creation failed. The DTO argument that was given is null." };
 
         // Check if the property with the specified PIN exists and if the OwnerVAT matches the property's owner
         var propertyItem = await db.Properties
             .Include(p => p.Owner)
             .FirstOrDefaultAsync(p => p.PIN == repairDto.PropertyIdNum && p.Owner.VATNum == repairDto.OwnerVAT);
         if (propertyItem == null)
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"Either the property with PIN {repairDto.PropertyIdNum} does not exist or the owner with VAT {repairDto.OwnerVAT} is not authorized for this property." };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"Either the property with PIN {repairDto.PropertyIdNum} does not exist or the owner with VAT {repairDto.OwnerVAT} is not authorized for this property." };
 
         // Validate the user input values
         var validationResponse = validation.RepairValidatorAdmin(repairDto);
@@ -93,11 +93,11 @@ public class RepairService : IRepairService
         {
             await db.Repairs.AddAsync(repair);
             await db.SaveChangesAsync();
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 0, Description = $"Repair for property with PIN {repairDto.PropertyIdNum} was created successfully.", Value = repair.ConvertRepairAdmin() };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 0, Description = $"Repair for property with PIN {repairDto.PropertyIdNum} was created successfully.", Value = repair.ConvertRepairAdmin() };
         }
         catch (Exception e)
         {
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"Repair creation for property with PIN {repairDto.PropertyIdNum} failed due to a database error: '{e.Message}'" };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"Repair creation for property with PIN {repairDto.PropertyIdNum} failed due to a database error: '{e.Message}'" };
         }
     }
 
@@ -138,7 +138,7 @@ public class RepairService : IRepairService
 
         if (GetQuery.Count == 0)
         {
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"There are no repairs with VAT Number: {VATNum} found in the database. " };
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"There are no repairs for owner with VAT Number: {VATNum} in the database. " };
         }
 
         try
@@ -258,9 +258,9 @@ public class RepairService : IRepairService
         }
     }
 
-    public async Task<ResponseApi<AdminCreateUpdateRepairDTO>> UpdateRepairAdmin(AdminCreateUpdateRepairDTO updatedRepairDto)
+    public async Task<ResponseApi<RepairAdminCreateUpdateDTO>> UpdateRepairAdmin(RepairAdminCreateUpdateDTO updatedRepairDto)
     {
-        if (updatedRepairDto == null) return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"The DTO argument that was given is null." };
+        if (updatedRepairDto == null) return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"The DTO argument that was given is null." };
 
         // Find the repair in the database
         var repairDb = await db.Repairs
@@ -270,7 +270,7 @@ public class RepairService : IRepairService
 
         if (repairDb == null)
         {
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"No repair with this ID was found in the database." };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"No repair with this ID was found in the database." };
         }
 
         // 1) Check if the property with the specified PIN exists and if the OwnerVAT matches the property's owner
@@ -279,7 +279,7 @@ public class RepairService : IRepairService
             .Include(p => p.Owner)
             .FirstOrDefaultAsync(p => p.PIN == updatedRepairDto.PropertyIdNum && p.Owner.VATNum == updatedRepairDto.OwnerVAT);
         if (updatedProperty == null)
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"Either the property with PIN {updatedRepairDto.PropertyIdNum} does not exist or the owner with VAT {updatedRepairDto.OwnerVAT} is not authorized for this property." };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"Either the property with PIN {updatedRepairDto.PropertyIdNum} does not exist or the owner with VAT {updatedRepairDto.OwnerVAT} is not authorized for this property." };
 
         // Retrieve the list of property IDs associated with the owner of this repair
         var ownerId = repairDb.Property.Owner.Id;
@@ -291,7 +291,7 @@ public class RepairService : IRepairService
         // Validate if the new PropertyId in updatedRepairDto exists within the owner's property list
         if (!ownerPropertyIds.Contains(updatedRepairDto.PropertyIdNum!))
         {
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = "The specified Property ID does not belong to the repair owner." };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = "The specified Property ID does not belong to the repair owner." };
         }
 
         // Validate the rest of the DTO's values
@@ -314,11 +314,11 @@ public class RepairService : IRepairService
             await db.SaveChangesAsync();
 
             // Return success response with the updated repair as RepairDTO
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 0, Description = $"Repair with ID {repairDb.Id} was updated successfully.", Value = repairDb.ConvertRepairAdmin() };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 0, Description = $"Repair with ID {repairDb.Id} was updated successfully.", Value = repairDb.ConvertRepairAdmin() };
         }
         catch (Exception e)
         {
-            return new ResponseApi<AdminCreateUpdateRepairDTO> { Status = 1, Description = $"Repair update for repair with ID {repairDb.Id} failed due to a database error: '{e.Message}'" };
+            return new ResponseApi<RepairAdminCreateUpdateDTO> { Status = 1, Description = $"Repair update for repair with ID {repairDb.Id} failed due to a database error: '{e.Message}'" };
         }
     }
 

@@ -48,9 +48,9 @@ public static class DTOConverters
         };
     }
 
-    public static AdminCreateUpdateRepairDTO ConvertRepairAdmin(this Repair repair)
+    public static RepairAdminCreateUpdateDTO ConvertRepairAdmin(this Repair repair)
     {
-        return new AdminCreateUpdateRepairDTO()
+        return new RepairAdminCreateUpdateDTO()
         {
             ScheduledDate = repair.ScheduledDate,
             RType = repair.RType,

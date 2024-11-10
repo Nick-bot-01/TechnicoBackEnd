@@ -24,7 +24,7 @@ public class RepairController : ControllerBase
     }
 
     [HttpPost("repair/admin")]
-    public async Task<ResponseApi<AdminCreateUpdateRepairDTO>> CreateRepairAdmin([FromBody] AdminCreateUpdateRepairDTO repairDTO)
+    public async Task<ResponseApi<RepairAdminCreateUpdateDTO>> CreateRepairAdmin([FromBody] RepairAdminCreateUpdateDTO repairDTO)
     {
         return await _repairService.CreateRepairAdmin(repairDTO);
     }
@@ -36,7 +36,7 @@ public class RepairController : ControllerBase
     }
 
     [HttpPut("repair/admin")]
-    public async Task<ResponseApi<AdminCreateUpdateRepairDTO>> UpdateRepairAdmin([FromBody] AdminCreateUpdateRepairDTO repairDTO)
+    public async Task<ResponseApi<RepairAdminCreateUpdateDTO>> UpdateRepairAdmin([FromBody] RepairAdminCreateUpdateDTO repairDTO)
     {
         return await _repairService.UpdateRepairAdmin(repairDTO);
     }
@@ -52,17 +52,6 @@ public class RepairController : ControllerBase
     {
         return await _repairService.DeleteRepair(repairDTO);
     }
-
-
-
-
-
-
-
-
-
-
-
 
     [HttpGet("repairs/get_all_pending")]
     public async Task<ActionResult<List<RepairDTO>>> GetAllPendingRepairs()
