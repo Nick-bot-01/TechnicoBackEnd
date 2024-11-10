@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TechnicoBackEnd.DTOs;
+using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Responses;
 
 namespace TechnicoBackEnd.Validators;
@@ -62,4 +63,5 @@ public class UserValidation : IUserValidation
         return null;
     }
 
+    public bool IsUserActive(User user) => user.IsActive;
 }
