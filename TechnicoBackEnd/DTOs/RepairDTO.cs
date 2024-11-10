@@ -14,7 +14,5 @@ public class RepairDTO
     public string? Description { get; set; }
     public RepairStatus Status { get; set; }
     public decimal Cost { get; set; }
-    public int PropertyId { get; set; }
-    //public string? OwnerName { get; set; }
-    //public string? Address { get; set; }
+    public string? PropertyIdNum { get; set; }
 }

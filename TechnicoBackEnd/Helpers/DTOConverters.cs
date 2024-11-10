@@ -37,17 +37,28 @@ public static class DTOConverters
 
     public static RepairDTO ConvertRepair(this Repair repair)
     {
-        return new RepairDTO
+        return new RepairDTO()
         {
-            Id = repair.Id,
             ScheduledDate = repair.ScheduledDate,
             RType = repair.RType,
             Description = repair.Description,
             Status = repair.Status,
             Cost = repair.Cost,
-            PropertyId = repair.Property.Id,
-            //OwnerName = repair.Property.Owner.Name, 
-            //Address = repair.Property.Address
+            PropertyIdNum = repair.Property.PIN
+        };
+    }
+
+    public static AdminCreateUpdateRepairDTO ConvertRepairAdmin(this Repair repair)
+    {
+        return new AdminCreateUpdateRepairDTO()
+        {
+            ScheduledDate = repair.ScheduledDate,
+            RType = repair.RType,
+            Description = repair.Description,
+            Status = repair.Status,
+            Cost = repair.Cost,
+            PropertyIdNum = repair.Property.PIN,
+            OwnerVAT = repair.Property.Owner.VATNum
         };
     }
 }
