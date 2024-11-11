@@ -126,22 +126,19 @@ public class UserService : IUserService
 
         UserValidation uservalidation = new();
 
-        var user = new User
-        {
-            VATNum = existingUserQuery!.VATNum,
-            Name = (uservalidation.IsAlphabeticalValid(userDto.Name))? userDto.Name! : existingUserQuery.Name,
-            Surname = (uservalidation.IsAlphabeticalValid(userDto.Surname)) ? userDto.Surname! : existingUserQuery.Surname,
-            Address = (string.IsNullOrEmpty(userDto.Address))? existingUserQuery.Address :userDto.Address!,
-            Phone = (uservalidation.IsNumericalValid(userDto.Phone)) ? userDto.Phone! : existingUserQuery.Phone,
-            Email = existingUserQuery!.Email,
-            Password = (string.IsNullOrEmpty(userDto.Password)) ? existingUserQuery.Password : userDto.Password!
-        };
+        existingUserQuery!.VATNum = existingUserQuery.VATNum;
+        existingUserQuery.Email = existingUserQuery.Email;
+        existingUserQuery.Name = (uservalidation.IsAlphabeticalValid(userDto.Name)) ? userDto.Name! : existingUserQuery.Name;
+        existingUserQuery.Surname = (uservalidation.IsAlphabeticalValid(userDto.Surname)) ? userDto.Surname! : existingUserQuery.Surname;
+        existingUserQuery.Address = (string.IsNullOrEmpty(userDto.Address)) ? existingUserQuery.Address : userDto.Address!;
+        existingUserQuery.Phone = (uservalidation.IsNumericalValid(userDto.Phone)) ? userDto.Phone! : existingUserQuery.Phone;
+        existingUserQuery.Password = (string.IsNullOrEmpty(userDto.Password)) ? existingUserQuery.Password : userDto.Password!;
 
         try
         {
-            await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
-            return new ResponseApi<UserDTO> { Status = 0, Description = $"User with vat {userDto.VAT} was updated successfully.", Value = user.ConvertUser() };
+            var userCopy = existingUserQuery;
+            return new ResponseApi<UserDTO> { Status = 0, Description = $"User with vat {userDto.VAT} was updated successfully.", Value = userCopy.ConvertUser() };
         }
         catch (Exception e)
         {
