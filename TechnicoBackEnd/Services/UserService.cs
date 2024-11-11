@@ -126,8 +126,8 @@ public class UserService : IUserService
 
         UserValidation uservalidation = new();
 
-        existingUserQuery!.VATNum = existingUserQuery.VATNum;
-        existingUserQuery.Email = existingUserQuery.Email;
+        existingUserQuery!.VATNum = existingUserQuery.VATNum; //this field should be auto retrieved (frontend) - NOT ALLOWING TO MODIFY
+        existingUserQuery.Email = existingUserQuery.Email; //this field should be auto retrieved (frontend) - NOT ALLOWING TO MODIFY
         existingUserQuery.Name = (uservalidation.IsAlphabeticalValid(userDto.Name)) ? userDto.Name! : existingUserQuery.Name;
         existingUserQuery.Surname = (uservalidation.IsAlphabeticalValid(userDto.Surname)) ? userDto.Surname! : existingUserQuery.Surname;
         existingUserQuery.Address = (string.IsNullOrEmpty(userDto.Address)) ? existingUserQuery.Address : userDto.Address!;
