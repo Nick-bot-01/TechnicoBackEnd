@@ -14,7 +14,7 @@ public class UserService : IUserService
     private readonly TechnicoDbContext _dbContext;
     public UserService(TechnicoDbContext repairApplicationDbContext) => _dbContext = repairApplicationDbContext;
 
-    public async Task<ResponseApi<UserDTO>> DeleteOwnerHard(string? vat){
+    public async Task<ResponseApi<UserDTO>> DeleteHard(string? vat){
         UserValidation userValidation = new();
 
         if (string.IsNullOrEmpty(vat)) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
@@ -31,7 +31,7 @@ public class UserService : IUserService
         return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult!.VATNum} has been removed!" };
     }
 
-    public async Task<ResponseApi<UserDTO>> DeleteOwnerSoft(string? vat){
+    public async Task<ResponseApi<UserDTO>> DeleteSoft(string? vat){
         UserValidation userValidation = new();
         if (string.IsNullOrEmpty(vat)) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
 
@@ -47,7 +47,7 @@ public class UserService : IUserService
         return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!" };
     }
 
-    public async Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email){
+    public async Task<ResponseApi<UserDTO>> Search(string? vat, string? email){
         UserValidation userValidation =new();
 
         if (string.IsNullOrEmpty(vat) && string.IsNullOrEmpty(email)) 
@@ -114,7 +114,7 @@ public class UserService : IUserService
         return new ResponseApi<List<UserDTO>> { Status = 0, Description = "", Value = users.Select(user => user.ConvertUser()).ToList() };
     }
 
-    public async Task<ResponseApi<UserDTO>> UpdateUser(UserWithRequiredFieldsDTO userDto)
+    public async Task<ResponseApi<UserDTO>> Update(UserWithRequiredFieldsDTO userDto)
     {
         //Input argument check
         if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User update failed. No user input was given" };

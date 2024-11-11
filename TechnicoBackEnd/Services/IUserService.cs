@@ -5,12 +5,12 @@ namespace TechnicoBackEnd.Services
 {
     public interface IUserService
     {
-        Task<ResponseApi<UserDTO>> DeleteOwnerHard(string? vat);
-        Task<ResponseApi<UserDTO>> DeleteOwnerSoft(string? vat);
+        Task<ResponseApi<UserDTO>> DeleteHard(string? vat);
+        Task<ResponseApi<UserDTO>> DeleteSoft(string? vat);
         Task<ResponseApi<List<UserDTO>>> GetAllUsers();
         Task<ResponseApi<UserDTO>> GetUserDetailsById(int id);
         Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto);
-        Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email);
-        Task<ResponseApi<UserDTO>> UpdateUser(UserWithRequiredFieldsDTO userDto);
+        Task<ResponseApi<UserDTO>> Search(string? vat, string? email);
+        Task<ResponseApi<UserDTO>> Update(UserWithRequiredFieldsDTO userDto);
     }
 }
