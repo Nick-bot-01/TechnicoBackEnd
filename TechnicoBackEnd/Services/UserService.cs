@@ -126,6 +126,7 @@ public class UserService : IUserService
 
         UserValidation uservalidation = new();
 
+        //Form that provides that kind of data (user/admin case any) should not contain input fields for these 2
         existingUserQuery!.VATNum = existingUserQuery.VATNum; //this field should be auto retrieved (frontend) - NOT ALLOWING TO MODIFY
         existingUserQuery.Email = existingUserQuery.Email; //this field should be auto retrieved (frontend) - NOT ALLOWING TO MODIFY
         existingUserQuery.Name = (uservalidation.IsAlphabeticalValid(userDto.Name)) ? userDto.Name! : existingUserQuery.Name;
