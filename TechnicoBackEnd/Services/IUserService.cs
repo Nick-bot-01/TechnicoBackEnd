@@ -11,5 +11,6 @@ namespace TechnicoBackEnd.Services
         Task<ResponseApi<UserDTO>> GetUserDetailsById(int id);
         Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto);
         Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email);
+        Task<ResponseApi<UserDTO>> UpdateUser(UserWithRequiredFieldsDTO userDto);
     }
 }

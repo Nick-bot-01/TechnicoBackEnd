@@ -114,4 +114,38 @@ public class UserService : IUserService
         return new ResponseApi<List<UserDTO>> { Status = 0, Description = "", Value = users.Select(user => user.ConvertUser()).ToList() };
     }
 
+    public async Task<ResponseApi<UserDTO>> UpdateUser(UserWithRequiredFieldsDTO userDto)
+    {
+        //Input argument check
+        if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User update failed. No user input was given" };
+
+        //User Exists
+        var existingUserQuery = await _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT);
+        if (GenericValidation.IsNull(existingUserQuery).Value)
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"No user found." };
+
+        UserValidation uservalidation = new();
+
+        var user = new User
+        {
+            VATNum = existingUserQuery!.VATNum,
+            Name = (uservalidation.IsAlphabeticalValid(userDto.Name))? userDto.Name! : existingUserQuery.Name,
+            Surname = (uservalidation.IsAlphabeticalValid(userDto.Surname)) ? userDto.Surname! : existingUserQuery.Surname,
+            Address = (string.IsNullOrEmpty(userDto.Address))? existingUserQuery.Address :userDto.Address!,
+            Phone = (uservalidation.IsNumericalValid(userDto.Phone)) ? userDto.Phone! : existingUserQuery.Phone,
+            Email = existingUserQuery!.Email,
+            Password = (string.IsNullOrEmpty(userDto.Password)) ? existingUserQuery.Password : userDto.Password!
+        };
+
+        try
+        {
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+            return new ResponseApi<UserDTO> { Status = 0, Description = $"User with vat {userDto.VAT} was updated successfully.", Value = user.ConvertUser() };
+        }
+        catch (Exception e)
+        {
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User update failed. Probable database error with message : '{e.Message}'" };
+        }
+    }
 }
