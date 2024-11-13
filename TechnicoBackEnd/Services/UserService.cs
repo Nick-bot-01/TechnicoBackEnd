@@ -14,7 +14,7 @@ public class UserService : IUserService
     private readonly TechnicoDbContext _dbContext;
     public UserService(TechnicoDbContext repairApplicationDbContext) => _dbContext = repairApplicationDbContext;
 
-    public async Task<ResponseApi<UserDTO>> DeleteOwnerHard(string? vat){
+    public async Task<ResponseApi<UserDTO>> DeleteHard(string? vat){
         UserValidation userValidation = new();
 
         if (string.IsNullOrEmpty(vat)) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
@@ -31,7 +31,7 @@ public class UserService : IUserService
         return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult!.VATNum} has been removed!" };
     }
 
-    public async Task<ResponseApi<UserDTO>> DeleteOwnerSoft(string? vat){
+    public async Task<ResponseApi<UserDTO>> DeleteSoft(string? vat){
         UserValidation userValidation = new();
         if (string.IsNullOrEmpty(vat)) return new ResponseApi<UserDTO> { Status = 1, Description = "Input argument null or empty" };
 
@@ -47,7 +47,7 @@ public class UserService : IUserService
         return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!" };
     }
 
-    public async Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email){
+    public async Task<ResponseApi<UserDTO>> Search(string? vat, string? email){
         UserValidation userValidation =new();
 
         if (string.IsNullOrEmpty(vat) && string.IsNullOrEmpty(email)) 
@@ -63,7 +63,7 @@ public class UserService : IUserService
 
     public async Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto)
     {
-        //checks if user input was given - maybe remove?
+        //checks if user input was given
         if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. No user input was given" };
 
         //checks if user exists
@@ -114,4 +114,36 @@ public class UserService : IUserService
         return new ResponseApi<List<UserDTO>> { Status = 0, Description = "", Value = users.Select(user => user.ConvertUser()).ToList() };
     }
 
+    public async Task<ResponseApi<UserDTO>> Update(UserWithRequiredFieldsDTO userDto)
+    {
+        //Input argument check
+        if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User update failed. No user input was given" };
+
+        //User Exists
+        var existingUserQuery = await _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT);
+        if (GenericValidation.IsNull(existingUserQuery).Value)
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"No user found." };
+
+        UserValidation uservalidation = new();
+
+        //Form that provides that kind of data (user/admin case any) should not contain input fields for these 2
+        existingUserQuery!.VATNum = existingUserQuery.VATNum; //this field should be auto retrieved (frontend) - NOT ALLOWING TO MODIFY
+        existingUserQuery.Email = existingUserQuery.Email; //this field should be auto retrieved (frontend) - NOT ALLOWING TO MODIFY
+        existingUserQuery.Name = (uservalidation.IsAlphabeticalValid(userDto.Name)) ? userDto.Name! : existingUserQuery.Name;
+        existingUserQuery.Surname = (uservalidation.IsAlphabeticalValid(userDto.Surname)) ? userDto.Surname! : existingUserQuery.Surname;
+        existingUserQuery.Address = (string.IsNullOrEmpty(userDto.Address)) ? existingUserQuery.Address : userDto.Address!;
+        existingUserQuery.Phone = (uservalidation.IsNumericalValid(userDto.Phone)) ? userDto.Phone! : existingUserQuery.Phone;
+        existingUserQuery.Password = (string.IsNullOrEmpty(userDto.Password)) ? existingUserQuery.Password : userDto.Password!;
+
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+            var userCopy = existingUserQuery;
+            return new ResponseApi<UserDTO> { Status = 0, Description = $"User with vat {userDto.VAT} was updated successfully.", Value = userCopy.ConvertUser() };
+        }
+        catch (Exception e)
+        {
+            return new ResponseApi<UserDTO> { Status = 1, Description = $"User update failed. Probable database error with message : '{e.Message}'" };
+        }
+    }
 }

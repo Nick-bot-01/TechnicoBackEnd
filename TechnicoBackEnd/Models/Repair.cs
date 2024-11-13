@@ -31,7 +31,8 @@ public class Repair
     public required decimal Cost { get; set; }
 
     [Required]
-    public required Property Property { get; set; }
+    public required Property Property 
+    { get; set; }
 
     [NotMapped]
     public User Owner => Property.Owner;
