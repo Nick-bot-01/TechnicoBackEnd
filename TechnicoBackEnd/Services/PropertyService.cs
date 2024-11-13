@@ -4,41 +4,30 @@ using TechnicoBackEnd.Helpers;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Repositories;
 using TechnicoBackEnd.Responses;
+using TechnicoBackEnd.Validators;
 
 public class PropertyService : IPropertyService
 {
     private readonly TechnicoDbContext db;
+    private readonly IPropertyValidation val;
 
-    public PropertyService(TechnicoDbContext db)
+    public PropertyService(TechnicoDbContext db, IPropertyValidation val)
     {
         this.db = db;
+        this.val = val;
     }
 
     public async Task<ResponseApi<PropertyDTO>> CreateProperty(PropertyDTO property)
     {
-        if (string.IsNullOrWhiteSpace(property.PIN))
-            return new ResponseApi<PropertyDTO>
-            {
-                Status = 1,
-                Description = "Property creation failed: No PIN given."
-            };
-        if (string.IsNullOrWhiteSpace(property.Address))
-            return new ResponseApi<PropertyDTO>
-            {
-                Status = 1,
-                Description = "Property creation failed: No Address given."
-            };
+        var valResponse = val.PropertyValidator(property);
+        
+        if (valResponse != null) return valResponse;
+        
         if (db.Properties.Any(x => x.PIN == property.PIN && x.IsActive))
             return new ResponseApi<PropertyDTO>
             {
                 Status = 1,
                 Description = "Property creation failed: Duplicate PIN."
-            };
-        if (property.ConstructionYear > DateTime.Now.Year)
-            return new ResponseApi<PropertyDTO>
-            {
-                Status = 1,
-                Description = "Property creation failed: Invalid construction year."
             };
 
         User? owner = await db.Users.FirstOrDefaultAsync(x => x.Id == property.OwnerId && x.IsActive);
@@ -52,7 +41,7 @@ public class PropertyService : IPropertyService
 
         Property dbproperty = new Property()
         {
-            PIN = property.PIN,
+            PIN = property.PIN!,
             PType = (PropertyType)property.PType!,
             Address = property.Address!,
             Owner = owner,
