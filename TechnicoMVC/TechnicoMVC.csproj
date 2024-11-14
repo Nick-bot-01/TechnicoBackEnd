@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Admin\NewFolder\" />
-    <Folder Include="Views\User\" />
+    <Folder Include="Views\Admin\UserHandling\" />
+    <Folder Include="Views\Admin\Property\" />
+    <Folder Include="Views\Admin\Repair\" />
+    <Folder Include="Views\User\SelfHandling\" />
+    <Folder Include="Views\User\Property\" />
+    <Folder Include="Views\User\Repair\" />
   </ItemGroup>
 
 </Project>
