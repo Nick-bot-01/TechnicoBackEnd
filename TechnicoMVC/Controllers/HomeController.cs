@@ -46,6 +46,16 @@ public class HomeController : Controller{
         return targetUser;
     }
 
+    [HttpDelete]
+    public async Task<ResponseApi<UserDTO>?> RemoveUserToRedirectController(string? vat)
+    {
+        string url = $"{sourcePrefix}delete_user_soft/{vat}";
+        var response = await client.DeleteAsync(url);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<UserDTO>? removedUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
+        return removedUser;
+    }
+
 
     public IActionResult Index() {
         //int rnd = Random.Shared.Next(-10, 10);
@@ -63,6 +73,13 @@ public class HomeController : Controller{
     public async Task<IActionResult> UpdateUserCallback(UserWithRequiredFieldsDTO pendingCreationUser)
     {
         ResponseApi<UserDTO>? createdUSer = await UpdateUserToRedirectController(pendingCreationUser);
+        return RedirectToAction("Index");
+    }
+
+    public async Task<IActionResult> RemoveUserCallback(string? vat)
+    {
+        if (string.IsNullOrEmpty(vat)) return RedirectToAction("Index"); //failsafe temp
+        ResponseApi<UserDTO>? deletedUser = await RemoveUserToRedirectController(vat);
         return RedirectToAction("Index");
     }
 
