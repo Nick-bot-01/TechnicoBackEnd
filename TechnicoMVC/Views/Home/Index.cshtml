@@ -1,6 +1,7 @@
 ﻿@using TechnicoBackEnd.Models;
 @using TechnicoBackEnd.Responses;
 @using TechnicoBackEnd.DTOs;
+@using TechnicoMVC.ViewModels;
 @* @model ResponseApi<UserDTO>;
  *@
 
@@ -58,10 +59,10 @@ else
     </div>
 </form> *@
 
-@model UserWithRequiredFieldsDTO
-<h1>Update User</h1>
+@* @model UserWithRequiredFieldsDTO
+<h1>Update User</h1> *@
 
-<form asp-controller="Home" asp-action="UpdateUserCallback" method="post" enctype="multipart/form-data">
+@* <form asp-controller="Home" asp-action="UpdateUserCallback" method="post" enctype="multipart/form-data">
     <label asp-for="Email"></label>
     <input asp-for="@Model.Email" />
     <span asp-validation-for="Email"></span>
@@ -92,5 +93,18 @@ else
     <br />
     <div class="form-group">
         <input type="submit" value="Update User" class="btn btn-primary" />
+    </div>
+</form> *@
+
+@model RemoveUserViewModelTemplate
+<h1>Remove User</h1>
+
+<form asp-controller="Home" asp-action="RemoveUserCallback" method="post" enctype="multipart/form-data">
+    <label asp-for="Vat"></label>
+    <input asp-for="Vat" />
+    <span asp-validation-for="Vat"></span>
+
+    <div class="form-group">
+        <input type="submit" value="Remove Entity" class="btn btn-primary" />
     </div>
 </form>
