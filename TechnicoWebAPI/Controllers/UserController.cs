@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
+using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Responses;
 using TechnicoBackEnd.Services;
 
@@ -13,6 +17,48 @@ namespace TechnicoWebAPI.Controllers
         private readonly IUserService _userService;
 
         public UserController(IUserService userService) => _userService = userService;
+
+
+
+
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest loginRequest)
+        {
+            var user = _userService.Authenticate(loginRequest.Email, loginRequest.Password);
+            if (user != null)
+            {
+                //LoginState.UserId = user.Id;
+                //LoginState.IsLoggedIn = true;
+                //LoginState.IsAdmin = user.Type == UserType.Admin; // Check if the user is an admin
+                return Ok(new { Message = "Login successful", Value = user });
+            }
+
+            return Unauthorized(new { Message = "Invalid credentials" });
+        }
+
+        
+
+
+
+
+
+
+
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            LoginState.UserId = -1;
+            LoginState.IsLoggedIn = false;
+            LoginState.IsAdmin = false;
+            return Ok(new { Message = "Logout successful" });
+        }
+
+
+
+
+
 
         [HttpGet("users")]
         public async Task<ResponseApi<List<UserDTO>>> GetUsers() => await _userService.GetAllUsers();
