@@ -13,6 +13,6 @@ namespace TechnicoBackEnd.Services
         Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto);
         Task<ResponseApi<UserDTO>> Search(string? vat, string? email);
         Task<ResponseApi<UserDTO>> Update(UserWithRequiredFieldsDTO userDto);
-        User Authenticate(string email, string password);
+        Task<ResponseApi<UserDTO>> Authenticate(string email, string password);
     }
 }

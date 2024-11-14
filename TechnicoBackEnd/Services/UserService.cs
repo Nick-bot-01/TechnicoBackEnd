@@ -6,22 +6,20 @@ using TechnicoBackEnd.Repositories;
 using TechnicoBackEnd.Responses;
 using TechnicoBackEnd.Validators;
 
-
 namespace TechnicoBackEnd.Services;
 
-public class UserService : IUserService
-{
+public class UserService : IUserService{
     private readonly TechnicoDbContext _dbContext;
     public UserService(TechnicoDbContext repairApplicationDbContext) => _dbContext = repairApplicationDbContext;
 
 
-    public User Authenticate(string email, string password)
-    {
+    public async Task<ResponseApi<UserDTO>> Authenticate(string email, string password){
         // Find the user based on email and password
-        var user = _dbContext.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
-
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+        UserDTO? userDTO = (user!=null)? user.ConvertUser() : null;
+        ResponseApi<UserDTO> response = new() {Status = (user != null)? 0 : 1, Description = (user != null)? "User Found":"User Not Found", Value = userDTO };
         // Return the user if found, otherwise return null
-        return user;
+        return response;
     }
 
 
