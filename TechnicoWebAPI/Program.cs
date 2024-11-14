@@ -16,7 +16,7 @@ builder.Services.AddDbContext<TechnicoDbContext>();
 
 builder.Services.AddScoped<IRepairService, RepairService>();
 builder.Services.AddScoped<IRepairValidation, RepairValidation>();
-//todo add UserService/UserValidation
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserValidation, UserValidation>();
 
