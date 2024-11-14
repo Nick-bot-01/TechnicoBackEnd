@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Admin\NewFolder\" />
+    <Folder Include="Views\User\" />
+  </ItemGroup>
+
 </Project>
