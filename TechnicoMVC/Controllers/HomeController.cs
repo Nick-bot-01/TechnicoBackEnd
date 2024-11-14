@@ -35,6 +35,16 @@ public class HomeController : Controller{
         ResponseApi<UserDTO>? targetUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
         return targetUser;
     }
+    [HttpPut]
+    public async Task<ResponseApi<UserDTO>?> UpdateUserToRedirectController(UserWithRequiredFieldsDTO user)
+    {
+        string url = $"{sourcePrefix}update_user";
+        var response = await client.PutAsJsonAsync(url, user);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<UserDTO>? targetUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
+        Console.WriteLine($"Status: {targetUser?.Status} Description: {targetUser?.Description}");
+        return targetUser;
+    }
 
 
     public IActionResult Index() {
@@ -46,6 +56,13 @@ public class HomeController : Controller{
     //Callback from Add User
     public async Task<IActionResult> CreateUserCallback(UserWithRequiredFieldsDTO pendingCreationUser){
         ResponseApi<UserDTO>? createdUSer = await CreateUserToRedirectController(pendingCreationUser);
+        return RedirectToAction("Index");
+    }
+
+    //Callback from Update User
+    public async Task<IActionResult> UpdateUserCallback(UserWithRequiredFieldsDTO pendingCreationUser)
+    {
+        ResponseApi<UserDTO>? createdUSer = await UpdateUserToRedirectController(pendingCreationUser);
         return RedirectToAction("Index");
     }
 
