@@ -14,17 +14,6 @@ public class UserService : IUserService
     private readonly TechnicoDbContext _dbContext;
     public UserService(TechnicoDbContext repairApplicationDbContext) => _dbContext = repairApplicationDbContext;
 
-
-    public User Authenticate(string email, string password)
-    {
-        // Find the user based on email and password
-        var user = _dbContext.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
-
-        // Return the user if found, otherwise return null
-        return user;
-    }
-
-
     public async Task<ResponseApi<UserDTO>> DeleteHard(string? vat){
         UserValidation userValidation = new();
 

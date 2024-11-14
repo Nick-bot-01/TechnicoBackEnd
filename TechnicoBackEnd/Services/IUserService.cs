@@ -1,5 +1,4 @@
 ﻿using TechnicoBackEnd.DTOs;
-using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Responses;
 
 namespace TechnicoBackEnd.Services
@@ -13,6 +12,5 @@ namespace TechnicoBackEnd.Services
         Task<ResponseApi<UserDTO>> Register(UserWithRequiredFieldsDTO userDto);
         Task<ResponseApi<UserDTO>> Search(string? vat, string? email);
         Task<ResponseApi<UserDTO>> Update(UserWithRequiredFieldsDTO userDto);
-        User Authenticate(string email, string password);
     }
 }
