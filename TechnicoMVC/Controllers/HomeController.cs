@@ -12,8 +12,6 @@ using TechnicoBackEnd.Services;
 namespace TechnicoMVC.Controllers;
 
 public class HomeController : Controller{
-    //private static User? _activeUser; 
-
     private readonly ILogger<HomeController> _logger;
     private readonly string sourcePrefix = "https://localhost:7017/api/User/"; //for other controller change to Repair / Property etc.
     private HttpClient client = new HttpClient();
@@ -52,14 +50,6 @@ public class HomeController : Controller{
         return targetUser;
     }
 
-    [HttpDelete]
-    public async Task<ResponseApi<UserDTO>?> RemoveUserToRedirectController(string? vat){
-        string url = $"{sourcePrefix}delete_user_soft/{vat}";
-        var response = await client.DeleteAsync(url);
-        var responseBody = await response.Content.ReadAsStringAsync();
-        ResponseApi<UserDTO>? removedUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
-        return removedUser;
-    }
 
     public IActionResult Index() {
         //int rnd = Random.Shared.Next(-10, 10);
@@ -74,14 +64,9 @@ public class HomeController : Controller{
     }
 
     //Callback from Update User
-    public async Task<IActionResult> UpdateUserCallback(UserWithRequiredFieldsDTO pendingCreationUser){
+    public async Task<IActionResult> UpdateUserCallback(UserWithRequiredFieldsDTO pendingCreationUser)
+    {
         ResponseApi<UserDTO>? createdUSer = await UpdateUserToRedirectController(pendingCreationUser);
-        return RedirectToAction("Index");
-    }
-
-    public async Task<IActionResult> RemoveUserCallback(string? vat){
-        if(string.IsNullOrEmpty(vat)) return RedirectToAction("Index"); //failsafe temp
-        ResponseApi<UserDTO>? deletedUser = await RemoveUserToRedirectController(vat);
         return RedirectToAction("Index");
     }
 
