@@ -1,12 +1,14 @@
 ﻿@using TechnicoBackEnd.Models;
 @using TechnicoBackEnd.Responses;
 @using TechnicoBackEnd.DTOs;
-@model ResponseApi<UserDTO>;
+@* @model ResponseApi<UserDTO>;
+ *@
+
 
 @{
     ViewData["Title"] = "Home Page";
 }
-@if (Model.Value != null)
+@* @if (Model.Value != null)
 {
     <div class="text-center">
         <h1 class="display-4">Welcome @Model.Value?.Name</h1>
@@ -17,4 +19,41 @@ else
     <div class="text-center">
         <h1 class="display-4">Invalid ID</h1>
     </div>
-}
+} *@
+
+@model UserWithRequiredFieldsDTO
+<h1>Create User</h1>
+
+<form asp-controller="Home" asp-action="CreateUserCallback" method="post" enctype="multipart/form-data">
+    <label asp-for="Email"></label>
+    <input asp-for="@Model.Email" />
+    <span asp-validation-for="Email"></span>
+    <br />
+    <label asp-for="Address"></label>
+    <input asp-for="@Model.Address" />
+    <span asp-validation-for="Address"></span>
+    <br />
+    <label asp-for="Name"></label>
+    <input asp-for="@Model.Name" />
+    <span asp-validation-for="Name"></span>
+    <br />
+    <label asp-for="Surname"></label>
+    <input asp-for="@Model.Surname" />
+    <span asp-validation-for="Surname"></span>
+    <br />
+    <label asp-for="VAT"></label>
+    <input asp-for="@Model.VAT" />
+    <span asp-validation-for="VAT"></span>
+    <br />
+    <label asp-for="Phone"></label>
+    <input asp-for="@Model.Phone" />
+    <span asp-validation-for="Phone"></span>
+    <br />
+    <label asp-for="Password"></label>
+    <input asp-for="@Model.Password" />
+    <span asp-validation-for="Password"></span>
+    <br />
+    <div class="form-group">
+        <input type="submit" value="Create User" class="btn btn-primary" />
+    </div>
+</form>
