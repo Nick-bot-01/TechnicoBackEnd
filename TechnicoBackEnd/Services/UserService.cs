@@ -120,7 +120,7 @@ public class UserService : IUserService
         if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User update failed. No user input was given" };
 
         //User Exists
-        var existingUserQuery = await _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT);
+        var existingUserQuery = await _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT || o.Email == userDto.Email);
         if (GenericValidation.IsNull(existingUserQuery).Value)
             return new ResponseApi<UserDTO> { Status = 1, Description = $"No user found." };
 
@@ -139,7 +139,11 @@ public class UserService : IUserService
         {
             await _dbContext.SaveChangesAsync();
             var userCopy = existingUserQuery;
-            return new ResponseApi<UserDTO> { Status = 0, Description = $"User with vat {userDto.VAT} was updated successfully.", Value = userCopy.ConvertUser() };
+
+            Tuple<string, string> varName = Tuple.Create("","");
+            if (userDto.Email != null) varName = Tuple.Create("Email", userDto.Email);
+            if (userDto.VAT != null) varName = Tuple.Create("VAT", userDto.VAT);
+            return new ResponseApi<UserDTO> { Status = 0, Description = $"User with {varName.Item1} {varName.Item2} was updated successfully.", Value = userCopy.ConvertUser() };
         }
         catch (Exception e)
         {
