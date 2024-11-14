@@ -15,4 +15,8 @@
     <Folder Include="Views\User\Repair\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TechnicoWebAPI\TechnicoWebAPI.csproj" />
+  </ItemGroup>
+
 </Project>
