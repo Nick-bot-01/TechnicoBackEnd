@@ -4,6 +4,12 @@ using TechnicoBackEnd.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Fixes lowercase enforced to Json Deserialize default way
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
