@@ -7,7 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechnicoBackEnd", "Technico
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechnicoWebAPI", "TechnicoWebAPI\TechnicoWebAPI.csproj", "{3AE67F34-07B9-42A2-A616-C97A4E830E78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnicoMVC", "TechnicoMVC\TechnicoMVC.csproj", "{3476A786-63EE-4598-A331-1AF2929C3E26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechnicoMVC", "TechnicoMVC\TechnicoMVC.csproj", "{3476A786-63EE-4598-A331-1AF2929C3E26}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3AE67F34-07B9-42A2-A616-C97A4E830E78} = {3AE67F34-07B9-42A2-A616-C97A4E830E78}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
