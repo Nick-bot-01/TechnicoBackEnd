@@ -1,8 +1,20 @@
-﻿@{
+﻿@using TechnicoBackEnd.Models;
+@using TechnicoBackEnd.Responses;
+@using TechnicoBackEnd.DTOs;
+@model ResponseApi<UserDTO>;
+
+@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (Model.Value != null)
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome @Model.Value?.Name</h1>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Invalid ID</h1>
+    </div>
+}
