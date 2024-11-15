@@ -1,0 +1,10 @@
+﻿@using TechnicoBackEnd.Auth
+@using TechnicoBackEnd.DTOs;
+@{
+    ViewData["Title"] = "Admin Home Page";
+}
+
+<h1>WELCOME ADMIN @LoginState.activeUser?.Name </h1>
+<br>
+<a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
+
