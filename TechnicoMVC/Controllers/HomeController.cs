@@ -113,6 +113,14 @@ public class HomeController : Controller{
 
     public IActionResult Login() => View(_activeUser);
 
+    public IActionResult Logout() {
+        LoginState.UserId = -1;
+        LoginState.IsLoggedIn = false;
+        LoginState.IsAdmin = false;
+        _activeUser = null;
+        return RedirectToAction("Index2");
+    }
+
     public IActionResult Index2()
     {
         if (LoginState.UserId == -1) return RedirectToAction("Login"); // Redirect to Login if not logged in

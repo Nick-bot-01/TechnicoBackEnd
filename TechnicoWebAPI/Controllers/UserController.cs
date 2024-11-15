@@ -23,10 +23,6 @@ public class UserController : ControllerBase{
 
     [HttpPost("logout")]
     public ResponseApi<UserDTO> Logout(){
-        //LoginState.UserId = -1;
-        //LoginState.IsLoggedIn = false;
-        //LoginState.IsAdmin = false;
-
         return new ResponseApi<UserDTO>() { Status = 1 , Description = "Log out!"};
     }
 
