@@ -40,7 +40,6 @@ public class LoginController : Controller{
         return RedirectToAction("RegisterPage");
     }
 
-
     [HttpPost]
     public async Task<IActionResult> LoginRequest(LoginRequest loginRequest){
         string url = $"{sourcePrefix}User/login";
@@ -59,7 +58,7 @@ public class LoginController : Controller{
                 }
                 else
                 {
-                    return RedirectToAction("UserHome");
+                    return RedirectToAction("UserHome", "UserController");
                 }    
             }
         }
@@ -72,7 +71,7 @@ public class LoginController : Controller{
     public ActionResult LandingPage(){
         if (LoginState.IsLoggedIn){
             if(LoginState.IsAdmin) return RedirectToAction("AdminHome");
-            else return RedirectToAction("UserHome");
+            else return RedirectToAction("UserHome", "UserController");
         }
         return View(new ActiveUserViewModel(){ Name = LoginState.activeUser?.Name });
     }
@@ -90,13 +89,7 @@ public class LoginController : Controller{
         else return RedirectToAction("LandingPage");
     }
 
-    //This should be in the respective controler for UserController
-    public ActionResult UserHome(){
-        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
 
-        if (!LoginState.IsAdmin) return View();
-        else return RedirectToAction("LandingPage");
-    }
 
     //Frontend Callbacks
     public IActionResult Logout(){
