@@ -37,7 +37,7 @@ public class LoginController : Controller{
             LoginRequest postRegistrationLoginRequest = new LoginRequest() { Email = userWithRequiredFieldsDTO.Email, Password = userWithRequiredFieldsDTO.Password };
             return await LoginRequest(postRegistrationLoginRequest);
         }
-        return RedirectToAction("LandingPage");
+        return RedirectToAction("RegisterPage");
     }
 
 
@@ -78,7 +78,8 @@ public class LoginController : Controller{
     }
 
     public ActionResult RegisterPage(){
-        return View();
+        if(!LoginState.IsLoggedIn)return View();
+        else return RedirectToAction("LandingPage");
     }
 
     //This should be in the respective controler for AdminController
