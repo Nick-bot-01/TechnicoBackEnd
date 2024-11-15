@@ -355,7 +355,10 @@ public class RepairService : IRepairService
     public async Task<ResponseApi<RepairDeactivateRequestDTO>> DeleteRepair(RepairDeactivateRequestDTO repairDTO)
     {
         // Check if the repair exists in the db
-        var repair = await db.Repairs.FirstOrDefaultAsync(r => r.Id == repairDTO.RepairId);
+        var repair = await db.Repairs
+            .Include(r => r.Property)
+            .ThenInclude(p => p.Owner)
+            .FirstOrDefaultAsync(r => r.Id == repairDTO.RepairId);
 
         if (repair == null)
         {
@@ -368,7 +371,7 @@ public class RepairService : IRepairService
             db.Repairs.Remove(repair);
             await db.SaveChangesAsync();
 
-            return new ResponseApi<RepairDeactivateRequestDTO> { Status = 0, Description = $"Repair with ID {repair.Id} was deleted successfully." };
+            return new ResponseApi<RepairDeactivateRequestDTO> { Status = 0, Description = $"Repair with ID {repair.Id} was deleted successfully.", Value = new RepairDeactivateRequestDTO { OwnerVAT = repair.Property.Owner.VATNum } };
         }
         catch (Exception ex)
         {

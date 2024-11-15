@@ -39,6 +39,7 @@ public static class DTOConverters
     {
         return new RepairDTO()
         {
+            Id = repair.Id,
             ScheduledDate = repair.ScheduledDate,
             RType = repair.RType,
             Description = repair.Description,
@@ -52,6 +53,7 @@ public static class DTOConverters
     {
         return new RepairAdminCreateUpdateDTO()
         {
+            Id = repair.Id,
             ScheduledDate = repair.ScheduledDate,
             RType = repair.RType,
             Description = repair.Description,

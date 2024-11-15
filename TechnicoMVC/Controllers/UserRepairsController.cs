@@ -54,148 +54,55 @@ namespace TechnicoMVC.Controllers
 
 
 
+        public async Task<ResponseApi<RepairDeactivateRequestDTO>?> RemoveRepairToRedirectController(int repairId)
+        {
+            string url = $"{sourcePrefix}repair/delete";
 
+            // Create the DTO object with the RepairId
+            var repairDTO = new RepairDeactivateRequestDTO { RepairId = repairId };
 
+            // Create the DELETE request with the DTO in the body
+            var request = new HttpRequestMessage(HttpMethod.Delete, url)
+            {
+                Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(repairDTO), System.Text.Encoding.UTF8, "application/json")
+            };
 
+            var response = await client.SendAsync(request);
 
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
 
+                ResponseApi<RepairDeactivateRequestDTO>? removedRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDeactivateRequestDTO>>(responseBody);
+                return removedRepair;
+            }
 
+            // Log error details if the request fails
+            var errorResponse = await response.Content.ReadAsStringAsync();
+            return null;
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> RemoveRepairCallback(int repairId)
+        {
+            if (repairId <= 0)
+            {
+                return RedirectToAction("GetUserRepairs");
+            }
 
+            var deletedRepair = await RemoveRepairToRedirectController(repairId);
 
-        //// GET: UserRepairs
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.Repairs.ToListAsync());
-        //}
+            if (deletedRepair != null)
+            {
+                _logger.LogInformation("Successfully deleted repair with ID: {RepairId}", repairId);
+            }
+            else
+            {
+                _logger.LogError("Deletion failed for repair ID: {RepairId}", repairId);
+                return View("Error");
+            }
 
-        //// GET: UserRepairs/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var repair = await _context.Repairs
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (repair == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(repair);
-        //}
-
-        //// GET: UserRepairs/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: UserRepairs/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,ScheduledDate,RType,Description,Status,Cost,IsActive")] Repair repair)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(repair);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(repair);
-        //}
-
-        //// GET: UserRepairs/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var repair = await _context.Repairs.FindAsync(id);
-        //    if (repair == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(repair);
-        //}
-
-        //// POST: UserRepairs/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,ScheduledDate,RType,Description,Status,Cost,IsActive")] Repair repair)
-        //{
-        //    if (id != repair.Id)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(repair);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!RepairExists(repair.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(repair);
-        //}
-
-        //// GET: UserRepairs/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var repair = await _context.Repairs
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (repair == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(repair);
-        //}
-
-        //// POST: UserRepairs/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var repair = await _context.Repairs.FindAsync(id);
-        //    if (repair != null)
-        //    {
-        //        _context.Repairs.Remove(repair);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //private bool RepairExists(int id)
-        //{
-        //    return _context.Repairs.Any(e => e.Id == id);
-        //}
+            return RedirectToAction("GetUserRepairs", new { VATNum = deletedRepair?.Value?.OwnerVAT });
+        }
     }
 }
