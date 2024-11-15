@@ -13,5 +13,6 @@ namespace TechnicoBackEnd.Services
         Task<ResponseApi<UserDTO>> Search(string? vat, string? email);
         Task<ResponseApi<UserDTO>> Update(UserWithRequiredFieldsDTO userDto);
         Task<ResponseApi<UserDTO>> Authenticate(string email, string password);
+        Task<ResponseApi<bool>> IsAdmin(string email);
     }
 }

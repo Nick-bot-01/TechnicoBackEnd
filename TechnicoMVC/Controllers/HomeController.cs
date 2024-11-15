@@ -11,7 +11,7 @@ using TechnicoBackEnd.Auth;
 namespace TechnicoMVC.Controllers;
 
 public class HomeController : Controller{
-    private static UserDTO? _activeUser = null; 
+    //private static UserDTO? _activeUser = null; 
 
     private readonly ILogger<HomeController> _logger;
     private readonly string sourcePrefix = "https://localhost:7017/api/User/"; //for other controller change to Repair / Property etc.
@@ -29,6 +29,17 @@ public class HomeController : Controller{
         var responseBody = await response.Content.ReadAsStringAsync();
         ResponseApi<UserDTO>? targetUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
         return targetUser;
+    }
+
+    [HttpPost]
+    public async Task<ResponseApi<bool>?> IsAdmin(string? email)
+    {
+        string url = $"{sourcePrefix}checkAdmin";
+        var response = await client.PostAsJsonAsync(url, email);
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<bool>? isAdminResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<bool>>(responseBody);
+        return isAdminResponse;
     }
 
     [HttpPost]
@@ -103,21 +114,26 @@ public class HomeController : Controller{
             ResponseApi<UserDTO>? responseUserDTO = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
             if (responseUserDTO != null && responseUserDTO.Value!= null){
                 LoginState.UserId = responseUserDTO.Value.Id;
-                _activeUser = responseUserDTO.Value;
+                LoginState.activeUser = responseUserDTO.Value;
+                LoginState.IsLoggedIn = true;
+                var result = await IsAdmin(responseUserDTO.Value.Email);
+                LoginState.IsAdmin = (result != null) ? result.Value : false;
                 return RedirectToAction("Index2");
             }
         }
         ModelState.AddModelError(string.Empty, "Invalid login credentials");
-        return View();
+        return RedirectToAction("Login");
     }
 
-    public IActionResult Login() => View(_activeUser);
+
+
+    public IActionResult Login() => View();
 
     public IActionResult Logout() {
         LoginState.UserId = -1;
         LoginState.IsLoggedIn = false;
         LoginState.IsAdmin = false;
-        _activeUser = null;
+        LoginState.activeUser = null;
         return RedirectToAction("Index2");
     }
 
@@ -126,7 +142,7 @@ public class HomeController : Controller{
         if (LoginState.UserId == -1) return RedirectToAction("Login"); // Redirect to Login if not logged in
 
         if (LoginState.IsAdmin) ViewBag.Message = "Welcome, Admin! You have access to admin-specific content.";
-        else ViewBag.Message = $"Welcome, {_activeUser?.Name}! You have access to regular user content.";
+        else ViewBag.Message = $"Welcome, {LoginState.activeUser?.Name}! You have access to regular user content.";
 
         return View();
     }

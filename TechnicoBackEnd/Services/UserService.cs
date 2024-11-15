@@ -22,6 +22,12 @@ public class UserService : IUserService{
         return response;
     }
 
+    public async Task<ResponseApi<bool>> IsAdmin(string email)
+    {
+        var result = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        ResponseApi<bool> response = new() { Status = (result != null) ? 0 : 1, Description = (result != null) ? "User Found" : "User Not Found", Value = (result?.Type == UserType.Admin)};
+        return response;
+    }
 
     public async Task<ResponseApi<UserDTO>> DeleteHard(string? vat){
         UserValidation userValidation = new();

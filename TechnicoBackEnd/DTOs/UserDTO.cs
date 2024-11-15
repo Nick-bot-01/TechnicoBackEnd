@@ -17,5 +17,4 @@ public class UserDTO{
 
     public string? Email { get; set; }
 
-    //public UserType? PType { get; set; } //TODO THINK ABOUT IT
 }

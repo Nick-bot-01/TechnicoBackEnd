@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
@@ -19,6 +20,13 @@ public class UserController : ControllerBase{
     public async Task<ResponseApi<UserDTO>> Login([FromBody] LoginRequest loginRequest){
         var user = await _userService.Authenticate(loginRequest.Email, loginRequest.Password);
         return user;
+    }
+
+    [HttpPost("checkAdmin")]
+    public async Task<ResponseApi<bool>> IsAdmin([FromBody] string email)
+    {
+        var result = await _userService.IsAdmin(email);
+        return result;
     }
 
     [HttpPost("logout")]

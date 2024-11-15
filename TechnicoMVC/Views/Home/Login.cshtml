@@ -1,10 +1,11 @@
-﻿@using TechnicoBackEnd.DTOs;
+﻿@using TechnicoBackEnd.Auth
+@using TechnicoBackEnd.DTOs;
 @{
     ViewData["Title"] = "Login";
 }
-@model UserDTO;
+@* @model UserDTO; *@
 
-@if (Model == null)
+@if (!LoginState.IsLoggedIn)
 {
   
     <h2>Login </h2>
@@ -27,6 +28,6 @@
 else
 {
     <div class="error-message">
-        Welcome @Model.Name !
+        Welcome @LoginState.activeUser?.Name !
     </div>
 }
