@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
 using TechnicoBackEnd.Services;
@@ -21,9 +23,9 @@ public class UserController : ControllerBase{
 
     [HttpPost("logout")]
     public ResponseApi<UserDTO> Logout(){
-        LoginState.UserId = -1;
-        LoginState.IsLoggedIn = false;
-        LoginState.IsAdmin = false;
+        //LoginState.UserId = -1;
+        //LoginState.IsLoggedIn = false;
+        //LoginState.IsAdmin = false;
 
         return new ResponseApi<UserDTO>() { Status = 1 , Description = "Log out!"};
     }
