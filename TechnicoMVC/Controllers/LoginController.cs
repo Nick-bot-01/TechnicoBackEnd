@@ -49,8 +49,8 @@ public class LoginController : Controller{
                 
             }
         }
-        ModelState.AddModelError(string.Empty, "Invalid login credentials");
-        return RedirectToAction("Login");
+        //ModelState.AddModelError(string.Empty, "Invalid login credentials");
+        return RedirectToAction("LandingPage");
     }
 
 
@@ -64,15 +64,19 @@ public class LoginController : Controller{
     }
 
     //This should be in the respective controler for AdminController
-    public ActionResult AdminHome()
-    {
-        return View();
+    public ActionResult AdminHome(){
+        if(!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+
+        if (LoginState.IsAdmin) return View();
+        else return RedirectToAction("LandingPage");
     }
 
     //This should be in the respective controler for UserController
-    public ActionResult UserHome()
-    {
-        return View();
+    public ActionResult UserHome(){
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+
+        if (!LoginState.IsAdmin) return View();
+        else return RedirectToAction("LandingPage");
     }
 
     //Frontend Callbacks
