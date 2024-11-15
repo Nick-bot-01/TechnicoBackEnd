@@ -5,6 +5,8 @@ using TechnicoWebAPI;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
+using Microsoft.AspNetCore.Identity.Data;
+using TechnicoBackEnd.Auth;
 
 namespace TechnicoMVC.Controllers;
 
