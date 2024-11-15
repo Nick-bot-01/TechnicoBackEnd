@@ -81,15 +81,6 @@ public class RepairController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("repairs/get_all_daily")]
-    public async Task<ActionResult<List<RepairDTO>>> GetAllRepairsDaily()
-    {
-        var response = await _repairService.GetAllOwnerRepairsByDateOrRangeOfDates(DateTime.Today, DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59));
-        if (response == null) { return NotFound(); }
-
-        return Ok(response);
-    }
-
     [HttpGet("repairs/get_by_repair_id/{id}")]
     public async Task<ActionResult<RepairDTO>> GetRepairByID([FromRoute] int id)
     {
