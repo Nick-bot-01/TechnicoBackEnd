@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
+using TechnicoMVC.ViewModels;
 
 namespace TechnicoMVC.Controllers;
 
@@ -60,14 +61,14 @@ public class LoginController : Controller{
             if(LoginState.IsAdmin) return RedirectToAction("AdminHome");
             else return RedirectToAction("UserHome");
         }
-        return View();
+        return View(new ActiveUserViewModel(){ Name = LoginState.activeUser?.Name });
     }
 
     //This should be in the respective controler for AdminController
     public ActionResult AdminHome(){
         if(!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
 
-        if (LoginState.IsAdmin) return View();
+        if (LoginState.IsAdmin) return View(new ActiveUserViewModel() { Name = LoginState.activeUser?.Name });
         else return RedirectToAction("LandingPage");
     }
 
