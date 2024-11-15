@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
-using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Responses;
 using TechnicoBackEnd.Services;
 

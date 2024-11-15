@@ -5,9 +5,6 @@ using TechnicoWebAPI;
 using TechnicoBackEnd.Models;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
-using TechnicoBackEnd.Auth;
-using Microsoft.AspNetCore.Identity.Data;
-using TechnicoBackEnd.Services;
 
 namespace TechnicoMVC.Controllers;
 
@@ -19,7 +16,6 @@ public class HomeController : Controller{
     private HttpClient client = new HttpClient();
 
     public HomeController(ILogger<HomeController> logger)=> _logger = logger;
-
 
     //Test only
     [HttpGet]
@@ -53,7 +49,8 @@ public class HomeController : Controller{
     }
 
     [HttpDelete]
-    public async Task<ResponseApi<UserDTO>?> RemoveUserToRedirectController(string? vat){
+    public async Task<ResponseApi<UserDTO>?> RemoveUserToRedirectController(string? vat)
+    {
         string url = $"{sourcePrefix}delete_user_soft/{vat}";
         var response = await client.DeleteAsync(url);
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -74,13 +71,15 @@ public class HomeController : Controller{
     }
 
     //Callback from Update User
-    public async Task<IActionResult> UpdateUserCallback(UserWithRequiredFieldsDTO pendingCreationUser){
+    public async Task<IActionResult> UpdateUserCallback(UserWithRequiredFieldsDTO pendingCreationUser)
+    {
         ResponseApi<UserDTO>? createdUSer = await UpdateUserToRedirectController(pendingCreationUser);
         return RedirectToAction("Index");
     }
 
-    public async Task<IActionResult> RemoveUserCallback(string? vat){
-        if(string.IsNullOrEmpty(vat)) return RedirectToAction("Index"); //failsafe temp
+    public async Task<IActionResult> RemoveUserCallback(string? vat)
+    {
+        if (string.IsNullOrEmpty(vat)) return RedirectToAction("Index"); //failsafe temp
         ResponseApi<UserDTO>? deletedUser = await RemoveUserToRedirectController(vat);
         return RedirectToAction("Index");
     }
