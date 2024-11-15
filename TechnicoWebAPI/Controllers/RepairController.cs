@@ -17,7 +17,7 @@ public class RepairController : ControllerBase
         _repairService = repairService;
     }
 
-    [HttpPost("repair/user")]
+    [HttpPost("user/create_repair")]
     public async Task<ResponseApi<RepairDTO>> CreateRepairUser([FromBody] RepairDTO repairDTO)
     {
         return await _repairService.CreateRepairUser(repairDTO);
