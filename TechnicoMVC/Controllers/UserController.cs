@@ -36,6 +36,24 @@ public class UserController : Controller{
         else return RedirectToAction("LandingPage");
     }
 
+    public IActionResult UserDetails(){
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+
+        if (!LoginState.IsAdmin){
+            return View();
+        }
+        else return RedirectToAction("LandingPage");
+    }
+
+    public IActionResult UserUpdate(){
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+
+        if (!LoginState.IsAdmin)
+        {
+            return View();
+        }
+        else return RedirectToAction("LandingPage");
+    }
 
 
     //View Callbacks
