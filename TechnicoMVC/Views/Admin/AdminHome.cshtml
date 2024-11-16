@@ -1,0 +1,39 @@
+﻿@using TechnicoBackEnd.Auth
+@using TechnicoBackEnd.DTOs;
+@{
+    ViewData["Title"] = "Admin Home Page";
+}
+@model List<RepairDTO>
+<h1>Welcome Admin @LoginState.activeUser?.Name </h1>
+<br>
+
+@foreach(var repair in Model)
+{
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">@repair.RType.ToString()</h5>
+            <p class="card-text">@repair.Description</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">@repair.PropertyIdNum</li>
+            <li class="list-group-item">@repair.Cost</li>
+            <li class="list-group-item">@repair.ScheduledDate</li>
+        </ul>
+        <div class="card-body">
+            <a href="#" class="card-link">Update Repair</a>
+            <a href="#" class="card-link">Delete Repair</a>
+        </div>
+    </div>
+}
+
+@* <button asp-area="" asp-controller="Admin" asp-action="OwnersAndProperties" type="button" class="btn btn-primary btn-lg">Owners And Properties</button> *@
+
+<div class="container">
+    <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="OwnersAndProperties">Owners And Properties</a>
+</div>
+
+<div class="container">
+    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">[Logout]</a>
+</div>
+
+
