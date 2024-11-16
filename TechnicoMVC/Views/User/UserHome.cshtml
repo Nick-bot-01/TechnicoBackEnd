@@ -35,14 +35,14 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id=@headingIDs[i]>
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=#@collapseIDs[i] aria-expanded="false" aria-controls=@collapseIDs[i]>
-                    <strong>@repairDTOs[i].RType.ToString()</strong> at <strong>@repairDTOs[i].ScheduledDate.ToString()</strong>
+                    <div>Type: <strong> @repairDTOs[i].RType.ToString() </strong> at Date: <strong> @repairDTOs[i].ScheduledDate.ToString() </strong></div>
                 </button>
             </h2>
             <div id=@collapseIDs[i] class="accordion-collapse collapse" aria-labelledby=@headingIDs[i] data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <strong>Property Reference ID:</strong> <i>@repairDTOs[i].Id</i><br>
-                    <strong>Description: </strong><i>@repairDTOs[i].Description </i><br>
-                    <strong>Cost: </strong><i> @repairDTOs[i].Cost</i><br>
+                    <strong>Property Reference ID: </strong> <i> @repairDTOs[i].Id </i><br>
+                    <strong>Description: </strong><i> @repairDTOs[i].Description </i><br>
+                    <strong>Cost: </strong><i> @repairDTOs[i].Cost </i><br>
                 </div>
             </div>
         </div>
