@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
+using TechnicoBackEnd.Models;
 using TechnicoBackEnd.Responses;
 
 namespace TechnicoMVC.Controllers;
@@ -28,7 +29,6 @@ public class UserController : Controller{
         var response = await client.PutAsJsonAsync(url, user);
         var responseBody = await response.Content.ReadAsStringAsync();
         ResponseApi<UserDTO>? targetUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
-        Console.WriteLine($"Status: {targetUser?.Status} Description: {targetUser?.Description}");
         return targetUser;
     }
 
@@ -59,11 +59,16 @@ public class UserController : Controller{
 
         if (!LoginState.IsAdmin)
         {
-            return View();
+            return View(LoginState.activeUser);
         }
         else return RedirectToAction("LandingPage");
     }
 
 
     //View Callbacks
+    [HttpPost]
+    public async Task<IActionResult> UserUpdateButtonCallback(UserDTO userDTO){
+        var response = await UpdateUserToRedirectController(userDTO);
+        return RedirectToAction("UserHome");
+    }
 }

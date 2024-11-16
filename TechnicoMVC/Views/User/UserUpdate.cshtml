@@ -25,41 +25,61 @@
         }
     </style>
 </head>
-
-@{
-    var currentUser = LoginState.activeUser;
-}
+@model UserDTO
 
 <div class="col">
     <div><h1><b>Update Personal Details</b></h1></div>
 </div>
 
 
-<form>
 <div class="card" style="width: 18rem; height:fit-content">
     <img class="card-img-top" src="~/images/user.jpg" alt="Card image cap">
     <div class="card-body">
         <h5 class="card-title">User Details</h5>
     </div>
-    <div class="form-group">
-        <label for="exampleFormControlInput1">Email: </label>
-        <input type="email" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder=@currentUser?.Email disabled>
-        <label for="exampleFormControlInput1">VAT: </label>
-        <input type="email" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder=@currentUser?.VAT disabled>
-        <label for="exampleFormControlInput1">Name: </label>
-        <input type="email" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder=@currentUser?.Name>
-        <label for="exampleFormControlInput1">Surname: </label>
-        <input type="email" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder=@currentUser?.Surname>
-        <label for="exampleFormControlInput1">Phone: </label>
-        <input type="email" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder=@currentUser?.Phone>
-        <label for="exampleFormControlInput1">Address: </label>
-        <input type="email" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder=@currentUser?.Address>
-    </div>
-    <div class="card-body">
-        <a class="card-link" asp-area="" asp-controller="User" asp-action="UserUpdate">Save Changes</a>
-        <a class="card-link" asp-area="" asp-controller="User" asp-action="UserUpdate">Delete Account</a>
-    </div>
+    @using (Html.BeginForm("UserUpdateButtonCallback", "User", FormMethod.Post))
+    {
+        <div class="form-group">
+            <div>
+                <label for="Email"> Email: </label>
+                @Html.TextBoxFor(m => m.Email, new { @disabled = "disabled", @Value = Model.Email })
+                @Html.HiddenFor(m => m.Email)
+            </div>
+
+            <div>
+                <label for="VAT"> VAT: </label>
+                @Html.TextBoxFor(m => m.VAT, new { @disabled = "disabled", @Value = Model.VAT })
+                @Html.HiddenFor(m => m.VAT)
+            </div>
+
+            <div>
+                <label for="Name"> Name: </label>
+                @Html.TextBoxFor(m => m.Name, new { @Value = Model.Name })
+            </div>
+
+            <div>
+                <label for="Surname"> Surname: </label>
+                @Html.TextBoxFor(m => m.Surname, new { @Value = Model.Surname })
+            </div>
+
+            <div>
+                <label for="Phone"> Phone: </label>
+                @Html.TextBoxFor(m => m.Phone, new { @Value = Model.Phone })
+            </div>
+
+            <div>
+                <label for="Address"> Address: </label>
+                @Html.TextBoxFor(m => m.Address, new { @Value = Model.Address })
+            </div>
+            <div class="card-body">
+                <button type="submit" class="card-link">Save Changes</button>
+                <button type="button" class="card-link" asp-area="" asp-controller="User" asp-action="#">Delete Account</button>
+            </div>
+            
+        </div>
+
+    }
+
 </div>
-</form>
 
 
