@@ -38,7 +38,7 @@ public class UserController : ControllerBase{
     public async Task<ResponseApi<List<UserDTO>>> GetUsers() => await _userService.GetAllUsers();
 
     [HttpGet("users/{id}")]
-    public async Task<ResponseApi<UserDTO>> GetCustomer([FromRoute] int id) => await _userService.GetUserDetailsById(id);
+    public async Task<ResponseApi<UserDTO>> GetUser([FromRoute] int id) => await _userService.GetUserDetailsById(id);
 
     [HttpPost("register_user")]
     public async Task<ResponseApi<UserDTO>> RegisterUser([FromBody] UserWithRequiredFieldsDTO user) => await _userService.Register(user);
