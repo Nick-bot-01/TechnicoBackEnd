@@ -18,7 +18,8 @@ public static class DTOConverters
             PIN = property.PIN,
             Address = property.Address,
             ConstructionYear = property.ConstructionYear,
-            PType = property.PType
+            PType = property.PType,
+            OwnerId = property.Owner == null ? null : property.Owner.Id
         };
     }
 
