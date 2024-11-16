@@ -61,8 +61,7 @@ public class RepairController : ControllerBase
     }
 
     [HttpGet("repairs/get_all_by_vat/{VATNum}")]
-    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByVAT([FromRoute] string? VATNum)
-    {
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByVAT([FromRoute] string? VATNum){
         var response = await _repairService.GetAllOwnerRepairsByVAT(VATNum);
         return response;
     }
