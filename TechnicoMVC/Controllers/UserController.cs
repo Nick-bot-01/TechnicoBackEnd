@@ -23,8 +23,7 @@ public class UserController : Controller{
     }
 
     [HttpPut]
-    public async Task<ResponseApi<UserDTO>?> UpdateUserToRedirectController(UserWithRequiredFieldsDTO user)
-    {
+    public async Task<ResponseApi<UserDTO>?> UpdateUserToRedirectController(UserDTO user){
         string url = $"{sourcePrefix}User/update_user";
         var response = await client.PutAsJsonAsync(url, user);
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -32,7 +31,6 @@ public class UserController : Controller{
         Console.WriteLine($"Status: {targetUser?.Status} Description: {targetUser?.Description}");
         return targetUser;
     }
-
 
 
 
