@@ -129,7 +129,7 @@ public class UserService : IUserService{
         return new ResponseApi<List<UserDTO>> { Status = 0, Description = "", Value = users.Select(user => user.ConvertUser()).ToList() };
     }
 
-    public async Task<ResponseApi<UserDTO>> Update(UserWithRequiredFieldsDTO userDto)
+    public async Task<ResponseApi<UserDTO>> Update(UserDTO userDto)
     {
         //Input argument check
         if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User update failed. No user input was given" };
@@ -148,8 +148,8 @@ public class UserService : IUserService{
         existingUserQuery.Surname = (uservalidation.IsAlphabeticalValid(userDto.Surname)) ? userDto.Surname! : existingUserQuery.Surname;
         existingUserQuery.Address = (string.IsNullOrEmpty(userDto.Address)) ? existingUserQuery.Address : userDto.Address!;
         existingUserQuery.Phone = (uservalidation.IsNumericalValid(userDto.Phone)) ? userDto.Phone! : existingUserQuery.Phone;
-        existingUserQuery.Password = (string.IsNullOrEmpty(userDto.Password)) ? existingUserQuery.Password : userDto.Password!;
-
+        //existingUserQuery.Password = (string.IsNullOrEmpty(userDto.Password)) ? existingUserQuery.Password : userDto.Password!; 
+        //Decided to not allow changing the password.
         try
         {
             await _dbContext.SaveChangesAsync();

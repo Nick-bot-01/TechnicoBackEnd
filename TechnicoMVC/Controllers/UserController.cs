@@ -22,6 +22,17 @@ public class UserController : Controller{
         return userRepairResponse;
     }
 
+    [HttpPut]
+    public async Task<ResponseApi<UserDTO>?> UpdateUserToRedirectController(UserWithRequiredFieldsDTO user)
+    {
+        string url = $"{sourcePrefix}User/update_user";
+        var response = await client.PutAsJsonAsync(url, user);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<UserDTO>? targetUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
+        Console.WriteLine($"Status: {targetUser?.Status} Description: {targetUser?.Description}");
+        return targetUser;
+    }
+
 
 
 
