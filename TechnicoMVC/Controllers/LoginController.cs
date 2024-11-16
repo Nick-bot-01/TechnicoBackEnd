@@ -58,7 +58,7 @@ public class LoginController : Controller{
                 }
                 else
                 {
-                    return RedirectToAction("UserHome", "UserController");
+                    return RedirectToAction("UserHome", "User");
                 }    
             }
         }
@@ -83,7 +83,7 @@ public class LoginController : Controller{
     public ActionResult LandingPage(){
         if (LoginState.IsLoggedIn){
             if(LoginState.IsAdmin) return RedirectToAction("AdminHome");
-            else return RedirectToAction("UserHome", "UserController");
+            else return RedirectToAction("UserHome", "User");
         }
         return View(new ActiveUserViewModel(){ Name = LoginState.activeUser?.Name });
     }
