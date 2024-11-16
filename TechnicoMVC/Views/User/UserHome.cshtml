@@ -1,0 +1,55 @@
+﻿@using TechnicoBackEnd.Auth
+@using TechnicoBackEnd.DTOs;
+@using TechnicoBackEnd.Responses;
+@{
+    ViewData["Title"] = "User Home Page";
+}
+@model ResponseApi<List<RepairDTO>>
+
+
+@{
+    //Page Initialization
+    int entriesCount = 0;
+    List<string> headingIDs = new();
+    List<string> collapseIDs = new();
+    List<RepairDTO> repairDTOs = new();
+
+    if (Model != null && Model.Value != null)
+    {
+        for (int i = 0; i < Model.Value.Count; i++)
+        {
+            headingIDs.Add($"heading{i}");
+            collapseIDs.Add($"collapse{i}");
+            repairDTOs.Add(Model.Value[i]);
+        }
+        entriesCount = Model.Value.Count;
+    }
+}
+
+<div><h1><b>HomePage. Hello @LoginState.activeUser?.Name</b></h1></div>
+<br>
+
+<div><h1><b>Upcoming Repairs</b></h1></div>
+<div class="accordion" id="accordionExample">
+    @for (int i = 0; i < entriesCount; i++){        
+        <div class="accordion-item">
+            <h2 class="accordion-header" id=@headingIDs[i]>
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=#@collapseIDs[i] aria-expanded="false" aria-controls=@collapseIDs[i]>
+                    <div>Type: <strong> @repairDTOs[i].RType.ToString() </strong> at Date: <strong> @repairDTOs[i].ScheduledDate.ToString() </strong></div>
+                </button>
+            </h2>
+            <div id=@collapseIDs[i] class="accordion-collapse collapse" aria-labelledby=@headingIDs[i] data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <strong>Property Reference ID: </strong> <i> @repairDTOs[i].Id </i><br>
+                    <strong>Description: </strong><i> @repairDTOs[i].Description </i><br>
+                    <strong>Cost: </strong><i> @repairDTOs[i].Cost </i><br>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- The section below might be moved to the nav bar of the web app to enable when logged in and disable when not-->
+<div class="container">
+    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">[Logout]</a>
+</div>

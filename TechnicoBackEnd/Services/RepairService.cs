@@ -128,7 +128,7 @@ public class RepairService : IRepairService
     public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByVAT(string? VATNum)
     {
         if (string.IsNullOrWhiteSpace(VATNum))
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The VAT Number you entered is not valid. " };
+            return new ResponseApi<List<RepairDTO>> { Value = new(), Status = 1, Description = $"The VAT Number you entered is not valid. " };
 
         var GetQuery = await db.Repairs
             .Include(r => r.Property)
@@ -139,7 +139,7 @@ public class RepairService : IRepairService
 
         if (GetQuery.Count == 0)
         {
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"There are no repairs for owner with VAT Number: {VATNum} in the database. " };
+            return new ResponseApi<List<RepairDTO>> { Value = new(), Status = 1, Description = $"There are no repairs for owner with VAT Number: {VATNum} in the database. " };
         }
 
         try
@@ -148,7 +148,7 @@ public class RepairService : IRepairService
         }
         catch (Exception e)
         {
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with VAT Number: {VATNum} failed to create due to a database error: '{e.Message}'" };
+            return new ResponseApi<List<RepairDTO>> { Value = new(), Status = 1, Description = $"The list of repairs with VAT Number: {VATNum} failed to create due to a database error: '{e.Message}'" };
         }
     }
 

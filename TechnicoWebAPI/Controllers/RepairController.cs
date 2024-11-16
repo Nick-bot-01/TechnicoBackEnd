@@ -54,22 +54,16 @@ public class RepairController : ControllerBase
     }
 
     [HttpGet("repairs/get_all_pending")]
-    public async Task<ActionResult<List<RepairDTO>>> GetAllPendingRepairs()
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllPendingRepairs()
     {
-
         var response = await _repairService.GetAllPendingRepairs();
-        if (response == null) { return NotFound(); }
-
-        return Ok(response);
+        return response;
     }
 
     [HttpGet("repairs/get_all_by_vat/{VATNum}")]
-    public async Task<ActionResult<List<RepairDTO>>> GetAllOwnerRepairsByVAT([FromRoute] string? VATNum)
-    {
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByVAT([FromRoute] string? VATNum){
         var response = await _repairService.GetAllOwnerRepairsByVAT(VATNum);
-        if (response == null) { return NotFound(); }
-
-        return Ok(response);
+        return response;
     }
 
     [HttpGet("repairs/get_all_by_id/{id}")]
@@ -82,21 +76,24 @@ public class RepairController : ControllerBase
     }
 
     [HttpGet("repairs/get_all_by_dates")]
-    public async Task<ActionResult<List<RepairDTO>>> GetAllOwnerRepairsByDateOrRangeOfDates(DateTime StartDate, DateTime EndDate)
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByDateOrRangeOfDates(DateTime StartDate, DateTime EndDate)
     {
         var response = await _repairService.GetAllOwnerRepairsByDateOrRangeOfDates(StartDate, EndDate);
-        if (response == null) { return NotFound(); }
+        return response;
+    }
 
-        return Ok(response);
+    [HttpGet("repairs/get_all_daily")]
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllRepairsDaily()
+    {
+        var response = await _repairService.GetAllOwnerRepairsByDateOrRangeOfDates(DateTime.Today, DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59));
+        return response;
     }
 
     [HttpGet("repairs/get_by_repair_id/{id}")]
-    public async Task<ActionResult<RepairDTO>> GetRepairByID([FromRoute] int id)
+    public async Task<ResponseApi<RepairDTO>> GetRepairByID([FromRoute] int id)
     {
         var response = await _repairService.GetRepairByID(id);
-        if (response == null) { return NotFound(); }
-
-        return Ok(response);
+        return response;
 
     }
 }

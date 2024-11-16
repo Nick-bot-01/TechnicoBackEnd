@@ -82,7 +82,7 @@ public class UserService : IUserService{
         if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. No user input was given" };
 
         //checks if user exists
-        var existingUserQuery = await _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT);
+        var existingUserQuery = await _dbContext.Users.FirstOrDefaultAsync(o => o.VATNum == userDto.VAT || o.Email == userDto.Email);
         if (!GenericValidation.IsNull(existingUserQuery).Value) 
             return new ResponseApi<UserDTO> { Status = 1, Description = $"User creation failed. User already exists" };
 
