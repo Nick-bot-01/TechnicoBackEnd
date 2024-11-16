@@ -27,7 +27,7 @@ public class RepairService : IRepairService
         // Check if the property intended for repair exists in the db
         var propertyItem = await db.Properties.FirstOrDefaultAsync(p => p.PIN == repairDto.PropertyIdNum);
         if (propertyItem == null)
-            return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair creation failed. Property with PIN {repairDto.PropertyIdNum} was not found." };
+            return new ResponseApi<RepairDTO> { Status = 2, Description = $"Repair creation failed. Property with PIN {repairDto.PropertyIdNum} was not found." };
 
         // Validate the user input values
         var validationResponse = validation.RepairValidatorUser(repairDto);
@@ -51,6 +51,7 @@ public class RepairService : IRepairService
         {
             await db.Repairs.AddAsync(repair);
             await db.SaveChangesAsync();
+            //repair.Property.Owner.Id = propertyItem.Owner.Id;
             return new ResponseApi<RepairDTO> { Status = 0, Description = $"Repair for property with PIN {repairDto.PropertyIdNum} was created successfully.", Value = repair.ConvertRepair() };
         }
         catch (Exception e)
@@ -148,6 +149,33 @@ public class RepairService : IRepairService
         catch (Exception e)
         {
             return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with VAT Number: {VATNum} failed to create due to a database error: '{e.Message}'" };
+        }
+    }
+
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByUID(int id)
+    {
+        if (id <= 0)
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The VAT Number you entered is not valid. " };
+
+        var GetQuery = await db.Repairs
+            .Include(r => r.Property)
+            .ThenInclude(r => r.Owner)
+            .Where(r => r.Property.Owner.Id == id)
+            .Select(r => r.ConvertRepair())
+            .ToListAsync();
+
+        if (GetQuery.Count == 0)
+        {
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"There are no repairs for owner with ID: {id} in the database. " };
+        }
+
+        try
+        {
+            return new ResponseApi<List<RepairDTO>> { Value = GetQuery, Status = 0, Description = $"List of repairs with ID: {id} created." };
+        }
+        catch (Exception e)
+        {
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with ID: {id} failed to create due to a database error: '{e.Message}'" };
         }
     }
 

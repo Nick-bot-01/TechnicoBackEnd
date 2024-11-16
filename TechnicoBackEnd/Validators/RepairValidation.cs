@@ -57,7 +57,7 @@ public class RepairValidation : IRepairValidation
         }
         if (scheduledDate < DateTime.Now.AddHours(1))
         {
-            return new ResponseApi<T> { Status = 1, Description = "ScheduledDate must be at least one hour in the future." };
+            return new ResponseApi<T> { Status = 2, Description = "ScheduledDate must be at least one hour in the future." };
         }
 
         // Validate RepairType

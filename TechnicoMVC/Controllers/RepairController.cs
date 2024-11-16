@@ -40,20 +40,5 @@ public class RepairController : Controller
         return View(new List<RepairDTO>());
     }
 
-    [HttpPost]
-    public async Task<ResponseApi<RepairDTO>?> CreateRepairToRedirectController(RepairDTO repair)
-    {
-        string url = $"{sourcePrefix}user/create_repair";
-        var response = await client.PostAsJsonAsync(url, repair);
-        var responseBody = await response.Content.ReadAsStringAsync();
-        ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
-        return targetRepair;
-    }
-
-    //Callback from Add Repair
-    public async Task<IActionResult> CreateRepairCallback(RepairDTO pendingCreationRepair)
-    {
-        ResponseApi<RepairDTO>? createdRepair = await CreateRepairToRedirectController(pendingCreationRepair);
-        return RedirectToAction("UserRepairs");
-    }
+    
 }

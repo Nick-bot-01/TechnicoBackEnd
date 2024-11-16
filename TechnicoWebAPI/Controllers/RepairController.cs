@@ -72,6 +72,15 @@ public class RepairController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("repairs/get_all_by_id/{id}")]
+    public async Task<ActionResult<List<RepairDTO>>> GetAllOwnerRepairsByUID([FromRoute] int id)
+    {
+        var response = await _repairService.GetAllOwnerRepairsByUID(id);
+        if (response == null) { return NotFound(); }
+
+        return Ok(response);
+    }
+
     [HttpGet("repairs/get_all_by_dates")]
     public async Task<ActionResult<List<RepairDTO>>> GetAllOwnerRepairsByDateOrRangeOfDates(DateTime StartDate, DateTime EndDate)
     {
