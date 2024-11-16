@@ -56,8 +56,8 @@
         <input type="email" class="form-control form-control-sm" id="exampleFormControlInput1" placeholder=@currentUser?.Address>
     </div>
     <div class="card-body">
-        <a href="#" class="card-link">Save Changes</a>
-        <a href="#" class="card-link">Delete Account</a>
+        <a class="card-link" asp-area="" asp-controller="User" asp-action="UserUpdate">Save Changes</a>
+        <a class="card-link" asp-area="" asp-controller="User" asp-action="UserUpdate">Delete Account</a>
     </div>
 </div>
 </form>
