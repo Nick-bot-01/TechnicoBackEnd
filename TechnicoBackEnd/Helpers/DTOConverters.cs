@@ -40,12 +40,14 @@ public static class DTOConverters
     {
         return new RepairDTO()
         {
+            Id = repair.Id,
             ScheduledDate = repair.ScheduledDate,
             RType = repair.RType,
             Description = repair.Description,
             Status = repair.Status,
             Cost = repair.Cost,
-            PropertyIdNum = repair.Property.PIN
+            PropertyIdNum = repair.Property.PIN,
+            OwnerVAT = repair.Owner?.VATNum
         };
     }
 
@@ -53,6 +55,7 @@ public static class DTOConverters
     {
         return new RepairAdminCreateUpdateDTO()
         {
+            Id = repair.Id,
             ScheduledDate = repair.ScheduledDate,
             RType = repair.RType,
             Description = repair.Description,

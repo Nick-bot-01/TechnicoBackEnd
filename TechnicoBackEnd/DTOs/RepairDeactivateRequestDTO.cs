@@ -9,4 +9,5 @@ namespace TechnicoBackEnd.DTOs;
 public class RepairDeactivateRequestDTO
 {
     public int RepairId { get; set; }
+    public string? OwnerVAT { get; set; }
 }

@@ -51,6 +51,7 @@ public class RepairService : IRepairService
         {
             await db.Repairs.AddAsync(repair);
             await db.SaveChangesAsync();
+            //repair.Property.Owner.Id = propertyItem.Owner.Id;
             return new ResponseApi<RepairDTO> { Status = 0, Description = $"Repair for property with PIN {repairDto.PropertyIdNum} was created successfully.", Value = repair.ConvertRepair() };
         }
         catch (Exception e)
@@ -127,7 +128,7 @@ public class RepairService : IRepairService
     public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByVAT(string? VATNum)
     {
         if (string.IsNullOrWhiteSpace(VATNum))
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The VAT Number you entered is not valid. " };
+            return new ResponseApi<List<RepairDTO>> { Value = new(), Status = 1, Description = $"The VAT Number you entered is not valid. " };
 
         var GetQuery = await db.Repairs
             .Include(r => r.Property)
@@ -138,7 +139,7 @@ public class RepairService : IRepairService
 
         if (GetQuery.Count == 0)
         {
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"There are no repairs for owner with VAT Number: {VATNum} in the database. " };
+            return new ResponseApi<List<RepairDTO>> { Value = new(), Status = 1, Description = $"There are no repairs for owner with VAT Number: {VATNum} in the database. " };
         }
 
         try
@@ -147,7 +148,34 @@ public class RepairService : IRepairService
         }
         catch (Exception e)
         {
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with VAT Number: {VATNum} failed to create due to a database error: '{e.Message}'" };
+            return new ResponseApi<List<RepairDTO>> { Value = new(), Status = 1, Description = $"The list of repairs with VAT Number: {VATNum} failed to create due to a database error: '{e.Message}'" };
+        }
+    }
+
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByUID(int id)
+    {
+        if (id <= 0)
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The VAT Number you entered is not valid. " };
+
+        var GetQuery = await db.Repairs
+            .Include(r => r.Property)
+            .ThenInclude(r => r.Owner)
+            .Where(r => r.Property.Owner.Id == id)
+            .Select(r => r.ConvertRepair())
+            .ToListAsync();
+
+        if (GetQuery.Count == 0)
+        {
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"There are no repairs for owner with ID: {id} in the database. " };
+        }
+
+        try
+        {
+            return new ResponseApi<List<RepairDTO>> { Value = GetQuery, Status = 0, Description = $"List of repairs with ID: {id} created." };
+        }
+        catch (Exception e)
+        {
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with ID: {id} failed to create due to a database error: '{e.Message}'" };
         }
     }
 
@@ -355,7 +383,10 @@ public class RepairService : IRepairService
     public async Task<ResponseApi<RepairDeactivateRequestDTO>> DeleteRepair(RepairDeactivateRequestDTO repairDTO)
     {
         // Check if the repair exists in the db
-        var repair = await db.Repairs.FirstOrDefaultAsync(r => r.Id == repairDTO.RepairId);
+        var repair = await db.Repairs
+            .Include(r => r.Property)
+            .ThenInclude(p => p.Owner)
+            .FirstOrDefaultAsync(r => r.Id == repairDTO.RepairId);
 
         if (repair == null)
         {
@@ -368,7 +399,7 @@ public class RepairService : IRepairService
             db.Repairs.Remove(repair);
             await db.SaveChangesAsync();
 
-            return new ResponseApi<RepairDeactivateRequestDTO> { Status = 0, Description = $"Repair with ID {repair.Id} was deleted successfully." };
+            return new ResponseApi<RepairDeactivateRequestDTO> { Status = 0, Description = $"Repair with ID {repair.Id} was deleted successfully.", Value = new RepairDeactivateRequestDTO { OwnerVAT = repair.Property.Owner.VATNum } };
         }
         catch (Exception ex)
         {

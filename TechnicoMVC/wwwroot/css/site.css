@@ -20,3 +20,46 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Custom card */
+.card-custom {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+}
+
+/* Custom button */
+.btn-custom-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.btn-custom-edit {
+    background-color: #6a1b9a;
+    border-color: #6a1b9a;
+    color: #fff;
+}
+
+.btn-custom-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: #fff;
+}
+
+.btn-custom-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+    .btn-custom-primary:hover, .btn-custom-info:hover, .btn-custom-danger:hover {
+        opacity: 0.9;
+    }
+
+.header-icon {
+    width: 40px; /* Adjust size as needed */
+    height: 40px;
+    margin-right: 10px; /* Space between icon and text */
+}
+
+

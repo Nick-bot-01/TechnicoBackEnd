@@ -1,0 +1,107 @@
+﻿@using TechnicoBackEnd.Auth
+@using TechnicoBackEnd.DTOs;
+@using TechnicoBackEnd.Responses;
+@{
+    ViewData["Title"] = "User Update Page";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexible Image Buttons with Bootstrap</title>
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Optional: Add custom hover effect if you want */
+        .image-button:hover img {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .image-button img {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            width: 100%; /* Make sure images scale to fit their container */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+</head>
+@model UserDTO
+
+@{
+    string deleteCallbackName = "DeleteUserButtonCallback";
+    string updateCallbackName = "UserUpdateButtonCallback";
+}
+
+<div class="col">
+    <div><h1><b>Update Personal Details</b></h1></div>
+</div>
+
+
+<div class="card" style="width: 18rem; height:fit-content">
+    <img class="card-img-top" src="~/images/user.jpg" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">User Details</h5>
+    </div>
+    @using (Html.BeginForm(updateCallbackName, "User", FormMethod.Post))
+    {
+        <div class="form-group">
+            <div>
+                <label for="Email"> Email: </label>
+                @Html.TextBoxFor(m => m.Email, new { @disabled = "disabled", @Value = Model.Email })
+                @Html.HiddenFor(m => m.Email)
+            </div>
+
+            <div>
+                <label for="VAT"> VAT: </label>
+                @Html.TextBoxFor(m => m.VAT, new { @disabled = "disabled", @Value = Model.VAT })
+                @Html.HiddenFor(m => m.VAT)
+            </div>
+
+            <div>
+                <label for="Name"> Name: </label>
+                @Html.TextBoxFor(m => m.Name, new { @Value = Model.Name })
+            </div>
+
+            <div>
+                <label for="Surname"> Surname: </label>
+                @Html.TextBoxFor(m => m.Surname, new { @Value = Model.Surname })
+            </div>
+
+            <div>
+                <label for="Phone"> Phone: </label>
+                @Html.TextBoxFor(m => m.Phone, new { @Value = Model.Phone })
+            </div>
+
+            <div>
+                <label for="Address"> Address: </label>
+                @Html.TextBoxFor(m => m.Address, new { @Value = Model.Address })
+            </div>
+            <div class="card-body">
+                <button type="submit" class="btn btn-secondary">Save Changes</button>
+
+                <!-- Delete Account -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Delete</button>
+            </div>
+            <!-- Soft Delete Window -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Warning</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            You are about to delete you account. This action cannot be reverted. Make sure this is correct before your proceed.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" formaction=@deleteCallbackName>Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
