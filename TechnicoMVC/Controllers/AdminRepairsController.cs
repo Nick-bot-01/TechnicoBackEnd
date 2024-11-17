@@ -199,29 +199,7 @@ public class AdminRepairsController : Controller
         return View();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
-
-
-
-    public async Task<IActionResult> Search([FromQuery] int? userId, [FromQuery]  DateOnly? startDate, [FromQuery] DateOnly? endDate)
+    public async Task<IActionResult> Search([FromQuery] int? userId, [FromQuery] DateOnly? startDate, [FromQuery] DateOnly? endDate)
     {
         string url = $"{sourcePrefix}repairs/search";
 
@@ -249,7 +227,7 @@ public class AdminRepairsController : Controller
 
             // Deserialize the response body to ResponseApi<List<RepairDTO>>
             var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<List<RepairDTO>>>(responseBody, options);
-            
+
             if (apiResponse?.Value != null)
             {
                 return View(apiResponse.Value);

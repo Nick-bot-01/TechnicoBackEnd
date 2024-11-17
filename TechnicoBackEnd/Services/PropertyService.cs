@@ -85,7 +85,7 @@ public class PropertyService : IPropertyService
             Value = properties
         };
     }
-    public async Task<ResponseApi<List<PropertyDTO>>> SearchProperties(string? pin = null, string? vat = null)
+    public async Task<ResponseApi<List<PropertyDTO>>> SearchProperties(string? pin, string? vat)
     {
         if (pin is null && vat is null)
             return new ResponseApi<List<PropertyDTO>>
@@ -98,7 +98,7 @@ public class PropertyService : IPropertyService
         var results = db.Properties.Include(x => x.Owner).Select(x => x);
 
         if (pin is not null) results = results.Where(x => x.PIN == pin);
-        if (vat is not null) results = results.Where(x => x.OwnerVAT == vat);
+        if (vat is not null) results = results.Where(x => x.Owner.VATNum == vat);
 
         var properties = await results.Select(x => x.ConvertProperty()).ToListAsync();
 
