@@ -33,8 +33,7 @@ public class UserController : Controller{
     }
 
     [HttpDelete]
-    public async Task<ResponseApi<UserDTO>?> RemoveUserToRedirectController(string? vat)
-    {
+    public async Task<ResponseApi<UserDTO>?> RemoveUserToRedirectController(string? vat){
         string url = $"{sourcePrefix}User/delete_user_soft/{vat}";
         var response = await client.DeleteAsync(url);
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -83,11 +82,8 @@ public class UserController : Controller{
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteUserButtonCallback(UserDTO userDTO)
-    {
-        
-        Console.WriteLine($"Deleting Current User{userDTO.VAT}");
-        var result = await RemoveUserToRedirectController(LoginState.activeUser?.VAT);
+    public async Task<IActionResult> DeleteUserButtonCallback(UserDTO userDTO){      
+        var result = await RemoveUserToRedirectController(userDTO?.VAT);
         return RedirectToAction("Logout", "Login");
     }
 }
