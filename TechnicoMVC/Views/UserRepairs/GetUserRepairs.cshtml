@@ -1,6 +1,7 @@
 ﻿@using TechnicoBackEnd.Models;
 @using TechnicoBackEnd.Responses;
 @using TechnicoBackEnd.DTOs;
+@using TechnicoBackEnd.Auth;
 @model IEnumerable<TechnicoBackEnd.DTOs.RepairDTO>;
 
 @{
@@ -90,12 +91,9 @@
                     <p class="card-text"><strong>Cost:</strong> @Html.DisplayFor(modelItem => item.Cost)</p>
                 </div>
                 <div class="card-footer text-center">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-custom-edit btn-sm mr-1">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-custom-info btn-sm mr-1">Details</a>
-                    @*@<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-custom-danger btn-sm">Delete</a>*@
+                    <a asp-controller="UserRepairs" asp-action="GetUpdatePageCallback" asp-route-id="@item.Id" class="btn btn-custom-edit btn-sm mr-1">Update</a>
                     <form asp-action="RemoveRepairCallback" method="post" style="display:inline;">
                         <input type="hidden" name="repairId" value="@item.Id" />
-                        <!--<input type="hidden" name="rcost" value="@item." /> -->
                         <button type="submit" class="btn btn-custom-danger btn-sm">Delete</button>
                     </form>
                 </div>

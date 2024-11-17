@@ -2,9 +2,15 @@
 @using TechnicoBackEnd.Auth
 @model TechnicoBackEnd.DTOs.RepairDTO
 
-<h1>Create Repair</h1>
+<h1>Update Repair</h1>
 <br />
-<form asp-action="CreateRepairCallback" method="post">
+<form asp-action="UpdateRepairCallback" asp-route-id="@Model?.Id" method="post">
+    <div class="form-group">
+        <label for="OwnerVAT">Owner VAT</label>
+        <input asp-for="OwnerVAT" class="form-control" />
+        <span asp-validation-for="OwnerVAT" class="text-danger"></span>
+    </div>
+
     <div class="form-group">
         <label for="PropertyIdNum">Property Identification Number (PIN)</label>
         <input asp-for="PropertyIdNum" class="form-control" />
@@ -34,18 +40,24 @@
         <input asp-for="Cost" class="form-control" />
         <span asp-validation-for="Cost" class="text-danger"></span>
     </div>
+    <br />
     <div id="ErrorMessage"
          style="display:@((Model?.ErrorCode == 1 || Model?.ErrorCode == 0) ? "block" : "none");">
         @if (Model != null && Model?.ErrorCode == 1)
         {
-            <span class ="text-danger">@Model.ErrorDescription</span>
+            <span class="text-danger">@Model.ErrorDescription</span>
         }
         @if (Model != null && Model?.ErrorCode == 0)
         {
-        <span class="text-success">@Model?.ErrorDescription</span>
+            <span class="text-success">@Model?.ErrorDescription</span>
         }
     </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="GetAllUsersRepairs" class="btn btn-secondary">Back to List</a>
     <br />
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId" class="btn btn-secondary">Back to List</a>
 </form>
+<form asp-controller="AdminRepairs" asp-action="RemoveRepairCallback" method="post" style="margin-top: 5px;">
+    <input type="hidden" name="repairId" value="@Model?.Id" />
+    <button type="submit" class="btn btn-custom-danger btn-sm">Delete</button>
+</form>
+

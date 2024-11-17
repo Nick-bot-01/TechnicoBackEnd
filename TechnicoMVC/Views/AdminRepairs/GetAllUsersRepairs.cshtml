@@ -15,7 +15,7 @@
 <br />
 <br />
 <p>
-    <a asp-action="UserCreateRepair" class="btn btn-primary">Create New</a>
+    <a asp-action="AdminCreateRepair" class="btn btn-primary">Create New</a>
 </p>
 
 <div class="row">
@@ -25,18 +25,16 @@
             <div class="card h-100 card-custom">
                 <div class="card-body">
                     <h5 class="card-title text-primary">Scheduled Date: @item.ScheduledDate</h5>
-                    <p class="card-text"><strong>PIN:</strong> @Html.DisplayFor(modelItem => item.PropertyIdNum)</p>
+                    <p class="card-text"><strong>Owner Name:</strong> @Html.DisplayFor(modelItem => item.FullName)</p>
+                    <p class="card-text"><strong>Address:</strong> @Html.DisplayFor(modelItem => item.PropertyAddress)</p>
                     <p class="card-text"><strong>Repair Type:</strong> @Html.DisplayFor(modelItem => item.RType)</p>
                     <p class="card-text"><strong>Status:</strong> @Html.DisplayFor(modelItem => item.Status)</p>
                     <p class="card-text"><strong>Cost:</strong> @Html.DisplayFor(modelItem => item.Cost)</p>
                 </div>
                 <div class="card-footer text-center">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-custom-edit btn-sm mr-1">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-custom-info btn-sm mr-1">Details</a>
-                    @*@<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-custom-danger btn-sm">Delete</a>*@
-                    <form asp-action="RemoveRepairCallback" method="post" style="display:inline;">
+                    <a asp-controller="AdminRepairs" asp-action="GetUpdatePageCallback" asp-route-id="@item.Id" class="btn btn-custom-edit btn-sm mr-1">Update</a>
+                    <form asp-controller="AdminRepairs" asp-action="RemoveRepairCallback" method="post" style="display:inline;">
                         <input type="hidden" name="repairId" value="@item.Id" />
-                        <!--<input type="hidden" name="rcost" value="@item." /> -->
                         <button type="submit" class="btn btn-custom-danger btn-sm">Delete</button>
                     </form>
                 </div>

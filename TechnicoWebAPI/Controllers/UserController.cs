@@ -38,7 +38,7 @@ public class UserController : ControllerBase{
     public async Task<ResponseApi<List<UserDTO>>> GetUsers() => await _userService.GetAllUsers();
 
     [HttpGet("users/{id}")]
-    public async Task<ResponseApi<UserDTO>> GetCustomer([FromRoute] int id) => await _userService.GetUserDetailsById(id);
+    public async Task<ResponseApi<UserDTO>> GetUser([FromRoute] int id) => await _userService.GetUserDetailsById(id);
 
     [HttpPost("register_user")]
     public async Task<ResponseApi<UserDTO>> RegisterUser([FromBody] UserWithRequiredFieldsDTO user) => await _userService.Register(user);
@@ -54,8 +54,9 @@ public class UserController : ControllerBase{
     [HttpDelete("delete_user_hard/{vat}")]
     public async Task<ResponseApi<UserDTO>> DeleteUserHard([FromRoute] string? vat) => await _userService.DeleteHard(vat);
 
-    [HttpGet("search_user")]
-    public async Task<ResponseApi<UserDTO>> SearchUser(string? vat, string? email){
-        return await _userService.Search(vat, email);
+    [HttpPost("search_user")]
+    public async Task<ResponseApi<UserDTO>> SearchUser([FromBody] QueryUserDTO queryUserDTO)
+    {
+        return await _userService.Search(queryUserDTO?.VAT, queryUserDTO?.Email);
     }
 }

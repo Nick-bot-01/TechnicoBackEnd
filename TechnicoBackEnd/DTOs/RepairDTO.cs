@@ -16,7 +16,7 @@ public class RepairDTO
     //public RepairStatus Status { get; set; }
     //public decimal Cost { get; set; }
     //public string? PropertyIdNum { get; set; }
-    
+
 
     [Required(ErrorMessage = "Scheduled date is required.")]
     public DateTime ScheduledDate { get; set; }
@@ -35,7 +35,16 @@ public class RepairDTO
     [Required(ErrorMessage = "Property identification number (PIN) is required.")]
     public string? PropertyIdNum { get; set; }
 
+    public string? PropertyAddress { get; set; }
+
+    [Required(ErrorMessage = "Owner VAT is required.")]
     public string? OwnerVAT { get; set; }
+
+    public string? OwnerName { get; set; }
+
+    public string? OwnerSurname { get; set; }
+
+    public string FullName => $"{OwnerName} {OwnerSurname}";
 
     public string? ErrorDescription { get; set; }
 

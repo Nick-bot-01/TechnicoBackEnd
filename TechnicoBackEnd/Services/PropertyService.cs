@@ -58,7 +58,7 @@ public class PropertyService : IPropertyService
     }
     public async Task<ResponseApi<List<PropertyDTO>>> GetAllProperties()
     {
-        var properties = await db.Properties.Where(x => x.IsActive).Select(x => x.ConvertProperty()).ToListAsync();
+        var properties = await db.Properties.Include(x => x.Owner).Where(x => x.IsActive).Select(x => x.ConvertProperty()).ToListAsync();
         return new ResponseApi<List<PropertyDTO>>
         {
             Status = 0,
@@ -72,12 +72,12 @@ public class PropertyService : IPropertyService
         {
             Status = 0,
             Description = $"Property with id {id} fetched succesfully.",
-            Value = await db.Properties.Where(x => x.Id == id && x.IsActive).Select(x => x.ConvertProperty()).FirstOrDefaultAsync()
+            Value = await db.Properties.Include(x => x.Owner).Where(x => x.Id == id && x.IsActive).Select(x => x.ConvertProperty()).FirstOrDefaultAsync()
         };
     }
     public async Task<ResponseApi<List<PropertyDTO>>> GetPropertiesByOwner(string vat)
     {
-        var properties = await db.Properties.Where(x => x.OwnerVAT == vat && x.IsActive).Select(x => x.ConvertProperty()).ToListAsync();
+        var properties = await db.Properties.Include(x => x.Owner).Where(x => x.OwnerVAT == vat && x.IsActive).Select(x => x.ConvertProperty()).ToListAsync();
         return new ResponseApi<List<PropertyDTO>>
         {
             Status = 0,
@@ -95,7 +95,7 @@ public class PropertyService : IPropertyService
                 Value = []
             };
 
-        var results = db.Properties.Select(x => x);
+        var results = db.Properties.Include(x => x.Owner).Select(x => x);
 
         if (pin is not null) results = results.Where(x => x.PIN == pin);
         if (vat is not null) results = results.Where(x => x.OwnerVAT == vat);
