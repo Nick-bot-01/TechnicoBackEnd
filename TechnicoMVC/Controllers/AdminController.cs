@@ -57,33 +57,51 @@ public class AdminController : Controller
     }
 
     [HttpGet]
-    public async Task<UserWithRequiredFieldsDTO> GetOwnerDetails(int? id)
+    public async Task<UserDTO> GetOwnerDetails(int? id)
     {
         if (id.HasValue){
             string url = $"{sourcePrefix}User/users/{id}";
             var response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
-            ResponseApi<UserWithRequiredFieldsDTO>? userResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserWithRequiredFieldsDTO>>(responseBody);
-            if (userResponse == null || userResponse.Value == null) return new UserWithRequiredFieldsDTO();
+            ResponseApi<UserDTO>? userResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
+            if (userResponse == null || userResponse.Value == null) return new UserDTO();
             return userResponse.Value;
         }
-        else return new UserWithRequiredFieldsDTO();
+        else return new UserDTO();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> UpdateOwner(UserWithRequiredFieldsDTO userWithRequiredFieldsDTO)
+    public async Task<IActionResult> PresentTargetOwnerDetailsCallback(int id) {
+        var result = await GetOwnerDetails(id);
+        return View("EditOwner", result);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateOwner(UserDTO userDTO)   //backend uses user with required fields!!!! fix it
     {
         string url = $"{sourcePrefix}User/update_user";
-        var response = await client.PostAsJsonAsync(url, userWithRequiredFieldsDTO);
+        var response = await client.PutAsJsonAsync(url, userDTO);
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
         ResponseApi<UserDTO>? createdResponseUserDTO = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
-        if (userWithRequiredFieldsDTO != null && userWithRequiredFieldsDTO.Email != null && userWithRequiredFieldsDTO.Password != null)
+        if (userDTO != null && userDTO.Email != null)
         {
             return RedirectToAction("OwnersAndProperties");
         }
-        return RedirectToAction("EditOwner", userWithRequiredFieldsDTO.Id);
+        return RedirectToAction("EditOwner", userDTO?.Id);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SearchOwnerByVatOrEmail(string? searchInput)
+    {
+        QueryUserDTO queryUserDTO = new QueryUserDTO() { VAT = searchInput, Email = searchInput };
+        string url = $"{sourcePrefix}User/search_user";
+        var response = await client.PostAsJsonAsync(url, queryUserDTO);
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<UserDTO>? userResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
+        if (userResponse == null || userResponse.Value == null) return RedirectToAction("SearchOwnerResult", null);
+        return RedirectToAction("SearchOwnerResult", userResponse.Value);
     }
 
     //Views Loading
@@ -122,14 +140,35 @@ public class AdminController : Controller
         else return RedirectToAction("LandingPage");
     }
 
-    public async Task<IActionResult> EditOwner(int? id)
+    public IActionResult EditOwner()
     {
         if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
 
         if (LoginState.IsAdmin)
         {
-                var ownerDetails = await GetOwnerDetails(id);
-                return View(ownerDetails);
+                return View();
+        }
+        else return RedirectToAction("LandingPage");
+    }
+
+    public IActionResult SearchOwner()
+    {
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+
+        if (LoginState.IsAdmin)
+        {
+            return View();
+        }
+        else return RedirectToAction("LandingPage");
+    }
+
+    public IActionResult SearchOwnerResult(UserDTO? user)
+    {
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+
+        if (LoginState.IsAdmin)
+        {
+            return View(user);
         }
         else return RedirectToAction("LandingPage");
     }
