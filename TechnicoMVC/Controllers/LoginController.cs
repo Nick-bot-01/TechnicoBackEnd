@@ -80,16 +80,7 @@ public class LoginController : Controller {
         if (!LoginState.IsLoggedIn) return View();
         else return RedirectToAction("LandingPage");
     }
-
-    public ActionResult AdminUsersAndProperties()
-    {
-        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
-
-        if (LoginState.IsAdmin) return View(new ActiveUserViewModel() { Name = LoginState.activeUser?.Name });
-        else return RedirectToAction("LandingPage");
-    }
-
-    
+   
 
     //Frontend Callbacks
     public IActionResult Logout(){

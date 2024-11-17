@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
+using TechnicoMVC.ViewModels;
 
 namespace TechnicoMVC.Controllers;
 
@@ -148,6 +149,14 @@ public class AdminController : Controller
         {
                 return View();
         }
+        else return RedirectToAction("LandingPage");
+    }
+
+    public IActionResult AdminUsersAndProperties()
+    {
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+
+        if (LoginState.IsAdmin) return View(new ActiveUserViewModel() { Name = LoginState.activeUser?.Name });
         else return RedirectToAction("LandingPage");
     }
 
