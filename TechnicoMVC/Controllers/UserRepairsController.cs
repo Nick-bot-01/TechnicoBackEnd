@@ -172,9 +172,9 @@ public class UserRepairsController : Controller
         }
         else
         {
-            if (createdRepair?.Status == 2)
+            if (createdRepair?.Status == 1)
             {
-                pendingCreationRepair.ErrorCode = 2;
+                pendingCreationRepair.ErrorCode = 1;
                 pendingCreationRepair.ErrorDescription = createdRepair.Description;
             }
             return View("UserCreateRepair", pendingCreationRepair);

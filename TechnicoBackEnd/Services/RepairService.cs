@@ -27,7 +27,7 @@ public class RepairService : IRepairService
         // Check if the property intended for repair exists in the db
         var propertyItem = await db.Properties.FirstOrDefaultAsync(p => p.PIN == repairDto.PropertyIdNum);
         if (propertyItem == null)
-            return new ResponseApi<RepairDTO> { Status = 2, Description = $"Repair creation failed. Property with PIN {repairDto.PropertyIdNum} was not found." };
+            return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair creation failed. Property with PIN {repairDto.PropertyIdNum} was not found." };
 
         // Validate the user input values
         var validationResponse = validation.RepairValidatorUser(repairDto);

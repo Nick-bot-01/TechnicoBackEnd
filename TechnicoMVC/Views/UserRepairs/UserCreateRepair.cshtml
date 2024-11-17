@@ -36,8 +36,8 @@
     </div>
     <br />
     <div id="ErrorMessage"
-         style="display:@((Model?.ErrorCode == 2 || Model?.ErrorCode == 0) ? "block" : "none");">
-        @if (Model != null && Model?.ErrorCode == 2)
+         style="display:@((Model?.ErrorCode == 1 || Model?.ErrorCode == 0) ? "block" : "none");">
+        @if (Model != null && Model?.ErrorCode == 1)
         {
             <span class ="text-danger">@Model.ErrorDescription</span>
         }
@@ -46,6 +46,7 @@
         <span class="text-success">@Model?.ErrorDescription</span>
         }
     </div>
+    <br />
     <button type="submit" class="btn btn-primary">Create</button>
     <a asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId" class="btn btn-secondary">Back to List</a>
 </form>
