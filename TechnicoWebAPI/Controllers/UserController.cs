@@ -47,8 +47,10 @@ public class UserController : ControllerBase{
     public async Task<ResponseApi<UserDTO>> UpdateUser([FromBody] UserDTO user) => await _userService.Update(user);
 
     [HttpDelete("delete_user_soft/{vat}")]
-    public async Task<ResponseApi<UserDTO>> DeleteUserSoft([FromRoute] string? vat) => await _userService.DeleteSoft(vat);
-
+    public async Task<ResponseApi<UserDTO>> DeleteUserSoft([FromRoute] string? vat){
+        var result = await _userService.DeleteSoft(vat);
+        return result;
+    }
     [HttpDelete("delete_user_hard/{vat}")]
     public async Task<ResponseApi<UserDTO>> DeleteUserHard([FromRoute] string? vat) => await _userService.DeleteHard(vat);
 
