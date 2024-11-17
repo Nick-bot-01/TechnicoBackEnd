@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
 
@@ -152,12 +154,12 @@ public class UserRepairsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateRepairCallback(RepairDTO pendingCreationRepair)
     {
-        // Front end validation of the model
-        if (!ModelState.IsValid)
-        {
-            // Return to the form view with data annotation error messages
-            return View("UserCreateRepair", pendingCreationRepair);
-        }
+        //// Front end validation of the model
+        //if (!ModelState.IsValid)
+        //{
+        //    // Return to the form view with data annotation error messages
+        //    return View("UserCreateRepair", pendingCreationRepair);
+        //}
 
         ResponseApi<RepairDTO>? createdRepair = await CreateRepairToRedirectController(pendingCreationRepair);
 
@@ -185,6 +187,103 @@ public class UserRepairsController : Controller
 
 
 
+
+
+    [HttpGet]
+    public async Task<ResponseApi<RepairDTO>?> GetUpdatePageRedirect(int id)
+    {
+        string url = $"{sourcePrefix}repairs/get_repair_details/{id}";
+        var response = await client.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
+        return targetRepair;
+    }
+
+    public async Task<IActionResult> GetUpdatePageCallback(RepairDTO pendingRepairDetails)
+    {
+        ResponseApi<RepairDTO>? repairDetails = await GetUpdatePageRedirect(pendingRepairDetails.Id);
+
+        return View("UserUpdateRepair", repairDetails?.Value);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    [HttpPut]
+    public async Task<ResponseApi<RepairDTO>?> UpdateUserToRedirectController(RepairDTO repair)
+    {
+        string url = $"{sourcePrefix}user/update_repair";
+        var response = await client.PutAsJsonAsync(url, repair);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
+        return targetRepair;
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateRepairCallback(RepairDTO pendingUpdateRepair)
+    {
+        // Front end validation of the model
+        if (!ModelState.IsValid)
+        {
+            // Return to the form view with data annotation error messages
+            return View("UserUpdateRepair", pendingUpdateRepair);
+        }
+
+        ResponseApi<RepairDTO>? createdRepair = await UpdateUserToRedirectController(pendingUpdateRepair);
+
+        if (createdRepair?.Value != null)
+        {
+            if (createdRepair?.Status == 0)
+            {
+                pendingUpdateRepair.ErrorCode = 0;
+                pendingUpdateRepair.ErrorDescription = createdRepair.Description;
+            }
+            return View("UserUpdateRepair", pendingUpdateRepair);
+        }
+        else
+        {
+            if (createdRepair?.Status == 1)
+            {
+                pendingUpdateRepair.ErrorCode = 1;
+                pendingUpdateRepair.ErrorDescription = createdRepair.Description;
+            }
+            return View("UserUpdateRepair", pendingUpdateRepair);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // View loading
 
     public IActionResult UserCreateRepair()
@@ -192,18 +291,14 @@ public class UserRepairsController : Controller
         return View(new RepairDTO { ScheduledDate = DateTime.Now, PropertyIdNum = "", Cost = 0, Description = "" });
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public IActionResult UserUpdateRepair()
+    {
+        return View();
     }
+
+    public IActionResult ViewRepairDetails()
+    {
+        return View();
+    }
+
+}
