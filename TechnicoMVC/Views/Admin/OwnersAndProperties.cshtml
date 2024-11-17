@@ -7,50 +7,60 @@
 <h1>WELCOME ADMIN @LoginState.activeUser?.Name </h1>
 <br>
 
-@* @{
-    var propertyDTO = (Model != null) ? Model.FirstOrDefault() : null;
-    var ownerId = propertyDTO?.OwnerId;
-} *@
+<div class="row">
+    <div class="col">
+        <div class="container">
+            <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="CreateOwner">Create Owner</a>
+        </div>
+    </div>
+    <div class="col">
+        <div class="container">
+            <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="SearchOwner">Search Owner</a>
+        </div>
+    </div>
+</div>
 
+
+<div class="row m-2">
 @if (Model != null)
 {
     foreach (var property in Model)
     {
-        if (@property.PIN != null) @*maybe unnecessary*@
+        if (@property.PIN != null)
         {
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">@property.PIN.ToString()</h5>
-                    <p class="card-text">@property.ConstructionYear</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">@property.Address</li>
-                    <li class="list-group-item">@property.PType</li>
-                    <li class="list-group-item">@property.OwnerId</li>
-                </ul>
-                <div class="card-body">
-                    @*use javascript and remove this comment*@
-                    @* <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="PresentTargetOwnerDetailsCallback" asp-route-id="@property.OwnerId">Edit Owner</a> *@
-                    <form asp-controller="Admin" asp-action="PresentTargetOwnerDetailsCallback" method="post" style="display: inline;">
-                        <input type="hidden" name="ownerId" value="@property.OwnerId" />
-                        <button type="submit" class="btn btn-primary">Edit Owner</button>
-                    </form>
-                    <a href="#" class="card-link">Update Property</a> @*implement*@
-                    <a href="#" class="card-link">Delete Property</a> @*implement*@
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">@property.PIN.ToString()</h5>
+                        <p class="card-text">@property.ConstructionYear</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">@property.Address</li>
+                        <li class="list-group-item">@property.PType</li>
+                        <li class="list-group-item">@property.OwnerId</li>
+                    </ul>
+                    <div class="card-body">
+                        <form asp-controller="Admin" asp-action="PresentTargetOwnerDetailsCallback" method="post" style="display: inline;">
+                            <input type="hidden" name="ownerId" value="@property.OwnerId" />
+                            <button type="submit" class="btn btn-primary">Edit Owner</button>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                            <form asp-controller="" asp-action="" method="post" style="display: inline;">
+                                <input type="hidden" name="updateProperty" value="" />
+                                <button type="submit" class="btn btn-primary">Update Property</button>
+                            </form>
+                    </div>
+                    <div class="card-body">
+
+                        <form asp-controller="" asp-action="" method="post" style="display: inline;">
+                            <input type="hidden" name="deleteProperty" value="" />
+                            <button type="submit" class="btn btn-primary">Delete Property</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         }
     }
 }
-
-<div class="container">
-    <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="CreateOwner">Create Owner</a>
-</div>
-
-@* <div class="container">
-    <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="EditOwner">Edit Owner</a>
-</div> *@
-
-<div class="container">
-    <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="SearchOwner">Search User</a> @*add asp action*@
 </div>
