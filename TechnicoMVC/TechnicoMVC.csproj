@@ -7,26 +7,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="wwwroot\Assets\property.jpg" />
+    <None Remove="wwwroot\Assets\repair.png" />
+    <None Remove="wwwroot\Assets\user.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Views\Admin\UserHandling\" />
     <Folder Include="Views\Admin\Property\" />
     <Folder Include="Views\Admin\Repair\" />
     <Folder Include="Views\User\Repair\" />
     <Folder Include="Views\User\SelfHandling\" />
     <Folder Include="Views\User\Property\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+    <Folder Include="Views\User\Repair\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TechnicoBackEnd\TechnicoBackEnd.csproj" />
     <ProjectReference Include="..\TechnicoWebAPI\TechnicoWebAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\Assets\property.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Assets\repair.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Assets\user.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
