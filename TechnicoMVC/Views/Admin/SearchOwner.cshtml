@@ -8,7 +8,7 @@
 
 <h2>Edit Owner</h2>
 <div class="login-form">
-    <form asp-controller="Admin" asp-action="SearchOwnerByVatOrEmail" method="post">
+    <form asp-controller="Admin" asp-action="SearchOwnerResultsCallback" method="post">
         <label for="searchInput">Search</label>
         <input type="text" id="searchInput" name="searchInput" required>
         <br>
@@ -19,8 +19,4 @@
     <div class="error-message">
         <!-- Example: Invalid login credentials -->
     </div>
-</div>
-
-<div class="container">
-    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">[Logout]</a>
 </div>

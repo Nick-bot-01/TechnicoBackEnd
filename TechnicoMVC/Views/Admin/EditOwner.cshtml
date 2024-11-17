@@ -8,29 +8,35 @@
 <br>
 
 <h2>Edit Owner</h2>
-<div class="login-form">
-    <form asp-controller="Admin" asp-action="UpdateOwner" method="post">
+<div class="update-form">
+    <form asp-controller="Admin" asp-action="UpdateOwnerCallback" method="post">
+        <!-- Hidden field for Id to pass it along with the form data -->
+        <input type="hidden" asp-for="Id" />
+
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="@Model?.Email" disabled>
+        <input type="email" id="email-view" value="@Model.Email" disabled />
+        <input type="hidden" id="email" asp-for="Email" />
         <br>
+
         <label for="vat">VAT:</label>
-        <input type="text" id="vat" name="vat" value="@Model?.VAT" disabled>
+        <input type="email" id="vat-view" value="@Model.VAT" disabled />
+        <input type="hidden" id="vat" asp-for="VAT" />
         <br>
 
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="@Model?.Name" required>
+        <input type="text" id="name" asp-for="Name" required />
         <br>
 
         <label for="surname">Surname:</label>
-        <input type="text" id="surname" name="surname" value="@Model?.Surname" required>
+        <input type="text" id="surname" asp-for="Surname" required />
         <br>
 
         <label for="address">Address:</label>
-        <input type="text" id="address" name="address" value="@Model?.Address" required>
+        <input type="text" id="address" asp-for="Address" required />
         <br>
 
         <label for="phone">Phone:</label>
-        <input type="text" id="phone" name="phone" value="@Model?.Phone" required>
+        <input type="text" id="phone" asp-for="Phone" required />
         <br>
 
         <button type="submit">Update</button>
@@ -39,8 +45,4 @@
     <div class="error-message">
         <!-- Example: Invalid login credentials -->
     </div>
-</div>
-
-<div class="container">
-    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">[Logout]</a>
 </div>
