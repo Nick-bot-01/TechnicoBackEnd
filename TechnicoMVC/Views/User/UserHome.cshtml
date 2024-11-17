@@ -89,9 +89,9 @@
             </a>
         </div>
         <div class="col">
-            <a href="#" class="d-block image-button">
+            <a asp-controller="UserRepairs" asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId" class="d-block image-button" />
                 <img src="~/images/repair.png" alt="Repair Details" class="img-fluid rounded-3">
-            </a>
+            </>
         </div>
     </div>
 
