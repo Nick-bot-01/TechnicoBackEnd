@@ -98,7 +98,7 @@ public class PropertyService : IPropertyService
             Value = properties
         };
     }
-    public async Task<ResponseApi<List<PropertyDTO>>> SearchProperties(string? pin = null, string? vat = null)
+    public async Task<ResponseApi<List<PropertyDTO>>> SearchProperties(string? pin, string? vat)
     {
         if (pin is null && vat is null)
             return new ResponseApi<List<PropertyDTO>>
@@ -111,13 +111,13 @@ public class PropertyService : IPropertyService
         var results = db.Properties.Include(x => x.Owner).Select(x => x);
 
         if (pin is not null) results = results.Where(x => x.PIN == pin);
-        if (vat is not null) results = results.Where(x => x.OwnerVAT == vat);
+        if (vat is not null) results = results.Where(x => x.Owner.VATNum == vat);
 
         var properties = await results.Select(x => x.ConvertProperty()).ToListAsync();
 
         return new ResponseApi<List<PropertyDTO>>
         {
-            Status = 1,
+            Status = 0,
             Description = "Search results fetched successfully.",
             Value = properties
         };
@@ -146,8 +146,8 @@ public class PropertyService : IPropertyService
             await db.SaveChangesAsync();
             return new ResponseApi<PropertyDTO>
             {
-                Status = 1,
-                Description = $"Property update failed : Property with id {property.Id} not found.",
+                Status = 0,
+                Description = $"Property update success : Property with id {property.Id} has been updated.",
                 Value = dbproperty.ConvertProperty()
             };
         }

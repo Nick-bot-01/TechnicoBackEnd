@@ -20,6 +20,69 @@ public class RepairService : IRepairService
         this.validation = validation;
     }
 
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByDateOrRangeOfDates(DateTime StartDate, DateTime EndDate)
+    {
+        if (EndDate != DateTime.MinValue && EndDate < StartDate)
+        {
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"Please enter valid Dates." };
+        }
+
+        EndDate = (EndDate == DateTime.MinValue) ? DateTime.MaxValue : EndDate;
+
+        var GetQuery2 = await db.Repairs
+            .Include(r => r.Property)
+            .ThenInclude(r => r.Owner)
+            .Where(r => r.ScheduledDate >= StartDate && r.ScheduledDate <= EndDate)
+            .Select(r => r.ConvertRepair())
+            .ToListAsync();
+
+        return new ResponseApi<List<RepairDTO>> { Description = $"Repairs between specified dates were found.", Value = GetQuery2, Status = 0 };
+    }
+    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByUID(int id)
+    {
+        if (id <= 0)
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The VAT Number you entered is not valid. " };
+
+        var GetQuery = await db.Repairs
+            .Include(r => r.Property)
+            .ThenInclude(r => r.Owner)
+            .Where(r => r.Property.Owner.Id == id)
+            .Select(r => r.ConvertRepair())
+            .ToListAsync();
+
+        if (GetQuery.Count == 0)
+        {
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"There are no repairs for owner with ID: {id} in the database. " };
+        }
+
+        try
+        {
+            return new ResponseApi<List<RepairDTO>> { Value = GetQuery, Status = 0, Description = $"List of repairs with ID: {id} created." };
+        }
+        catch (Exception e)
+        {
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with ID: {id} failed to create due to a database error: '{e.Message}'" };
+        }
+    }
+
+    public async Task<ResponseApi<RepairDTO>> GetRepairByID(int id)
+    {
+        var GetQuery = await db.Repairs
+            .Include(r => r.Property)
+            .ThenInclude(r => r.Owner)
+            .Where(r => r.Id == id)
+            .Select(r => r.ConvertRepair())
+            .FirstOrDefaultAsync();
+
+        Console.WriteLine(GetQuery);
+
+        if (GetQuery == null)
+        {
+            return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair with id: {id} was not found." };
+        }
+
+        return new ResponseApi<RepairDTO> { Status = 0, Value = GetQuery, Description = $"Repair with id: {id} was found." };
+    }
     public async Task<ResponseApi<RepairDTO>> CreateRepairUser(RepairDTO repairDto)
     {
         if (repairDto == null) return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair creation failed. The DTO argument that was given is null." };
@@ -163,71 +226,45 @@ public class RepairService : IRepairService
         }
     }
 
-    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByUID(int id)
+    public async Task<ResponseApi<List<RepairDTO>>> SearchRepairs(int? id, DateOnly? startDate, DateOnly? endDate)
     {
-        if (id <= 0)
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The VAT Number you entered is not valid. " };
+        if (id == null && startDate == null)
+            return new ResponseApi<List<RepairDTO>>
+            {
+                Status = 0,
+                Description = "No search parameters.",
+                Value = []
+            };
 
-        var GetQuery = await db.Repairs
-            .Include(r => r.Property)
-            .ThenInclude(r => r.Owner)
-            .Where(r => r.Property.Owner.Id == id)
-            .Select(r => r.ConvertRepair())
-            .ToListAsync();
+        var results = db.Repairs
+                .Include(a => a.Property)
+                .ThenInclude(a => a.Owner)
+                .AsQueryable();
 
-        if (GetQuery.Count == 0)
+        if (id is not null)
+            results = results.Where(x => x.Property.Owner.Id == id);
+
+        if (startDate != null)
         {
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"There are no repairs for owner with ID: {id} in the database. " };
+            if (endDate == null)
+                results = results.Where(x => DateOnly.FromDateTime(x.ScheduledDate) == startDate);
+            else
+                results = results.Where(x => DateOnly.FromDateTime(x.ScheduledDate) >= startDate && DateOnly.FromDateTime(x.ScheduledDate) <= endDate);
         }
+
+        var finalresults = await results
+                    .Select(x => x.ConvertRepair())
+                    .ToListAsync();
 
         try
         {
-            return new ResponseApi<List<RepairDTO>> { Value = GetQuery, Status = 0, Description = $"List of repairs with ID: {id} created." };
+            return new ResponseApi<List<RepairDTO>> { Value = finalresults, Status = 0, Description = $"List of repeair search results created." };
         }
         catch (Exception e)
         {
             return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with ID: {id} failed to create due to a database error: '{e.Message}'" };
         }
     }
-
-    public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByDateOrRangeOfDates(DateTime StartDate, DateTime EndDate)
-    {
-        if (EndDate != DateTime.MinValue && EndDate < StartDate)
-        {
-            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"Please enter valid Dates." };
-        }
-
-        EndDate = (EndDate == DateTime.MinValue) ? DateTime.MaxValue : EndDate;
-
-        var GetQuery2 = await db.Repairs
-            .Include(r => r.Property)
-            .ThenInclude(r => r.Owner)
-            .Where(r => r.ScheduledDate >= StartDate && r.ScheduledDate <= EndDate)
-            .Select(r => r.ConvertRepair())
-            .ToListAsync();
- 
-        return new ResponseApi<List<RepairDTO>> { Description = $"Repairs between specified dates were found.", Value = GetQuery2, Status = 0 };
-    }
-
-    public async Task<ResponseApi<RepairDTO>> GetRepairByID(int id)
-    {
-        var GetQuery = await db.Repairs
-            .Include(r => r.Property)
-            .ThenInclude(r => r.Owner)
-            .Where(r => r.Id == id)
-            .Select(r => r.ConvertRepair())
-            .FirstOrDefaultAsync();
-
-        Console.WriteLine(GetQuery);
-
-        if (GetQuery == null)
-        {
-            return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair with id: {id} was not found." };
-        }
-
-        return new ResponseApi<RepairDTO> { Status = 0, Value = GetQuery, Description = $"Repair with id: {id} was found." };
-    }
-
     public async Task<ResponseApi<RepairDTO>> UpdateRepairUser(RepairDTO updatedRepairDto)
     {
         if (updatedRepairDto == null) return new ResponseApi<RepairDTO> { Status = 1, Description = $"The DTO argument that was given is null." };

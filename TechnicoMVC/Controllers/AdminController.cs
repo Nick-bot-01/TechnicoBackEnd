@@ -211,4 +211,40 @@ public class AdminController : Controller
         return View("OwnersAndProperties");
     }
 
+    public async Task<IActionResult> SearchProperties(string? PIN, string? VAT)
+    {
+        string url = $"{sourcePrefix}Property/search_properties";
+
+        var queryParams = new List<string>();
+        if (!string.IsNullOrEmpty(PIN)) { queryParams.Add($"pin={PIN}"); }
+        if (!string.IsNullOrEmpty(VAT)) { queryParams.Add($"vat={VAT}"); }
+        var queryString = string.Join("&", queryParams);
+
+        if (string.IsNullOrEmpty(queryString))
+        {
+            return View();
+        }
+        else { url = url + "?" + queryString; }
+
+        var response = await client.GetAsync(url);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var options = new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            // Deserialize the response body to ResponseApi<List<RepairDTO>>
+            var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<List<PropertyDTO>>>(responseBody, options);
+
+            if (apiResponse?.Value != null)
+            {
+                return View(apiResponse.Value);
+            }
+        }
+
+        return View("Error");
+    }
 }
