@@ -85,6 +85,19 @@ public class PropertyService : IPropertyService
             Value = properties
         };
     }
+    public async Task<ResponseApi<List<PropertyDTO>>> GetPropertiesByOwnerID(int id)
+    {
+        var properties = await db.Properties
+            .Include(x => x.Owner)
+            .Where(x => x.Owner.Id == id && x.IsActive)
+            .Select(x => x.ConvertProperty()).ToListAsync();
+        return new ResponseApi<List<PropertyDTO>>
+        {
+            Status = 0,
+            Description = $"Properties for owner with Id {id} fetched succesfully.",
+            Value = properties
+        };
+    }
     public async Task<ResponseApi<List<PropertyDTO>>> SearchProperties(string? pin = null, string? vat = null)
     {
         if (pin is null && vat is null)
