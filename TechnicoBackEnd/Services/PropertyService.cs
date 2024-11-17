@@ -134,7 +134,7 @@ public class PropertyService : IPropertyService
             return new ResponseApi<PropertyDTO>
             {
                 Status = 1,
-                Description = $"Property update failed : Property with id {property.Id} not found.",
+                Description = $"Property update success : Property with id {property.Id} has been updated.",
                 Value = dbproperty.ConvertProperty()
             };
         }
