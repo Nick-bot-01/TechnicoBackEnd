@@ -72,28 +72,19 @@ public class AdminController : Controller
         else return new UserDTO();
     }
 
-    public async Task<IActionResult> PresentTargetOwnerDetailsCallback(int ownerId) {
-        var result = await GetOwnerDetails(ownerId);
-        return View("EditOwner", result);
-    }
-
     [HttpPut]
-    public async Task<IActionResult> UpdateOwner(UserDTO userDTO)   //backend uses user with required fields!!!! fix it
+    public async Task<UserDTO?> UpdateOwner(UserDTO userDTO)
     {
         string url = $"{sourcePrefix}User/update_user";
         var response = await client.PutAsJsonAsync(url, userDTO);
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
         ResponseApi<UserDTO>? createdResponseUserDTO = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
-        if (userDTO != null && userDTO.Email != null)
-        {
-            return RedirectToAction("OwnersAndProperties");
-        }
-        return RedirectToAction("EditOwner", userDTO?.Id);
+        return createdResponseUserDTO?.Value;
     }
 
     [HttpPost]
-    public async Task<IActionResult> SearchOwnerByVatOrEmail(string? searchInput)
+    public async Task<UserDTO?> SearchOwnerByVatOrEmail(string? searchInput)
     {
         QueryUserDTO queryUserDTO = new QueryUserDTO() { VAT = searchInput, Email = searchInput };
         string url = $"{sourcePrefix}User/search_user";
@@ -101,8 +92,19 @@ public class AdminController : Controller
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
         ResponseApi<UserDTO>? userResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
-        if (userResponse == null || userResponse.Value == null) return RedirectToAction("SearchOwnerResult", null);
-        return RedirectToAction("SearchOwnerResult", userResponse.Value);
+        return userResponse?.Value;
+    }
+
+    
+    [HttpDelete]
+    public async Task<ResponseApi<UserDTO>?> DeleteOwner(string? ownerVat)
+    {
+        string url = $"{sourcePrefix}User/delete_user_soft/{ownerVat}";
+        var response = await client.DeleteAsync(url);
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<UserDTO>? createdResponseUserDTO = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
+        return createdResponseUserDTO;
     }
 
     //Views Loading
@@ -151,7 +153,7 @@ public class AdminController : Controller
         }
         else return RedirectToAction("LandingPage");
     }
-
+    //probably not needed, cant find a corresponding view
     public IActionResult AdminUsersAndProperties()
     {
         if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
@@ -180,6 +182,33 @@ public class AdminController : Controller
             return View(user);
         }
         else return RedirectToAction("LandingPage");
+    }
+
+    //Views Callbacks
+
+    public async Task<IActionResult> PresentTargetOwnerDetailsCallback(int ownerId)
+    {
+        var result = await GetOwnerDetails(ownerId);
+        return View("EditOwner", result);
+    }
+
+    public async Task<IActionResult> UpdateOwnerCallback(UserDTO userDTO)
+    {
+        var result = await UpdateOwner(userDTO);
+        if (result != null && result.Email != null) return RedirectToAction("OwnersAndProperties");
+        return RedirectToAction("EditOwner", userDTO.Id);
+    }
+
+    public async Task<IActionResult> SearchOwnerResultsCallback(string? searchInput)
+    {
+        var result = await SearchOwnerByVatOrEmail(searchInput);
+        return View("SearchOwnerResult", result);
+    }
+
+    public async Task<IActionResult> DeleteOwnerCallback(string? ownerVat)
+    {
+        var result = await DeleteOwner(ownerVat);
+        return View("OwnersAndProperties");
     }
 
 }
