@@ -30,7 +30,6 @@
 @{
     string deleteCallbackName = "DeleteUserButtonCallback";
     string updateCallbackName = "UserUpdateButtonCallback";
-    string defaultCallback = updateCallbackName;
 }
 
 <div class="col">
@@ -43,7 +42,7 @@
     <div class="card-body">
         <h5 class="card-title">User Details</h5>
     </div>
-    @using (Html.BeginForm(defaultCallback, "User", FormMethod.Post))
+    @using (Html.BeginForm(updateCallbackName, "User", FormMethod.Post))
     {
         <div class="form-group">
             <div>
@@ -82,26 +81,25 @@
 
                 <!-- Delete Account -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Delete</button>
-
-                <!-- Soft Delete Window -->
-                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">Warning</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                You are about to delete you account. This action cannot be reverted. Make sure this is correct before your proceed.
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" onclick="@{defaultCallback = deleteCallbackName;};" class="btn btn-primary">Confirm</button>
-                            </div>
+            </div>
+            <!-- Soft Delete Window -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Warning</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            You are about to delete you account. This action cannot be reverted. Make sure this is correct before your proceed.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" formaction=@deleteCallbackName>Confirm</button>
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     }
 </div>
