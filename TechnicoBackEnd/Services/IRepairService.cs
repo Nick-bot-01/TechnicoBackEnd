@@ -7,6 +7,7 @@ public interface IRepairService
 {
     Task<ResponseApi<RepairDTO>> CreateRepairUser(RepairDTO repairDto);
     Task<ResponseApi<RepairAdminCreateUpdateDTO>> CreateRepairAdmin(RepairAdminCreateUpdateDTO repairDto);
+    Task<ResponseApi<List<RepairDTO>>> SearchRepairs(int? userId, DateOnly? StartDate, DateOnly? EndDate);
     Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByDateOrRangeOfDates(DateTime StartDate, DateTime EndDate);
     Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByVAT(string? VATNum);
     Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByUID(int id);

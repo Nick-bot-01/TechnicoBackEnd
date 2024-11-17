@@ -25,7 +25,7 @@ public class PropertyController : ControllerBase
     public async Task<ResponseApi<List<PropertyDTO>>> GetPropertiesByOwner([FromRoute] string vat) => await _propertyService.GetPropertiesByOwner(vat);
 
     [HttpGet("search_properties")]
-    public async Task<ResponseApi<List<PropertyDTO>>> SearchProperty([FromBody] string? pin, string? vat) => await _propertyService.SearchProperties(pin,vat);
+    public async Task<ResponseApi<List<PropertyDTO>>> SearchProperty([FromQuery] string? pin, [FromQuery] string? vat) => await _propertyService.SearchProperties(pin,vat);
 
     [HttpPost("create_property")]
     public async Task<ResponseApi<PropertyDTO>> CreateProperty([FromBody] PropertyDTO property) => await _propertyService.CreateProperty(property);

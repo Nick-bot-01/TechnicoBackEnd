@@ -10,7 +10,6 @@
 <h2>Edit Owner</h2>
 <div class="update-form">
     <form asp-controller="Admin" asp-action="UpdateOwnerCallback" method="post">
-        <!-- Hidden field for Id to pass it along with the form data -->
         <input type="hidden" asp-for="Id" />
 
         <label for="email">Email:</label>
@@ -41,8 +40,4 @@
 
         <button type="submit">Update</button>
     </form>
-    <!-- Error message display, if needed -->
-    <div class="error-message">
-        <!-- Example: Invalid login credentials -->
-    </div>
 </div>
