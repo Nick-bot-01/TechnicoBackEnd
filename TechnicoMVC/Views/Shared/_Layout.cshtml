@@ -28,7 +28,15 @@
                             }
                         </li>
                         <li class="nav-item">
+                            @if (LoginState.IsLoggedIn && !LoginState.IsAdmin) {
                             <a class="nav-link text-dark" asp-area="" asp-controller="UserRepairs" asp-action="GetUserRepairs" asp-route-VATNum="987654321">USER Repairs Page</a>
+                            }
+                        </li>
+                        <li class="nav-item">
+                            @if (LoginState.IsLoggedIn && LoginState.IsAdmin)
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AdminRepairs" asp-action="Index"> Admin Repairs Page </a>
+                            }
                         </li>
                     </ul>
                 </div>
