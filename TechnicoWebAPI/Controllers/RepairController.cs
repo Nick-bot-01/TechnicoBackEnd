@@ -23,7 +23,7 @@ public class RepairController : ControllerBase
         return await _repairService.CreateRepairUser(repairDTO);
     }
 
-    [HttpPost("repair/admin")]
+    [HttpPost("admin/create_repair")]
     public async Task<ResponseApi<RepairAdminCreateUpdateDTO>> CreateRepairAdmin([FromBody] RepairAdminCreateUpdateDTO repairDTO)
     {
         return await _repairService.CreateRepairAdmin(repairDTO);
@@ -35,7 +35,7 @@ public class RepairController : ControllerBase
         return await _repairService.UpdateRepairUser(repairDTO);
     }
 
-    [HttpPut("repair/admin")]
+    [HttpPut("admin/update_repair")]
     public async Task<ResponseApi<RepairAdminCreateUpdateDTO>> UpdateRepairAdmin([FromBody] RepairAdminCreateUpdateDTO repairDTO)
     {
         return await _repairService.UpdateRepairAdmin(repairDTO);

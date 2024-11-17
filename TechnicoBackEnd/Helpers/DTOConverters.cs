@@ -46,7 +46,10 @@ public static class DTOConverters
             Status = repair.Status,
             Cost = repair.Cost,
             PropertyIdNum = repair.Property.PIN,
-            OwnerVAT = repair.Owner?.VATNum
+            OwnerVAT = repair.Owner?.VATNum,
+            OwnerName = repair.Owner?.Name,
+            OwnerSurname = repair.Owner?.Surname,
+            PropertyAddress = repair.Property?.Address
         };
     }
 

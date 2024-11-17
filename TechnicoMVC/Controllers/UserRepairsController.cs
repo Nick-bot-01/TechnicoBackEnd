@@ -296,9 +296,4 @@ public class UserRepairsController : Controller
         return View();
     }
 
-    public IActionResult ViewRepairDetails()
-    {
-        return View();
-    }
-
 }
