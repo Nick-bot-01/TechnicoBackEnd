@@ -58,6 +58,17 @@ public class UserService : IUserService{
 
         //Deactivate user from the db
         ownerQueryResult!.IsActive = false;
+        
+
+        await _dbContext.Repairs
+                        .Select(r => r)
+                        .Where(r => r.Owner.VATNum == ownerQueryResult.VATNum)
+                        .ForEachAsync(r => r.IsActive = false);
+        await _dbContext.Properties
+                        .Select(p => p)
+                        .Where(p => p.OwnerVAT == ownerQueryResult.VATNum)
+                        .ForEachAsync (p => p.IsActive = false);
+
         await _dbContext.SaveChangesAsync();
         return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!" };
     }
