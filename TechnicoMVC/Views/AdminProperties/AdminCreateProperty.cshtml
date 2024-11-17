@@ -4,7 +4,7 @@
 
 <h1>Create Property</h1>
 <br />
-<form asp-action="CreatePropertyCallback" method="post">
+<form asp-controller="AdminProperties" asp-action="CreatePropertyCallback" method="post">
     <div class="form-group">
         <label for="PIN">Property Identification Number (PIN)</label>
         <input asp-for="@Model.PIN" class="form-control" />

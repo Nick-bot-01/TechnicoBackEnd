@@ -28,10 +28,7 @@ public class PropertyController : ControllerBase
     public async Task<ResponseApi<List<PropertyDTO>>> SearchProperty([FromBody] string? pin, string? vat) => await _propertyService.SearchProperties(pin,vat);
 
     [HttpPost("create_property")]
-    public async Task<ResponseApi<PropertyDTO>> CreateProperty([FromBody] PropertyDTO property){
-        var result = await _propertyService.CreateProperty(property);
-        return result;
-    }
+    public async Task<ResponseApi<PropertyDTO>> CreateProperty([FromBody] PropertyDTO property) => await _propertyService.CreateProperty(property);
     [HttpPatch("update_property")]
     public async Task<ResponseApi<PropertyDTO>> UpdateProperty([FromBody] PropertyDTO property) => await _propertyService.UpdateProperty(property);
 

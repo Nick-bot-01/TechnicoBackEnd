@@ -35,7 +35,11 @@
                         <input type="hidden" name="ownerId" value="@property.OwnerId" />
                         <button type="submit" class="btn btn-primary">Edit Owner</button>
                     </form>
-                    <a href="#" class="card-link">Update Property</a> @*implement*@
+
+                    <form asp-controller="AdminProperties" asp-action="AdminUpdateProperty" method="post" style="display: inline;">
+                        <input type="hidden" name="id" value="@property.Id" />
+                        <button type="submit" class="btn btn-primary">Update Property</button>
+                    </form>
                     <a href="#" class="card-link">Delete Property</a> @*implement*@
                 </div>
             </div>
