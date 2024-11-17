@@ -53,8 +53,8 @@ public class LoginController : Controller {
                 LoginState.IsLoggedIn = true;
                 var result = await IsAdmin(responseUserDTO.Value.Email);
                 LoginState.IsAdmin = (result != null) ? result.Value : false;
-                if (LoginState.IsAdmin) {
-                    return RedirectToAction("AdminHome");
+                if (LoginState.IsAdmin){
+                    return RedirectToAction("AdminHome", "Admin");
                 }
                 else
                 {
@@ -66,23 +66,11 @@ public class LoginController : Controller {
         return RedirectToAction("LandingPage");
     }
 
-    [HttpGet]
-    public async Task<List<RepairDTO>> GetDailyRepairs()
-    {
-        string url = $"{sourcePrefix}Repair/repairs/get_all_daily";
-        var response = await client.GetAsync(url);
-        response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync();
-        ResponseApi<List<RepairDTO>>? dailyRepairsResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<List<RepairDTO>>>(responseBody);
-        if (dailyRepairsResponse == null || dailyRepairsResponse.Value == null) return new List<RepairDTO>();
-        return dailyRepairsResponse.Value;
-    }
-
 
     //Views Loading
-    public ActionResult LandingPage() {
-        if (LoginState.IsLoggedIn) {
-            if (LoginState.IsAdmin) return RedirectToAction("AdminHome");
+    public ActionResult LandingPage(){
+        if (LoginState.IsLoggedIn){
+            if(LoginState.IsAdmin) return RedirectToAction("AdminHome", "Admin");
             else return RedirectToAction("UserHome", "User");
         }
         return View(new ActiveUserViewModel() { Name = LoginState.activeUser?.Name });
@@ -92,26 +80,7 @@ public class LoginController : Controller {
         if (!LoginState.IsLoggedIn) return View();
         else return RedirectToAction("LandingPage");
     }
-
-    //This should be in the respective controler for AdminController
-    public async Task<ActionResult> AdminHome() {
-        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
-
-        if (LoginState.IsAdmin) {
-            var dailyRepairs = await GetDailyRepairs();
-            return View(dailyRepairs);
-        }
-        else return RedirectToAction("LandingPage");
-    }
-
-    public ActionResult AdminUsersAndProperties(){
-        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
-
-        if (LoginState.IsAdmin) return View(new ActiveUserViewModel() { Name = LoginState.activeUser?.Name });
-        else return RedirectToAction("LandingPage");
-    }
-
-    
+   
 
     //Frontend Callbacks
     public IActionResult Logout(){

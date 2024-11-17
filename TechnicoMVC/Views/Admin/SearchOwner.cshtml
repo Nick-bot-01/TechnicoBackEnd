@@ -1,0 +1,22 @@
+﻿@using TechnicoBackEnd.Auth
+@using TechnicoBackEnd.DTOs;
+@{
+    ViewData["Title"] = "Search Owner Page";
+}
+<h1>WELCOME ADMIN @LoginState.activeUser?.Name </h1>
+<br>
+
+<h2>Edit Owner</h2>
+<div class="login-form">
+    <form asp-controller="Admin" asp-action="SearchOwnerResultsCallback" method="post">
+        <label for="searchInput">Search</label>
+        <input type="text" id="searchInput" name="searchInput" required>
+        <br>
+
+        <button type="submit">Search</button>
+    </form>
+    <!-- Error message display, if needed -->
+    <div class="error-message">
+        <!-- Example: Invalid login credentials -->
+    </div>
+</div>
