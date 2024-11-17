@@ -37,22 +37,20 @@
     </div>
     <br />
     <br />
+    <br />
+    <div id="ErrorMessage"
+         style="display:@((Model?.ErrorCode == 1 || Model?.ErrorCode == 0) ? "block" : "none");">
+        @if (Model != null && Model?.ErrorCode == 1)
+        {
+            <span class="text-danger">@Model.ErrorDescription</span>
+        }
+        @if (Model != null && Model?.ErrorCode == 0)
+        {
+            <span class="text-success">@Model?.ErrorDescription</span>
+        }
+    </div>
     <button type="submit" class="btn btn-primary">Save Changes</button>
     <a asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId" class="btn btn-secondary">Back to List</a>
     <br />
-    <div id="ErrorMessage"
-         style="display:@((Model?.Value != null) ? "block" : "none");">
-        @if (Model != null)
-        {
-            @if (Model?.Value == null)
-            {
-                <span class="text-danger">@Model.Description</span>
-            }
-            else
-            {
-                <span class="text-success">@Model.Description</span>
-            }
-        }
-    </div>
 </form>
 

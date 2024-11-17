@@ -29,6 +29,17 @@ public class RepairService : IRepairService
         if (propertyItem == null)
             return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair creation failed. Property with PIN {repairDto.PropertyIdNum} was not found." };
 
+        //var ownerPINs = await db.Properties
+        //    .Where(p => p.Owner.Id == currentUser)
+        //    .Select(p => p.PIN)
+        //    .ToListAsync();
+
+        //// Validate if the new PropertyId in updatedRepairDto exists within the owner's property list
+        //if (!ownerPINs.Contains(repairDto.PropertyIdNum!))
+        //{
+        //    return new ResponseApi<RepairDTO> { Status = 1, Description = "You can only enter the PIN of one of your properties." };
+        //}
+
         // Validate the user input values
         var validationResponse = validation.RepairValidatorUser(repairDto);
         if (validationResponse != null)
@@ -249,7 +260,7 @@ public class RepairService : IRepairService
         // Validate if the new PropertyId in updatedRepairDto exists within the owner's property list
         if (!ownerPINs.Contains(updatedRepairDto.PropertyIdNum!))
         {
-            return new ResponseApi<RepairDTO> { Status = 1, Description = "The specified Property ID does not belong to the repair owner." };
+            return new ResponseApi<RepairDTO> { Status = 1, Description = "You can only enter the PIN of one of your properties." };
         }
 
         // Validate the rest of the DTO's values

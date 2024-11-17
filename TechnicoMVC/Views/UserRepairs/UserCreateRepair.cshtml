@@ -34,7 +34,6 @@
         <input asp-for="Cost" class="form-control" />
         <span asp-validation-for="Cost" class="text-danger"></span>
     </div>
-    <br />
     <div id="ErrorMessage"
          style="display:@((Model?.ErrorCode == 1 || Model?.ErrorCode == 0) ? "block" : "none");">
         @if (Model != null && Model?.ErrorCode == 1)
