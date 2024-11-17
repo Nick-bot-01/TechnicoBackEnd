@@ -58,6 +58,20 @@ public class UserService : IUserService{
 
         //Deactivate user from the db
         ownerQueryResult!.IsActive = false;
+
+
+        var repairsFoundToRemove = await _dbContext.Repairs
+                        .Include(r => r.Property)
+                        .ThenInclude(p => p.Owner)
+                        .Where(r => r.Property.Owner.VATNum == ownerQueryResult.VATNum).ToListAsync();
+
+        var propertiesFoundToRemove = await _dbContext.Properties
+                        .Include(p => p.Owner)
+                        .Where(p => p.Owner.VATNum == ownerQueryResult.VATNum).ToListAsync();
+
+        repairsFoundToRemove.ForEach(r => { r.IsActive = false; });
+        propertiesFoundToRemove.ForEach(p => { p.IsActive = false; });
+
         await _dbContext.SaveChangesAsync();
         return new ResponseApi<UserDTO> { Status = 0, Description = $"User with Vat: {ownerQueryResult.VATNum} has been removed!" };
     }
@@ -129,7 +143,7 @@ public class UserService : IUserService{
         return new ResponseApi<List<UserDTO>> { Status = 0, Description = "", Value = users.Select(user => user.ConvertUser()).ToList() };
     }
 
-    public async Task<ResponseApi<UserDTO>> Update(UserWithRequiredFieldsDTO userDto)
+    public async Task<ResponseApi<UserDTO>> Update(UserDTO userDto)
     {
         //Input argument check
         if (GenericValidation.IsNull(userDto).Value) return new ResponseApi<UserDTO> { Status = 1, Description = $"User update failed. No user input was given" };
@@ -148,8 +162,8 @@ public class UserService : IUserService{
         existingUserQuery.Surname = (uservalidation.IsAlphabeticalValid(userDto.Surname)) ? userDto.Surname! : existingUserQuery.Surname;
         existingUserQuery.Address = (string.IsNullOrEmpty(userDto.Address)) ? existingUserQuery.Address : userDto.Address!;
         existingUserQuery.Phone = (uservalidation.IsNumericalValid(userDto.Phone)) ? userDto.Phone! : existingUserQuery.Phone;
-        existingUserQuery.Password = (string.IsNullOrEmpty(userDto.Password)) ? existingUserQuery.Password : userDto.Password!;
-
+        //existingUserQuery.Password = (string.IsNullOrEmpty(userDto.Password)) ? existingUserQuery.Password : userDto.Password!; 
+        //Decided to not allow changing the password.
         try
         {
             await _dbContext.SaveChangesAsync();

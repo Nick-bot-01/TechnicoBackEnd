@@ -79,21 +79,20 @@
     <!-- Flexible grid layout with Bootstrap -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-6 g-6">
         <div class="col">
-            <a href="#" class="d-block image-button">
-                <img src="~/images/user.jpg" alt="User Details" class="img-fluid rounded-3">
+            <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="UserDetails">
+            <img src="~/images/user.jpg" alt="User Details" class="img-fluid rounded-3">
             </a>
         </div>
         <div class="col">
-            <a href="#" class="d-block image-button">
+            <button asp-area="" asp-controller="User" asp-action="#" class="d-block image-button">
                 <img src="~/images/property.jpg" alt="Property Details" class="img-fluid rounded-3">
-            </a>
+            </button>
         </div>
         <div class="col">
-            <a asp-controller="UserRepairs" asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId" class="d-block image-button" />
+            <a class="navbar-brand" asp-controller="UserRepairs" asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId">
                 <img src="~/images/repair.png" alt="Repair Details" class="img-fluid rounded-3">
-            </>
+            </a>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

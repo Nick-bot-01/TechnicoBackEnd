@@ -16,9 +16,9 @@
     <Folder Include="Views\Admin\UserHandling\" />
     <Folder Include="Views\Admin\Property\" />
     <Folder Include="Views\Admin\Repair\" />
+    <Folder Include="Views\User\Property\" />
     <Folder Include="Views\User\Repair\" />
     <Folder Include="Views\User\SelfHandling\" />
-    <Folder Include="Views\User\Property\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
