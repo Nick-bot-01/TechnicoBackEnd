@@ -71,8 +71,8 @@ public class AdminController : Controller
         else return new UserDTO();
     }
 
-    public async Task<IActionResult> PresentTargetOwnerDetailsCallback(int id) {
-        var result = await GetOwnerDetails(id);
+    public async Task<IActionResult> PresentTargetOwnerDetailsCallback(int ownerId) {
+        var result = await GetOwnerDetails(ownerId);
         return View("EditOwner", result);
     }
 
