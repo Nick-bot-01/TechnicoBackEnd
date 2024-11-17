@@ -32,6 +32,16 @@ public class UserController : Controller{
         return targetUser;
     }
 
+    [HttpDelete]
+    public async Task<ResponseApi<UserDTO>?> RemoveUserToRedirectController(string? vat)
+    {
+        string url = $"{sourcePrefix}User/delete_user_soft/{vat}";
+        var response = await client.DeleteAsync(url);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<UserDTO>? removedUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
+        return removedUser;
+    }
+
 
 
     //Views
@@ -70,5 +80,14 @@ public class UserController : Controller{
     public async Task<IActionResult> UserUpdateButtonCallback(UserDTO userDTO){
         var response = await UpdateUserToRedirectController(userDTO);
         return RedirectToAction("UserHome");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteUserButtonCallback(UserDTO userDTO)
+    {
+        
+        Console.WriteLine($"Deleting Current User{userDTO.VAT}");
+        var result = await RemoveUserToRedirectController(LoginState.activeUser?.VAT);
+        return RedirectToAction("Logout", "Login");
     }
 }
