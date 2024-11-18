@@ -40,12 +40,6 @@ public class RepairDTO
     //[Required(ErrorMessage = "Owner VAT is required.")]
     public string? OwnerVAT { get; set; }
 
-    public string? OwnerName { get; set; }
-
-    public string? OwnerSurname { get; set; }
-
-    public string? FullName => $"{OwnerName} {OwnerSurname}";
-
     public string? ErrorDescription { get; set; }
 
     public int? ErrorCode { get; set; }
