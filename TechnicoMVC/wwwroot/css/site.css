@@ -9,8 +9,8 @@ html {
 }
 
 html, body {
-    height: 100%;
-    margin: 0;
+    height: 100%; /* Ensure the full viewport height is used */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .footer {
@@ -24,30 +24,14 @@ html, body {
     padding-top: 20px;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Ensure the body stretches to full height of the viewport */
-}
-
 main {
-    flex: 1; /* Pushes the footer down when the content is short */
+    flex: 1;
+    padding-bottom: 20px; /* Add spacing to avoid overlap */
 }
 
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-/*
-html {
-  position: relative;
-  min-height: 100%;
-}
-*/
-
-html, body {
-    overflow-y: auto;
-    height: 100%;
 }
 
 /* Custom card */
