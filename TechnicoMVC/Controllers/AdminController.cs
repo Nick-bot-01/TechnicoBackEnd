@@ -208,7 +208,7 @@ public class AdminController : Controller
     public async Task<IActionResult> DeleteOwnerCallback(string? ownerVat)
     {
         var result = await DeleteOwner(ownerVat);
-        return View("OwnersAndProperties");
+        return RedirectToAction("OwnersAndProperties");
     }
 
 }
