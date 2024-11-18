@@ -8,11 +8,11 @@ namespace TechnicoMVC.Controllers;
 
 public class UserRepairsController : Controller
 {
-    private readonly ILogger<RepairController> _logger;
-    private readonly string sourcePrefix = "https://localhost:7017/api/Repair/"; //for other controller change to Repair / Property etc.
+    private readonly ILogger<UserRepairsController> _logger;
+    private readonly string sourcePrefix = "https://localhost:7017/api/Repair/";
     private HttpClient client = new HttpClient();
 
-    public UserRepairsController(ILogger<RepairController> logger) => _logger = logger;
+    public UserRepairsController(ILogger<UserRepairsController> logger) => _logger = logger;
 
 
     public async Task<IActionResult> GetUserRepairs(string VATNum)
@@ -22,7 +22,7 @@ public class UserRepairsController : Controller
             return View("Error");
         }
         // Define the API endpoint for retrieving repairs
-        string url = $"{sourcePrefix}repairs/get_all_by_vat/{VATNum}";
+        string url = $"{sourcePrefix}properties/vat/{VATNum}";
         var response = await client.GetAsync(url);
 
         if (response.IsSuccessStatusCode)

@@ -24,12 +24,14 @@ public class PropertyController : ControllerBase
     [HttpGet("properties/vat/{vat}")]
     public async Task<ResponseApi<List<PropertyDTO>>> GetPropertiesByOwner([FromRoute] string vat) => await _propertyService.GetPropertiesByOwner(vat);
 
+    [HttpGet("properties/byid/{id}")]
+    public async Task<ResponseApi<List<PropertyDTO>>> GetPropertiesByOwnerID([FromRoute] int id) => await _propertyService.GetPropertiesByOwnerID(id);
+
     [HttpGet("search_properties")]
     public async Task<ResponseApi<List<PropertyDTO>>> SearchProperty([FromQuery] string? pin, [FromQuery] string? vat) => await _propertyService.SearchProperties(pin,vat);
 
     [HttpPost("create_property")]
     public async Task<ResponseApi<PropertyDTO>> CreateProperty([FromBody] PropertyDTO property) => await _propertyService.CreateProperty(property);
-
     [HttpPatch("update_property")]
     public async Task<ResponseApi<PropertyDTO>> UpdateProperty([FromBody] PropertyDTO property) => await _propertyService.UpdateProperty(property);
 

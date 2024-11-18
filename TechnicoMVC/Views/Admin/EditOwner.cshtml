@@ -14,30 +14,33 @@
 
         <label for="email">Email:</label>
         <input type="email" id="email-view" value="@Model.Email" disabled />
-        <input type="hidden" id="email" asp-for="Email" />
+        <input class="m-1" type="hidden" id="email" asp-for="Email" />
         <br>
 
         <label for="vat">VAT:</label>
         <input type="email" id="vat-view" value="@Model.VAT" disabled />
-        <input type="hidden" id="vat" asp-for="VAT" />
+        <input class="m-1" type="hidden" id="vat" asp-for="VAT" />
         <br>
 
         <label for="name">Name:</label>
-        <input type="text" id="name" asp-for="Name" required />
+        <input class="m-1" type="text" id="name" asp-for="Name" required />
         <br>
 
         <label for="surname">Surname:</label>
-        <input type="text" id="surname" asp-for="Surname" required />
+        <input class="m-1" type="text" id="surname" asp-for="Surname" required />
         <br>
 
         <label for="address">Address:</label>
-        <input type="text" id="address" asp-for="Address" required />
+        <input class="m-1" type="text" id="address" asp-for="Address" required />
         <br>
 
         <label for="phone">Phone:</label>
-        <input type="text" id="phone" asp-for="Phone" required />
+        <input class="m-1" type="text" id="phone" asp-for="Phone" required />
         <br>
 
-        <button type="submit">Update</button>
+        <button class="m-1" type="submit">Update</button>
     </form>
+</div>
+<div class="container m-2">
+    <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="OwnersAndProperties">Back to Owners and Properties</a>
 </div>

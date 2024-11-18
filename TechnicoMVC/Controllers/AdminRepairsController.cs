@@ -8,11 +8,11 @@ namespace TechnicoMVC.Controllers;
 
 public class AdminRepairsController : Controller
 {
-    private readonly ILogger<RepairController> _logger;
+    private readonly ILogger<AdminRepairsController> _logger;
     private readonly string sourcePrefix = "https://localhost:7017/api/Repair/"; //for other controller change to Repair / Property etc.
     private HttpClient client = new HttpClient();
 
-    public AdminRepairsController(ILogger<RepairController> logger) => _logger = logger;
+    public AdminRepairsController(ILogger<AdminRepairsController> logger) => _logger = logger;
 
 
     public async Task<IActionResult> GetAllUsersRepairs()
@@ -199,6 +199,7 @@ public class AdminRepairsController : Controller
         return View();
     }
 
+
     public async Task<IActionResult> Search([FromQuery] int? userId, [FromQuery] DateOnly? startDate, [FromQuery] DateOnly? endDate)
     {
         string url = $"{sourcePrefix}repairs/search";
@@ -236,4 +237,10 @@ public class AdminRepairsController : Controller
 
         return View("Error");
     }
+
 }
+
+
+
+
+

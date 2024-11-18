@@ -20,49 +20,53 @@
     </div>
     <div class="col">
         <div class="container">
+            <a class="btn btn-primary" asp-area="" asp-controller="AdminProperties" asp-action="AdminCreateProperty">Create Property</a>
+        </div>
+    </div>
+    <div class="col">
+        <div class="container">
             <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="SearchProperties">Search Properties</a>
         </div>
     </div>
 </div>
-
 
 <div class="row m-2">
 @if (Model != null)
 {
     foreach (var property in Model)
     {
-        if (@property.PIN != null)
+        if (@property.PIN != null) @*maybe unnecessary*@
         {
-            <div class="col">
+            <div class="col">        
                 <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">@property.PIN.ToString()</h5>
-                        <p class="card-text">@property.ConstructionYear</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">@property.Address</li>
-                        <li class="list-group-item">@property.PType</li>
-                        <li class="list-group-item">@property.OwnerId</li>
-                    </ul>
-                    <div class="card-body">
-                        <form asp-controller="Admin" asp-action="PresentTargetOwnerDetailsCallback" method="post" style="display: inline;">
-                            <input type="hidden" name="ownerId" value="@property.OwnerId" />
-                            <button type="submit" class="btn btn-primary">Edit Owner</button>
-                        </form>
-                    </div>
-                    <div class="card-body">
-                            <form asp-controller="" asp-action="" method="post" style="display: inline;">
-                                <input type="hidden" name="updateProperty" value="" />
+                        <div class="card-body">
+                            <h5 class="card-title">@property.PIN.ToString()</h5>
+                            <p class="card-text">@property.ConstructionYear</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">@property.Address</li>
+                            <li class="list-group-item">@property.PType</li>
+                            <li class="list-group-item">@property.OwnerId</li>
+                        </ul>
+                        <div class="card-body">
+                            <form asp-controller="Admin" asp-action="PresentTargetOwnerDetailsCallback" method="post" style="display: inline;">
+                                <input type="hidden" name="ownerId" value="@property.OwnerId" />
+                                <button type="submit" class="btn btn-primary">Edit Owner</button>
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <form asp-controller="AdminProperties" asp-action="AdminUpdateProperty" method="post" style="display: inline;">
+                                <input type="hidden" name="id" value="@property.Id" />
                                 <button type="submit" class="btn btn-primary">Update Property</button>
                             </form>
-                    </div>
-                    <div class="card-body">
-
-                        <form asp-controller="" asp-action="" method="post" style="display: inline;">
-                            <input type="hidden" name="deleteProperty" value="" />
-                            <button type="submit" class="btn btn-primary">Delete Property</button>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="card-body">
+                            <form asp-controller="" asp-action="" method="post" style="display: inline;">
+                                @*implement*@
+                                <input type="hidden" name="deleteProperty" value="" />
+                                <button type="submit" class="btn btn-primary">Delete Property</button>
+                            </form>
+                        </div>
                 </div>
             </div>
         }
