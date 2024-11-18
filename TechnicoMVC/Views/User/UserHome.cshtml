@@ -51,6 +51,21 @@
 <div style="display:flex; justify-content:center; align-items: center; margin-top: 25px;"><h1><b>HomePage. Hello @LoginState.activeUser?.Name 😎</b></h1></div>
 <br>
 
+<!--INTERACTION OF USER-->
+<div class="container interaction-container">
+    <div class="interaction-grid">
+        <a class="interaction-item" asp-controller="User" asp-action="UserDetails">
+            <img src="~/images/user.jpg" alt="User Details" class="interaction-icon">
+        </a>
+        <a class="interaction-item" asp-controller="UserProperties" asp-action="GetUserPropertiesByUID" asp-route-Id="@LoginState.UserId">
+            <img src="~/images/property.jpg" alt="Property Details" class="interaction-icon">
+        </a>
+        <a class="interaction-item" asp-controller="UserRepairs" asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId">
+            <img src="~/images/repair.png" alt="Repair Details" class="interaction-icon">
+        </a>
+    </div>
+</div>
+
 <div><h2>Upcoming Repairs</h2></div>
 <div class="accordion" id="accordionExample" style="margin: 25px;">
     @for (int i = 0; i < entriesCount; i++)
@@ -65,7 +80,7 @@
                         aria-controls="collapse-@i">
                     <div>
                         You have scheduled a repair of type <strong>@repairDTOs[i].RType.ToString()</strong>
-                        on <strong>@repairDTOs[i].ScheduledDate.ToString()</strong>
+                        on <strong>@repairDTOs[i].ScheduledDate.ToString("dd/MM/yyyy HH:mm")</strong>
                     </div>
                 </button>
             </h2>
@@ -82,21 +97,5 @@
         </div>
     }
 </div>
-
-<!--INTERACTION OF USER-->
-<div class="container interaction-container">
-    <div class="interaction-grid">
-        <a class="interaction-item" asp-controller="User" asp-action="UserDetails">
-            <img src="~/images/user.jpg" alt="User Details" class="interaction-icon">
-        </a>
-        <a class="interaction-item" asp-controller="UserProperties" asp-action="GetUserPropertiesByUID" asp-route-Id="@LoginState.UserId">
-            <img src="~/images/property.jpg" alt="Property Details" class="interaction-icon">
-        </a>
-        <a class="interaction-item" asp-controller="UserRepairs" asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId">
-            <img src="~/images/repair.png" alt="Repair Details" class="interaction-icon">
-        </a>
-    </div>
-</div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

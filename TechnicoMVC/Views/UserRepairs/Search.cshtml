@@ -3,9 +3,10 @@
 @using TechnicoBackEnd.DTOs;
 @using TechnicoBackEnd.Auth;
 @model IEnumerable<TechnicoBackEnd.DTOs.RepairDTO>;
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 @{
-    ViewData["Title"] = "Repairs";
+    ViewData["Title"] = "Search User Repairs";
 
     // Generate the list of repair types choices from the RepairType enum
     var repairTypes = Enum.GetValues(typeof(TechnicoBackEnd.Models.RepairType))
@@ -26,23 +27,41 @@
                                      }).ToList();
 }
 
-<h1 class="d-flex align-items-center mt-4">
-    <img src="~/images/tools.png" alt="Repair Icon" class="header-icon mr-2" />
-    Repairs
-</h1>
-<br />
-<br />
-<br />
-<p>
-    <a asp-action="UserCreateRepair" class="btn btn-primary">Create New</a>
-    <a class="btn btn-secondary px-4" asp-area="" asp-controller="User" asp-action="UserHome">Back to Homepage</a>
-</p>
-<br />
-<br />
-<br />
-<p>
-    <a asp-action="Search" class="btn btn-primary">Search Repairs</a>
-</p>
+<form method="get" asp-action="Search" class="form-inline mb-3">
+    <div class="form-group mr-2">
+        <label for="rtype">Repair Type:</label>
+        <select name="rtype" class="form-control">
+            <option value="">-- Select Repair Type --</option>
+            @foreach (var type in repairTypes)
+            {
+                var selected = (ViewData["searchRType"]?.ToString() == type.Value) ? "selected" : "";
+                @Html.Raw($"<option value=\"{type.Value}\" {selected}>{type.Text}</option>")
+            }
+        </select>
+    </div>
+    <div class="form-group mr-2">
+        <label for="rstatus">Status:</label>
+        <select name="rstatus" class="form-control">
+            <option value="">-- Select Status --</option>
+            @foreach (var status in repairStatuses)
+            {
+                var selected = (ViewData["searchStatus"]?.ToString() == status.Value) ? "selected" : "";
+                @Html.Raw($"<option value=\"{status.Value}\" {selected}>{status.Text}</option>")
+            }
+        </select>
+    </div>
+    <div class="form-group mr-2">
+        <label for="minCost">Min Cost:</label>
+        <input type="number" name="minCost" class="form-control" step="0.01" value="@ViewData["minCost"]" />
+    </div>
+    <div class="form-group mr-2">
+        <label for="maxCost">Max Cost:</label>
+        <input type="number" name="maxCost" class="form-control" step="0.01" value="@ViewData["maxCost"]" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary mr-2">Search</button>
+    <a asp-action="Search" class="btn btn-secondary">Clear</a>
+</form>
 
 
 <div class="row">
@@ -51,7 +70,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 card-custom">
                 <div class="card-body">
-                    <h5 class="card-title text-primary">Scheduled Date: @item.ScheduledDate.ToString("dd/MM/yyyy HH:mm")</h5>
+                    <h5 class="card-title text-primary">Scheduled Date: @item.ScheduledDate.ToString("dd/MM/yyyy HH:mm tt", System.Globalization.CultureInfo.InvariantCulture)</h5>
                     <p class="card-text"><strong>PIN:</strong> @Html.DisplayFor(modelItem => item.PropertyIdNum)</p>
                     <p class="card-text"><strong>Repair Type:</strong> @Html.DisplayFor(modelItem => item.RType)</p>
                     <p class="card-text"><strong>Status:</strong> @Html.DisplayFor(modelItem => item.Status)</p>

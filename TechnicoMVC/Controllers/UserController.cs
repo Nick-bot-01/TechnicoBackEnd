@@ -41,6 +41,16 @@ public class UserController : Controller{
         return removedUser;
     }
 
+    [HttpGet]
+    public async Task RefreshActiveUserData(){
+        string url = $"{sourcePrefix}User/users/{LoginState.UserId}";
+        var response = await client.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync();
+        ResponseApi<UserDTO>? targetUser = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<UserDTO>>(responseBody);
+        LoginState.activeUser = targetUser?.Value;
+        if(LoginState.activeUser != null) LoginState.UserId = LoginState.activeUser.Id;
+    } 
 
 
     //Views
@@ -78,6 +88,7 @@ public class UserController : Controller{
     [HttpPost]
     public async Task<IActionResult> UserUpdateButtonCallback(UserDTO userDTO){
         var response = await UpdateUserToRedirectController(userDTO);
+        await RefreshActiveUserData();
         return RedirectToAction("UserHome");
     }
 

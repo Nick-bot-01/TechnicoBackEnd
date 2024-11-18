@@ -82,6 +82,13 @@ public class RepairController : ControllerBase
         return response;
     }
 
+    [HttpGet("repairs/user_search")]
+    public async Task<ResponseApi<List<RepairDTO>>> SearchRepairs(int? userId, RepairType? rtype, RepairStatus? rstatus, decimal? minCost, decimal? maxCost)
+    {
+        var response = await _repairService.SearchUserRepairs(userId, rtype, rstatus, minCost, maxCost);
+        return response;
+    }
+
     [HttpGet("repairs/get_all_by_dates")]
     public async Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByDateOrRangeOfDates(DateTime StartDate, DateTime EndDate)
     {
