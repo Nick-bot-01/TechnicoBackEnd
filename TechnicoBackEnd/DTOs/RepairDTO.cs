@@ -37,14 +37,14 @@ public class RepairDTO
 
     public string? PropertyAddress { get; set; }
 
-    [Required(ErrorMessage = "Owner VAT is required.")]
+    //[Required(ErrorMessage = "Owner VAT is required.")]
     public string? OwnerVAT { get; set; }
 
     public string? OwnerName { get; set; }
 
     public string? OwnerSurname { get; set; }
 
-    public string FullName => $"{OwnerName} {OwnerSurname}";
+    public string? FullName => $"{OwnerName} {OwnerSurname}";
 
     public string? ErrorDescription { get; set; }
 
