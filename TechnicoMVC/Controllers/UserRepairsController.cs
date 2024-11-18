@@ -5,20 +5,21 @@ using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
 using TechnicoBackEnd.Helpers;
 using TechnicoBackEnd.Models;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace TechnicoMVC.Controllers;
 
 public class UserRepairsController : Controller
 {
     private readonly ILogger<UserRepairsController> _logger;
-    private readonly string sourcePrefix = "https://localhost:7017/api/Repair/";
+    private readonly string sourcePrefix = "https://localhost:7017/api/";
     private HttpClient client = new HttpClient();
 
     public UserRepairsController(ILogger<UserRepairsController> logger) => _logger = logger;
 
     public async Task<IActionResult> Search([FromQuery] RepairType? rtype, [FromQuery] RepairStatus? rstatus, [FromQuery] decimal? minCost, [FromQuery] decimal? maxCost)
     {
-        string url = $"{sourcePrefix}repairs/user_search";
+        string url = $"{sourcePrefix}Repair/repairs/user_search";
 
         var queryParams = new List<string>();
         queryParams.Add($"userId={LoginState.UserId}");
@@ -63,7 +64,7 @@ public class UserRepairsController : Controller
             return View("Error");
         }
         // Define the API endpoint for retrieving repairs
-        string url = $"{sourcePrefix}properties/vat/{VATNum}";
+        string url = $"{sourcePrefix}Repair/properties/vat/{VATNum}";
         var response = await client.GetAsync(url);
 
         if (response.IsSuccessStatusCode)
@@ -88,12 +89,12 @@ public class UserRepairsController : Controller
 
     public async Task<IActionResult> GetUserRepairsByUID(int id)
     {
-        if (id <= 0)
+        if (id <= 0 || id != LoginState.UserId)
         {
             return View("Error", "Negative user Id Detected");
         }
         // Define the API endpoint for retrieving repairs
-        string url = $"{sourcePrefix}repairs/get_all_by_id/{id}";
+        string url = $"{sourcePrefix}Repair/repairs/get_all_by_id/{id}";
         var response = await client.GetAsync(url);
 
         if (response.IsSuccessStatusCode)
@@ -107,10 +108,8 @@ public class UserRepairsController : Controller
             // Deserialize the response body to ResponseApi<List<RepairDTO>>
             var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<List<RepairDTO>>>(responseBody, options);
 
-            if (apiResponse?.Value != null)
-            {
-                return View("GetUserRepairs", apiResponse.Value);
-            }
+            var repairList = (apiResponse?.Value != null) ? apiResponse.Value : new();
+            return View("GetUserRepairs", repairList);
         }
 
         return View("Error");
@@ -120,7 +119,7 @@ public class UserRepairsController : Controller
 
     public async Task<ResponseApi<RepairDeactivateRequestDTO>?> RemoveRepairToRedirectController(int repairId)
     {
-        string url = $"{sourcePrefix}repair/delete";
+        string url = $"{sourcePrefix}Repair/repair/delete";
 
         // Create the DTO object with the RepairId
         var repairDTO = new RepairDeactivateRequestDTO { RepairId = repairId };
@@ -170,7 +169,15 @@ public class UserRepairsController : Controller
     }
 
 
-
+    [HttpGet]
+    public async Task<ResponseApi<PropertyDTO>?> GetUserPropertyByPIN(string? pin)
+    {
+        string url = $"{sourcePrefix}Property/properties/pin/{pin}";
+        var response = await client.GetAsync(url);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var targetProperty = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<PropertyDTO>>(responseBody);
+        return targetProperty;
+    }
 
 
 
@@ -184,7 +191,7 @@ public class UserRepairsController : Controller
     [HttpPost]
     public async Task<ResponseApi<RepairDTO>?> CreateRepairToRedirectController(RepairDTO repair)
     {
-        string url = $"{sourcePrefix}user/create_repair";
+        string url = $"{sourcePrefix}Repair/user/create_repair";
         var response = await client.PostAsJsonAsync(url, repair);
         var responseBody = await response.Content.ReadAsStringAsync();
         ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
@@ -201,6 +208,17 @@ public class UserRepairsController : Controller
         //    // Return to the form view with data annotation error messages
         //    return View("UserCreateRepair", pendingCreationRepair);
         //}
+
+        //Check if the user has a property with property id.
+        var result = await GetUserPropertyByPIN(pendingCreationRepair.PropertyIdNum);
+        var propertyFound = result?.Value;
+        if (propertyFound != null)
+        {
+            if(propertyFound.OwnerId != LoginState.UserId)
+            {
+                return RedirectToAction("UserHome", "User");
+            }
+        }
 
         ResponseApi<RepairDTO>? createdRepair = await CreateRepairToRedirectController(pendingCreationRepair);
 
@@ -233,7 +251,7 @@ public class UserRepairsController : Controller
     [HttpGet]
     public async Task<ResponseApi<RepairWithoutAnnotationsDTO>?> GetUpdatePageRedirect(int id)
     {
-        string url = $"{sourcePrefix}repairs/get_repair_details/{id}";
+        string url = $"{sourcePrefix}Repair/repairs/get_repair_details/{id}";
         var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -272,7 +290,7 @@ public class UserRepairsController : Controller
     [HttpPut]
     public async Task<ResponseApi<RepairDTO>?> UpdateUserToRedirectController(RepairDTO repair)
     {
-        string url = $"{sourcePrefix}user/update_repair";
+        string url = $"{sourcePrefix}Repair/user/update_repair";
         var response = await client.PutAsJsonAsync(url, repair);
         var responseBody = await response.Content.ReadAsStringAsync();
         ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
