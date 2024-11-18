@@ -1,0 +1,35 @@
+﻿@using TechnicoBackEnd.Models
+@using TechnicoBackEnd.Auth
+@model TechnicoBackEnd.DTOs.PropertyDTO
+
+<h1>Create Property</h1>
+<br />
+<form asp-controller="UserProperties" asp-action="CreatePropertyCallback" method="post">
+    <div class="form-group">
+        <label for="PIN">Property Identification Number (PIN)</label>
+        <input asp-for="@Model.PIN" class="form-control" />
+        <span asp-validation-for="PIN" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Address">Address</label>
+        <input asp-for="@Model.Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConstructionYear">Construction Year</label>
+        <input asp-for="@Model.ConstructionYear" class="form-control" />
+        <span asp-validation-for="ConstructionYear" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PType">Property Type</label>
+        <select asp-for="@Model.PType" class="form-control" asp-items="Html.GetEnumSelectList<PropertyType>()"></select>
+        <span asp-validation-for="PType" class="text-danger"></span>
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-controller="User" asp-action="UserHome" class="btn btn-secondary">Back to Homepage</a>
+</form>
