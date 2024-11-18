@@ -84,9 +84,9 @@
             </a>
         </div>
         <div class="col">
-            <button asp-area="" asp-controller="User" asp-action="#" class="d-block image-button">
+            <a class="navbar-brand" asp-controller="UserProperties" asp-action="GetUserPropertiesByUID" asp-route-Id="@LoginState.UserId">
                 <img src="~/images/property.jpg" alt="Property Details" class="img-fluid rounded-3">
-            </button>
+            </a>
         </div>
         <div class="col">
             <a class="navbar-brand" asp-controller="UserRepairs" asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId">
