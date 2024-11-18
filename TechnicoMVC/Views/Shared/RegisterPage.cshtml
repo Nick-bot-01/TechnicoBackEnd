@@ -4,51 +4,57 @@
     ViewData["Title"] = "Register Page";
 }
 
-@if (!LoginState.IsLoggedIn)
-{
-    <h1>REGISTER</h1>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="width: 30rem;">
+        <h1 class="text-center mb-4">Register</h1>
 
-    <h2>Personal Info </h2>
-    <div class="login-form">
-        <form asp-controller="Login" asp-action="RegisterRequest" method="post">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <br>
-            <label for="vat">VAT:</label>
-            <input type="text" id="vat" name="vat" required>
-            <br>
+        @if (!LoginState.IsLoggedIn)
+        {
+            <h4 class="text-center mb-3">Personal Info</h4>
+            <form asp-controller="Login" asp-action="RegisterRequest" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                </div>
 
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <br>
+                <div class="mb-3">
+                    <label for="vat" class="form-label">VAT:</label>
+                    <input type="text" id="vat" name="vat" class="form-control" placeholder="Enter your VAT number" required>
+                </div>
 
-            <label for="surname">Surname:</label>
-            <input type="text" id="surname" name="surname" required>
-            <br>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter your first name" required>
+                </div>
 
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address" required>
-            <br>
+                <div class="mb-3">
+                    <label for="surname" class="form-label">Surname:</label>
+                    <input type="text" id="surname" name="surname" class="form-control" placeholder="Enter your surname" required>
+                </div>
 
-            <label for="phone">Phone:</label>
-            <input type="text" id="phone" name="phone" required>
-            <br>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address:</label>
+                    <input type="text" id="address" name="address" class="form-control" placeholder="Enter your address" required>
+                </div>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <br>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone:</label>
+                    <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" required>
+                </div>
 
-            <button type="submit">Register</button>
-        </form>
-        <!-- Error message display, if needed -->
-        <div class="error-message">
-            <!-- Example: Invalid login credentials -->
-        </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-success text-center" role="alert">
+                Welcome @LoginState.activeUser?.Name!
+            </div>
+        }
     </div>
-}
-else
-{
-    <div class="error-message">
-        Welcome @LoginState.activeUser?.Name !
-    </div>
-}
+</div>
