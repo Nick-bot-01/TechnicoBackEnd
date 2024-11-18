@@ -54,7 +54,7 @@ public class RepairController : ControllerBase
     }
 
     [HttpGet("repairs/get_all_pending")]
-    public async Task<ResponseApi<List<RepairDTO>>> GetAllPendingRepairs()
+    public async Task<ResponseApi<List<RepairAdminCreateUpdateDTO>>> GetAllPendingRepairs()
     {
         var response = await _repairService.GetAllPendingRepairs();
         return response;

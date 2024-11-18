@@ -30,7 +30,7 @@ public class AdminRepairsController : Controller
             };
 
             // Deserialize the response body to ResponseApi<List<RepairDTO>>
-            var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<List<RepairDTO>>>(responseBody, options);
+            var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<List<RepairAdminCreateUpdateDTO>>>(responseBody, options);
 
             if (apiResponse?.Value != null)
             {
@@ -96,20 +96,20 @@ public class AdminRepairsController : Controller
     // CREATE
 
     [HttpPost]
-    public async Task<ResponseApi<RepairDTO>?> CreateRepairToRedirectController(RepairDTO repair)
+    public async Task<ResponseApi<RepairAdminCreateUpdateDTO>?> CreateRepairToRedirectController(RepairAdminCreateUpdateDTO repair)
     {
         string url = $"{sourcePrefix}admin/create_repair";
         var response = await client.PostAsJsonAsync(url, repair);
         var responseBody = await response.Content.ReadAsStringAsync();
-        ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
+        ResponseApi<RepairAdminCreateUpdateDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairAdminCreateUpdateDTO>>(responseBody);
         return targetRepair;
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateRepairCallback(RepairDTO pendingCreationRepair)
+    public async Task<IActionResult> CreateRepairCallback(RepairAdminCreateUpdateDTO pendingCreationRepair)
     {
-        ResponseApi<RepairDTO>? createdRepair = await CreateRepairToRedirectController(pendingCreationRepair);
+        ResponseApi<RepairAdminCreateUpdateDTO>? createdRepair = await CreateRepairToRedirectController(pendingCreationRepair);
 
         if (createdRepair?.Value != null)
         {
@@ -133,46 +133,46 @@ public class AdminRepairsController : Controller
 
     public IActionResult AdminCreateRepair()
     {
-        return View(new RepairDTO { ScheduledDate = DateTime.Now, PropertyIdNum = "", Cost = 0, Description = "" });
+        return View(new RepairAdminCreateUpdateDTO { ScheduledDate = DateTime.Now, PropertyIdNum = "", Cost = 0, Description = "" });
     }
 
 
     // UPDATE
 
     [HttpGet]
-    public async Task<ResponseApi<RepairDTO>?> GetUpdatePageRedirect(int id)
+    public async Task<ResponseApi<RepairAdminCreateUpdateDTO>?> GetUpdatePageRedirect(int id)
     {
         string url = $"{sourcePrefix}repairs/get_repair_details/{id}";
         var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
-        ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
+        ResponseApi<RepairAdminCreateUpdateDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairAdminCreateUpdateDTO>>(responseBody);
         return targetRepair;
     }
 
-    public async Task<IActionResult> GetUpdatePageCallback(RepairDTO pendingRepairDetails)
+    public async Task<IActionResult> GetUpdatePageCallback(RepairAdminCreateUpdateDTO pendingRepairDetails)
     {
-        ResponseApi<RepairDTO>? repairDetails = await GetUpdatePageRedirect(pendingRepairDetails.Id);
+        ResponseApi<RepairAdminCreateUpdateDTO>? repairDetails = await GetUpdatePageRedirect(pendingRepairDetails.Id);
 
         return View("AdminUpdateRepair", repairDetails?.Value);
     }
 
 
     [HttpPut]
-    public async Task<ResponseApi<RepairDTO>?> UpdateAdminToRedirectController(RepairDTO repair)
+    public async Task<ResponseApi<RepairAdminCreateUpdateDTO>?> UpdateAdminToRedirectController(RepairAdminCreateUpdateDTO repair)
     {
         string url = $"{sourcePrefix}admin/update_repair";
         var response = await client.PutAsJsonAsync(url, repair);
         var responseBody = await response.Content.ReadAsStringAsync();
-        ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
+        ResponseApi<RepairAdminCreateUpdateDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairAdminCreateUpdateDTO>>(responseBody);
         return targetRepair;
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UpdateRepairCallback(RepairDTO pendingUpdateRepair)
+    public async Task<IActionResult> UpdateRepairCallback(RepairAdminCreateUpdateDTO pendingUpdateRepair)
     {
-        ResponseApi<RepairDTO>? createdRepair = await UpdateAdminToRedirectController(pendingUpdateRepair);
+        ResponseApi<RepairAdminCreateUpdateDTO>? createdRepair = await UpdateAdminToRedirectController(pendingUpdateRepair);
 
         if (createdRepair?.Value != null)
         {
