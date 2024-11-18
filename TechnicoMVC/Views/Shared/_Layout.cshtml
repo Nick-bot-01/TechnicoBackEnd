@@ -11,35 +11,13 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom shadow-sm">
+            <div class="container d-flex justify-content-between">
                 <a class="navbar-brand" asp-area="" asp-controller="Login" asp-action="LandingPage">Technico Repair Application</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            @if (LoginState.IsLoggedIn){
-                                <div class="container">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout"><strong>Logout</strong></a>
-                                </div>
-                            }
-                        </li>
-                        <li class="nav-item">
-                            @if (LoginState.IsLoggedIn && !LoginState.IsAdmin) {
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserRepairs" asp-action="GetUserRepairs" asp-route-VATNum="987654321">USER Repairs Page</a>
-                            }
-                        </li>
-                        <li class="nav-item">
-                            @if (LoginState.IsLoggedIn && LoginState.IsAdmin)
-                            {
-                                <a class="nav-link text-dark" asp-area="" asp-controller="AdminRepairs" asp-action="GetAllUsersRepairs"> Admin Repairs Page </a>
-                            }
-                        </li>
-                    </ul>
-                </div>
+                @if (LoginState.IsLoggedIn)
+                {
+                    <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout" style="font-weight: bold; font-size: large">Logout</a>
+                }
             </div>
         </nav>
     </header>
@@ -49,8 +27,8 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
+    <footer class="footer mt-auto py-3 bg-light text-muted">
+        <div class="container text-center">
             &copy; 2024 - TechnicoMVC
         </div>
     </footer>

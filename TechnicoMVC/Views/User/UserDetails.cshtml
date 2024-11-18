@@ -27,26 +27,28 @@
 </head>
 
 
-<div class="col">
-    <div><h1><b>Personal Details</b></h1></div>
+<div class="text-center my-4">
+    <h1><b>Personal Details</b></h1>
 </div>
-<br>
-<div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="~/images/user.jpg" alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-title">User Details</h5> 
-    </div>
-    <ul class="list-group list-group-flush">
-        @if(LoginState.activeUser!=null){
-            <li class="list-group-item"> <i>Name: </i> <b>@LoginState.activeUser.Name</b> </li>
-            <li class="list-group-item"> <i>Surname: </i> <b>@LoginState.activeUser.Surname</b> </li>
-            <li class="list-group-item"> <i>Phone: </i> <b>@LoginState.activeUser.Phone</b> </li>
-            <li class="list-group-item"> <i>Email: </i> <b>@LoginState.activeUser.Email</b> </li>
-            <li class="list-group-item"> <i>VAT: </i> <b>@LoginState.activeUser.VAT</b> </li>
-        }
-    </ul>
-    <div class="card-body">
-        <a class="card-link" asp-area="" asp-controller="User" asp-action="UserUpdate">Update Details</a>
+<div class="d-flex justify-content-center">
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="~/images/user.jpg" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title text-center">User Details</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            @if (LoginState.activeUser != null)
+            {
+                <li class="list-group-item"><i>Name: </i><b>@LoginState.activeUser.Name</b></li>
+                <li class="list-group-item"><i>Surname: </i><b>@LoginState.activeUser.Surname</b></li>
+                <li class="list-group-item"><i>Phone: </i><b>@LoginState.activeUser.Phone</b></li>
+                <li class="list-group-item"><i>Email: </i><b>@LoginState.activeUser.Email</b></li>
+                <li class="list-group-item"><i>VAT: </i><b>@LoginState.activeUser.VAT</b></li>
+            }
+        </ul>
+        <div class="card-body text-center">
+            <a class="card-link" asp-area="" asp-controller="User" asp-action="UserUpdate">Update Details</a>
+        </div>
     </div>
 </div>
 

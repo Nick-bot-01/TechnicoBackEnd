@@ -3,6 +3,7 @@ using System.Net.Http;
 using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
+using TechnicoBackEnd.Helpers;
 
 namespace TechnicoMVC.Controllers;
 
@@ -190,21 +191,29 @@ public class UserRepairsController : Controller
 
 
     [HttpGet]
-    public async Task<ResponseApi<RepairDTO>?> GetUpdatePageRedirect(int id)
+    public async Task<ResponseApi<RepairWithoutAnnotationsDTO>?> GetUpdatePageRedirect(int id)
     {
         string url = $"{sourcePrefix}repairs/get_repair_details/{id}";
         var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
-        ResponseApi<RepairDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairDTO>>(responseBody);
+        ResponseApi<RepairWithoutAnnotationsDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairWithoutAnnotationsDTO>>(responseBody);
         return targetRepair;
     }
 
-    public async Task<IActionResult> GetUpdatePageCallback(RepairDTO pendingRepairDetails)
+    public async Task<IActionResult> GetUpdatePageCallback(RepairWithoutAnnotationsDTO pendingRepairDetails)
     {
-        ResponseApi<RepairDTO>? repairDetails = await GetUpdatePageRedirect(pendingRepairDetails.Id);
+        ResponseApi<RepairWithoutAnnotationsDTO>? repairDetails = await GetUpdatePageRedirect(pendingRepairDetails.Id);
 
-        return View("UserUpdateRepair", repairDetails?.Value);
+        // Create a new ResponseApi<RepairDTO> by converting the Value
+        ResponseApi<RepairDTO> responseForView = new ResponseApi<RepairDTO>
+        {
+            Status = repairDetails?.Status ?? 0, // Copy the status
+            Description = repairDetails?.Description, // Copy the description
+            Value = repairDetails?.Value != null ? repairDetails.Value.ConvertToRepairDTO() : null // Convert the Value
+        };
+
+        return View("UserUpdateRepair", responseForView?.Value);
     }
 
 

@@ -105,3 +105,49 @@
 </div>
 
 
+<!--
+    <div class="d-flex justify-content-center my-4">
+    <div>
+        <div class="text-center mb-4">
+            <h1><b>Update Personal Details</b></h1>
+        </div>
+        <div class="card shadow" style="width: 22rem;">
+            <div class="card-body">
+                <img class="rounded-circle mx-auto d-block mb-3" src="~/images/user.jpg" alt="User Image" style="width: 120px; height: 120px;">
+                <form method="post" asp-action="@updateCallbackName" asp-controller="User">
+                    <div class="mb-3">
+                        <label for="Email" class="form-label"><strong>Email:</strong></label>
+                        <input type="email" class="form-control" id="Email" value="@Model.Email" disabled>
+@Html.HiddenFor(m => m.Email)
+                    </div>
+                    <div class="mb-3">
+                        <label for="VAT" class="form-label"><strong>VAT:</strong></label>
+                        <input type="text" class="form-control" id="VAT" value="@Model.VAT" disabled>
+@Html.HiddenFor(m => m.VAT)
+                    </div>
+                    <div class="mb-3">
+                        <label for="Name" class="form-label"><strong>Name:</strong></label>
+                        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Surname" class="form-label"><strong>Surname:</strong></label>
+                        <input type="text" class="form-control" id="Surname" name="Surname" value="@Model.Surname">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Phone" class="form-label"><strong>Phone:</strong></label>
+                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.Phone">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Address" class="form-label"><strong>Address:</strong></label>
+                        <input type="text" class="form-control" id="Address" name="Address" value="@Model.Address">
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary w-100 mb-2">Save Changes</button>
+                        <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Delete Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+-->

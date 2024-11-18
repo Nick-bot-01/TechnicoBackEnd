@@ -97,7 +97,7 @@ public class RepairController : ControllerBase
     }
 
     [HttpGet("repairs/get_repair_details/{id}")]
-    public async Task<ResponseApi<RepairDTO>> GetRepairByID([FromRoute] int id)
+    public async Task<ResponseApi<RepairWithoutAnnotationsDTO>> GetRepairByID([FromRoute] int id)
     {
         var response = await _repairService.GetRepairByID(id);
         return response;

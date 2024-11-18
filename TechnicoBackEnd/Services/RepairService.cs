@@ -65,23 +65,23 @@ public class RepairService : IRepairService
         }
     }
 
-    public async Task<ResponseApi<RepairDTO>> GetRepairByID(int id)
+    public async Task<ResponseApi<RepairWithoutAnnotationsDTO>> GetRepairByID(int id)
     {
         var GetQuery = await db.Repairs
             .Include(r => r.Property)
             .ThenInclude(r => r.Owner)
             .Where(r => r.Id == id)
-            .Select(r => r.ConvertRepair())
+            .Select(r => r.ConvertRepairWithoutAnnotations())
             .FirstOrDefaultAsync();
 
         Console.WriteLine(GetQuery);
 
         if (GetQuery == null)
         {
-            return new ResponseApi<RepairDTO> { Status = 1, Description = $"Repair with id: {id} was not found." };
+            return new ResponseApi<RepairWithoutAnnotationsDTO> { Status = 1, Description = $"Repair with id: {id} was not found." };
         }
 
-        return new ResponseApi<RepairDTO> { Status = 0, Value = GetQuery, Description = $"Repair with id: {id} was found." };
+        return new ResponseApi<RepairWithoutAnnotationsDTO> { Status = 0, Value = GetQuery, Description = $"Repair with id: {id} was found." };
     }
     public async Task<ResponseApi<RepairDTO>> CreateRepairUser(RepairDTO repairDto)
     {

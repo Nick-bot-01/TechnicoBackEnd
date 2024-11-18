@@ -12,7 +12,7 @@ public interface IRepairService
     Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByVAT(string? VATNum);
     Task<ResponseApi<List<RepairDTO>>> GetAllOwnerRepairsByUID(int id);
     Task<ResponseApi<List<RepairAdminCreateUpdateDTO>>> GetAllPendingRepairs();
-    Task<ResponseApi<RepairDTO>> GetRepairByID(int Id);
+    Task<ResponseApi<RepairWithoutAnnotationsDTO>> GetRepairByID(int Id);
     Task<ResponseApi<RepairDTO>> UpdateRepairUser(RepairDTO updatedRepairDto);
     Task<ResponseApi<RepairAdminCreateUpdateDTO>> UpdateRepairAdmin(RepairAdminCreateUpdateDTO updatedRepairDto);
     Task<ResponseApi<RepairDeactivateResponseDTO>> DeactivateRepair(RepairDeactivateRequestDTO repairDTO);
