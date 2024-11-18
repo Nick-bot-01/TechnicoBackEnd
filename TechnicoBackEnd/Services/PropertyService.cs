@@ -75,6 +75,18 @@ public class PropertyService : IPropertyService
             Value = await db.Properties.Include(x => x.Owner).Where(x => x.Id == id && x.IsActive).Select(x => x.ConvertProperty()).FirstOrDefaultAsync()
         };
     }
+
+    public async Task<ResponseApi<PropertyDTO>> GetPropertyByPIN(string pin)
+    {
+        return new ResponseApi<PropertyDTO>
+        {
+            Status = 0,
+            Description = $"Property with id {pin} fetched succesfully.",
+            Value = await db.Properties.Include(x => x.Owner).Where(x => x.PIN == pin && x.IsActive).Select(x => x.ConvertProperty()).FirstOrDefaultAsync()
+        };
+    }
+
+
     public async Task<ResponseApi<List<PropertyDTO>>> GetPropertiesByOwner(string vat)
     {
         var properties = await db.Properties.Include(x => x.Owner).Where(x => x.OwnerVAT == vat && x.IsActive).Select(x => x.ConvertProperty()).ToListAsync();
