@@ -231,7 +231,7 @@ public class RepairService : IRepairService
         if (id == null && startDate == null)
             return new ResponseApi<List<RepairDTO>>
             {
-                Status = 0,
+                Status = 1,
                 Description = "No search parameters.",
                 Value = []
             };
@@ -265,6 +265,57 @@ public class RepairService : IRepairService
             return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with ID: {id} failed to create due to a database error: '{e.Message}'" };
         }
     }
+
+    public async Task<ResponseApi<List<RepairDTO>>> SearchUserRepairs(int? userId, RepairType? rtype, RepairStatus? rstatus, decimal? minCost, decimal? maxCost)
+    {
+        if (userId == null)
+            return new ResponseApi<List<RepairDTO>>
+            {
+                Status = 1,
+                Description = "No user given.",
+                Value = []
+            };
+
+        if (rtype == null && rstatus == null && minCost == null && maxCost == null)
+            return new ResponseApi<List<RepairDTO>>
+            {
+                Status = 1,
+                Description = "No search parameters.",
+                Value = []
+            };
+
+        var results = db.Repairs
+                .Include(a => a.Property)
+                .ThenInclude(a => a.Owner)
+                .Where(a => a.Property.Owner.Id == userId)
+                .AsQueryable();
+
+        if (rtype != null)
+            results = results.Where(x => x.RType == rtype);
+
+        if (rstatus != null)
+            results = results.Where(x => x.Status == rstatus);
+
+        if (minCost != null)
+            results = results.Where(x => x.Cost >= minCost);
+
+        if (maxCost != null)
+            results = results.Where(x => x.Cost <= maxCost);
+
+        var finalresults = await results
+                    .Select(x => x.ConvertRepair())
+                    .ToListAsync();
+
+        try
+        {
+            return new ResponseApi<List<RepairDTO>> { Value = finalresults, Status = 0, Description = $"List of repeair search results created." };
+        }
+        catch (Exception e)
+        {
+            return new ResponseApi<List<RepairDTO>> { Status = 1, Description = $"The list of repairs with ID: {userId} failed to create due to a database error: '{e.Message}'" };
+        }
+    }
+
     public async Task<ResponseApi<RepairDTO>> UpdateRepairUser(RepairDTO updatedRepairDto)
     {
         if (updatedRepairDto == null) return new ResponseApi<RepairDTO> { Status = 1, Description = $"The DTO argument that was given is null." };

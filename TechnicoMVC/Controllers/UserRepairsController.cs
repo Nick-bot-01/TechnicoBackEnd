@@ -4,6 +4,7 @@ using TechnicoBackEnd.Auth;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
 using TechnicoBackEnd.Helpers;
+using TechnicoBackEnd.Models;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace TechnicoMVC.Controllers;
@@ -16,6 +17,45 @@ public class UserRepairsController : Controller
 
     public UserRepairsController(ILogger<UserRepairsController> logger) => _logger = logger;
 
+    public async Task<IActionResult> Search([FromQuery] RepairType? rtype, [FromQuery] RepairStatus? rstatus, [FromQuery] decimal? minCost, [FromQuery] decimal? maxCost)
+    {
+        string url = $"{sourcePrefix}Repair/repairs/user_search";
+
+        var queryParams = new List<string>();
+        queryParams.Add($"userId={LoginState.UserId}");
+        if (rtype != null) { queryParams.Add($"rtype={rtype}"); }
+        if (rstatus != null) { queryParams.Add($"rstatus={rstatus}"); }
+        if (minCost != null) { queryParams.Add($"minCost={minCost}"); }
+        if (maxCost != null) { queryParams.Add($"maxCost={maxCost}"); }
+        var queryString = string.Join("&", queryParams);
+
+        if (string.IsNullOrEmpty(queryString))
+        {
+            return View();
+        }
+        else { url = url + "?" + queryString; }
+
+        var response = await client.GetAsync(url);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var options = new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            // Deserialize the response body to ResponseApi<List<RepairDTO>>
+            var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<List<RepairDTO>>>(responseBody, options);
+
+            if (apiResponse?.Value != null)
+            {
+                return View(apiResponse.Value);
+            }
+        }
+
+        return View("Error");
+    }
 
     public async Task<IActionResult> GetUserRepairs(string VATNum)
     {
