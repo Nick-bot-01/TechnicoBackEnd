@@ -7,7 +7,7 @@ namespace TechnicoMVC.Controllers;
 public class UserPropertiesController : Controller
 {
     private readonly ILogger<UserPropertiesController> _logger;
-    private readonly string sourcePrefix = "https://localhost:7017/api/Property/";
+    private readonly string sourcePrefix = "https://localhost:7017/api/";
     private HttpClient client = new HttpClient();
 
     public UserPropertiesController(ILogger<UserPropertiesController> logger) => _logger = logger;
@@ -19,7 +19,7 @@ public class UserPropertiesController : Controller
             return View("Error", "Negative user Id Detected");
         }
         // Define the API endpoint for retrieving repairs
-        string url = $"{sourcePrefix}properties/byid/{id}";
+        string url = $"{sourcePrefix}Property/properties/byid/{id}";
         var response = await client.GetAsync(url);
 
         if (response.IsSuccessStatusCode)
@@ -42,11 +42,20 @@ public class UserPropertiesController : Controller
         return View("Error");
     }
 
-    //   DELETE
+    [HttpGet]
+    public async Task<ResponseApi<PropertyDTO>?> GetUserPropertyByID(int id)
+    {
+        string url = $"{sourcePrefix}Property/properties/id/{id}";
+        var response = await client.GetAsync(url);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var targetProperty = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<PropertyDTO>>(responseBody);
+        return targetProperty;
+    }
 
+    //Delete Property
     public async Task<ResponseApi<PropertyDTO>?> DeletePropertyToRedirectController(int propertyId)
     {
-        string url = $"{sourcePrefix}delete/{propertyId}";
+        string url = $"{sourcePrefix}Property/delete/{propertyId}";
 
         // Create the DTO object with the RepairId
         var repairDTO = new PropertyDTO { Id = propertyId };
@@ -71,7 +80,6 @@ public class UserPropertiesController : Controller
         var errorResponse = await response.Content.ReadAsStringAsync();
         return null;
     }
-
     [HttpPost]
     public async Task<IActionResult> DeletePropertyCallback(int propertyId)
     {
@@ -92,15 +100,55 @@ public class UserPropertiesController : Controller
             return View("Error");
         }
 
-        return RedirectToAction("GetUserPropertiesByUID", new { id = LoginState.UserId});
+        return RedirectToAction("GetUserPropertiesByUID", new { id = LoginState.UserId });
     }
 
 
+    //Views
+    public IActionResult UserCreateProperty(){
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+        return View();
+    }
 
-    
+    public async Task<IActionResult> UserUpdateProperty(int id){
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+        var result = await GetUserPropertyByID(id);
+        if(result?.Value == null) return RedirectToAction("LandingPage");
+        if(result.Value.OwnerId != LoginState.UserId) return RedirectToAction("LandingPage");
+        PropertyDTO resultDTO = result.Value;
+        return View(resultDTO);
+    }
 
-    //deactivate/{id}
+    //Create Property
+    [HttpPost]
+    public async Task<ResponseApi<PropertyDTO>?> CreatePropertyToRedirectController(PropertyDTO property)
+    {
+        string url = $"{sourcePrefix}Property/create_property";
+        var response = await client.PostAsJsonAsync(url, property);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var targetProperty = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<PropertyDTO>>(responseBody);
+        return targetProperty;
+    }
 
+    public async Task<IActionResult> CreatePropertyCallback(PropertyDTO pendingCreationProperty)
+    {
+        pendingCreationProperty.OwnerId = LoginState.UserId;
+        var createdProperty = await CreatePropertyToRedirectController(pendingCreationProperty);
+        return RedirectToAction("GetUserPropertiesByUID", new { id = LoginState.UserId });
+    }
 
+    //Update Property
+    [HttpPatch]
+    public async Task<ResponseApi<PropertyDTO>?> UpdatePropertyToRedirectController(PropertyDTO property){
+        string url = $"{sourcePrefix}Property/update_property";
+        var response = await client.PatchAsJsonAsync(url, property);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var targetProperty = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<PropertyDTO>>(responseBody);
+        return targetProperty;
+    }
 
+    public async Task<IActionResult> UpdatePropertyCallback(PropertyDTO pendingUpdateProperty){
+        var updatedProperty = await UpdatePropertyToRedirectController(pendingUpdateProperty);
+        return RedirectToAction("GetUserPropertiesByUID", new { id = LoginState.UserId });
+    }
 }

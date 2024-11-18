@@ -1,0 +1,41 @@
+﻿@using TechnicoBackEnd.Models
+@using TechnicoBackEnd.Auth
+@model TechnicoBackEnd.DTOs.PropertyDTO
+
+<h1>Update Property</h1>
+<br />
+<form asp-controller="UserProperties" asp-action="UpdatePropertyCallback" method="post">
+    <div class="form-group">
+        <label for="Id" hidden>ID</label>
+        <input asp-for="@Model.Id" class="form-control" hidden />
+        <span asp-validation-for="Id" class="text-danger" hidden></span>
+    </div>
+
+    <div class="form-group">
+        <label for="OwnerId" hidden>Owner ID</label>
+        <input asp-for="@Model.OwnerId" class="form-control" hidden />
+        <span asp-validation-for="OwnerId" class="text-danger" hidden></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Address">Address</label>
+        <input asp-for="@Model.Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConstructionYear">Construction Year</label>
+        <input asp-for="@Model.ConstructionYear" class="form-control" />
+        <span asp-validation-for="ConstructionYear" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PType">Property Type</label>
+        <select asp-for="@Model.PType" class="form-control" asp-items="Html.GetEnumSelectList<PropertyType>()"></select>
+        <span asp-validation-for="PType" class="text-danger"></span>
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-controller="User" asp-action="UserHome" class="btn btn-secondary">Back to Homepage</a>
+</form>
