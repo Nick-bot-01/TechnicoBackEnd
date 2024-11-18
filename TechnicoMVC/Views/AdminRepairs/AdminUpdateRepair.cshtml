@@ -72,7 +72,12 @@
             dateFormat: "Y-m-d H:i",
             time_24hr: true,
             altInput: true,
-            altFormat: "d/m/Y H:i"
-        });
-    });
+            altFormat: "d/m/Y H:i",
+            onReady: function(selectedDates, dateStr, instance) {
+            // Ensure background remains white even with flatpickr styling to not be confused with disabled field
+                        instance.altInput.style.backgroundColor = "white";
+                        instance.altInput.style.color = "black";
+                    }
+                });
+            });
 </script>

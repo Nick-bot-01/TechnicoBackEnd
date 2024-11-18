@@ -8,7 +8,7 @@
 <form asp-action="UpdateRepairCallback" asp-route-id="@Model?.Id" method="post">
     <div class="form-group">
         <label for="PropertyIdNum">Property Identification Number (PIN)</label>
-        <input asp-for="PropertyIdNum" class="form-control" />
+        <input disabled asp-for="PropertyIdNum" class="form-control" />
         <span asp-validation-for="PropertyIdNum" class="text-danger"></span>
     </div>
 
@@ -64,7 +64,12 @@
             dateFormat: "Y-m-d H:i",
             time_24hr: true,
             altInput: true,
-            altFormat: "d/m/Y H:i"
+            altFormat: "d/m/Y H:i",
+            onReady: function(selectedDates, dateStr, instance) {
+            // Ensure background remains white even with flatpickr styling to not be confused with disabled field
+                    instance.altInput.style.backgroundColor = "white";
+                    instance.altInput.style.color = "black";
+                }
             });
         });
 </script>
