@@ -15,7 +15,7 @@
     </div>
     <div class="col">
         <div class="container">
-            <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="">Repairs</a> @*implement*@
+            <a class="btn btn-primary" asp-area="" asp-controller="AdminRepairs" asp-action="GetAllUsersRepairs">Repairs</a> @*implement*@
         </div>
     </div>
 </div>
@@ -39,12 +39,15 @@
                 <div class="row">
                     <div class="col">
                             <div class="container m-1">
-                                <a class="btn btn-primary" asp-area="" asp-controller="Repairs" asp-action="">Update Repair</a> @*implement*@
+                                <a asp-controller="AdminRepairs" asp-action="GetUpdatePageCallback" asp-route-id="@repair.Id" class="btn btn-custom-edit btn-sm mr-1">Update</a>
                             </div>
                     </div>
                     <div class="col">
                             <div class="container m-1">
-                                <a class="btn btn-primary" asp-area="" asp-controller="Repairs" asp-action="">Delete Repair</a> @*implement*@
+                                <form asp-controller="AdminRepairs" asp-action="RemoveRepairCallback" method="post" style="display:inline;">
+                                    <input type="hidden" name="repairId" value="@repair.Id" />
+                                    <button type="submit" class="btn btn-custom-danger btn-sm">Delete</button>
+                                </form>
                             </div>
                     </div>
                 </div>

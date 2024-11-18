@@ -199,6 +199,7 @@ public class AdminRepairsController : Controller
         return View();
     }
 
+
     public async Task<IActionResult> Search([FromQuery] int? userId, [FromQuery] DateOnly? startDate, [FromQuery] DateOnly? endDate)
     {
         string url = $"{sourcePrefix}repairs/search";
@@ -236,4 +237,10 @@ public class AdminRepairsController : Controller
 
         return View("Error");
     }
+
 }
+
+
+
+
+

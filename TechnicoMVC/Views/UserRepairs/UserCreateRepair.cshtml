@@ -2,6 +2,8 @@
 @using TechnicoBackEnd.Auth
 @model TechnicoBackEnd.DTOs.RepairDTO
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <h1>Create Repair</h1>
 <br />
 <form asp-action="CreateRepairCallback" method="post">
@@ -49,3 +51,16 @@
     <button type="submit" class="btn btn-primary">Create</button>
     <a asp-action="GetUserRepairsByUID" asp-route-Id="@LoginState.UserId" class="btn btn-secondary">Back to List</a>
 </form>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        flatpickr('input[name="ScheduledDate"]', {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true,
+            altInput: true,
+            altFormat: "d/m/Y H:i"
+            });
+        });
+</script>
