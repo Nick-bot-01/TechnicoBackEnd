@@ -9,32 +9,34 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechnicoMVC.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom shadow-sm">
-            <div class="container d-flex justify-content-between">
-                <a class="navbar-brand" asp-area="" asp-controller="Login" asp-action="LandingPage">Technico Repair Application</a>
-                @if (LoginState.IsLoggedIn)
-                {
-                    <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout" style="font-weight: bold; font-size: large">Logout</a>
-                }
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom shadow-sm">
+                <div class="container d-flex justify-content-between">
+                    <a class="navbar-brand" asp-area="" asp-controller="Login" asp-action="LandingPage">Technico Repair Application</a>
+                    @if (LoginState.IsLoggedIn)
+                    {
+                        <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout" style="font-weight: bold; font-size: large">Logout</a>
+                    }
+                </div>
+            </nav>
+        </header>
 
-    <footer class="footer mt-auto py-3 bg-light text-muted">
-        <div class="container text-center">
-            &copy; 2024 - TechnicoMVC
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+
+        <footer class="footer">
+            <div class="container text-center">
+                &copy; 2024 - TechnicoMVC
+            </div>
+        </footer>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
 </html>

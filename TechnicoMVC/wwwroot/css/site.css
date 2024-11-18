@@ -1,34 +1,52 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.footer {
+    position: relative; /* No fixed or absolute positioning */
+    bottom: 0; /* Ensure it sticks at the very bottom */
+    width: 100%;
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid #e7e7e7;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the body stretches to full height of the viewport */
+}
+
+main {
+    flex: 1; /* Pushes the footer down when the content is short */
+}
+
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
-
+/*
 html {
   position: relative;
   min-height: 100%;
 }
-
-body {
-  margin-bottom: 60px;
-}
+*/
 
 html, body {
-    overflow-y: auto; /* Enables vertical scrolling for the page */
-    height: 100%; /* Ensure the body takes up the full height */
-}
-
-body {
-    margin: 0; /* Remove any extra margins causing unexpected overflow */
-    padding: 0; /* Reset padding */
+    overflow-y: auto;
+    height: 100%;
 }
 
 /* Custom card */
@@ -67,9 +85,9 @@ body {
     }
 
 .header-icon {
-    width: 40px; /* Adjust size as needed */
+    width: 40px;
     height: 40px;
-    margin-right: 10px; /* Space between icon and text */
+    margin-right: 10px;
 }
 
 /* Styling for the interaction section */
@@ -79,18 +97,18 @@ body {
     align-items: center;
     margin-top: 20px;
     padding: 20px;
-    background-color: #f8f9fa; /* Light background for better contrast */
+    background-color: #f8f9fa;
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 40px;
 }
 
 /* Grid layout for icons */
 .interaction-grid {
     display: flex;
-    gap: 40px; /* Adjust spacing between icons */
+    gap: 40px;
     justify-content: center;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    flex-wrap: wrap;
 }
 
 /* Individual interaction item */
@@ -98,7 +116,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-decoration: none; /* Remove underline */
+    text-decoration: none;
 }
 
 /* Interaction icon hover effect */
@@ -106,7 +124,7 @@ body {
     width: 100px;
     height: 100px;
     border-radius: 10px;
-    margin-bottom: 20px; /* Adds space between icons and footer */
+    margin-bottom: 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -117,9 +135,4 @@ body {
     cursor: pointer;
 }
 
-/* Footer styling to remain visually separate */
-.footer {
-    border-top: 1px solid #e7e7e7; /* Subtle border for separation */
-    padding: 10px 0;
-    background-color: #f8f9fa;
-}
+
