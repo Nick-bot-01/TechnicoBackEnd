@@ -14,8 +14,7 @@ html, body {
 }
 
 .footer {
-    position: relative; /* No fixed or absolute positioning */
-    bottom: 0; /* Ensure it sticks at the very bottom */
+    position: relative !important;
     width: 100%;
     background-color: #f8f9fa;
     text-align: center;
