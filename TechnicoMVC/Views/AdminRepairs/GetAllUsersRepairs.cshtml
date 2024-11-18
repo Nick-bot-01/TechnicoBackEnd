@@ -24,7 +24,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 card-custom">
                 <div class="card-body">
-                    <h5 class="card-title text-primary">Scheduled Date: @item.ScheduledDate</h5>
+                    <h5 class="card-title text-primary">Scheduled Date: @item.ScheduledDate.ToString("dd/MM/yyyy HH:mm tt", System.Globalization.CultureInfo.InvariantCulture)</h5>
                     <p class="card-text"><strong>Owner Name:</strong> @Html.DisplayFor(modelItem => item.FullName)</p>
                     <p class="card-text"><strong>Address:</strong> @Html.DisplayFor(modelItem => item.PropertyAddress)</p>
                     <p class="card-text"><strong>Repair Type:</strong> @Html.DisplayFor(modelItem => item.RType)</p>
