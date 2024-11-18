@@ -41,7 +41,7 @@ public class AdminController : Controller
         return propertiesResponse.Value;
     }
 
-    
+
     [HttpPost]
     public async Task<IActionResult> SubmitNewOwner(UserWithRequiredFieldsDTO userWithRequiredFieldsDTO)
     {
@@ -60,7 +60,8 @@ public class AdminController : Controller
     [HttpGet]
     public async Task<UserDTO> GetOwnerDetails(int? id)
     {
-        if (id.HasValue){
+        if (id.HasValue)
+        {
             string url = $"{sourcePrefix}User/users/{id}";
             var response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
@@ -95,7 +96,7 @@ public class AdminController : Controller
         return userResponse?.Value;
     }
 
-    
+
     [HttpDelete]
     public async Task<ResponseApi<UserDTO>?> DeleteOwner(string? ownerVat)
     {
@@ -149,7 +150,7 @@ public class AdminController : Controller
 
         if (LoginState.IsAdmin)
         {
-                return View();
+            return View();
         }
         else return RedirectToAction("LandingPage");
     }
@@ -246,5 +247,10 @@ public class AdminController : Controller
         }
 
         return View("Error");
+    }
+
+    public IActionResult VisitAdminHomePage()
+    {
+        return View("AdminHome");
     }
 }

@@ -176,7 +176,7 @@ public class RepairService : IRepairService
         }
     }
 
-    public async Task<ResponseApi<List<RepairAdminCreateUpdateDTO>>> GetAllPendingRepairs()
+    public async Task<ResponseApi<List<RepairWithoutAnnotationsAdminDTO>>> GetAllPendingRepairs()
     {
         try
         {
@@ -184,18 +184,18 @@ public class RepairService : IRepairService
                 .Include(r => r.Property)
                 .ThenInclude(r => r.Owner)
                 .Where(x => x.Status == RepairStatus.Pending)
-                .Select(x => x.ConvertRepairAdmin())
+                .Select(x => x.ConvertRepairWithoutAnnotationsAdmin())
                 .ToListAsync();
 
             string description = (GetQuery.Count == 0) ? "There are no pending repairs." : "List of pending repairs created.";
             int status = (GetQuery.Count == 0) ? 1 : 0;
 
-            return new ResponseApi<List<RepairAdminCreateUpdateDTO>> { Value = GetQuery, Status = status, Description = description };
+            return new ResponseApi<List<RepairWithoutAnnotationsAdminDTO>> { Value = GetQuery, Status = status, Description = description };
         }
 
         catch (Exception e)
         {
-            return new ResponseApi<List<RepairAdminCreateUpdateDTO>> { Value = new(), Status = 0, Description = $"The list of pending repairs failed to create due to a database error: '{e.Message}'" };
+            return new ResponseApi<List<RepairWithoutAnnotationsAdminDTO>> { Value = new(), Status = 0, Description = $"The list of pending repairs failed to create due to a database error: '{e.Message}'" };
         }
     }
 

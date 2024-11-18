@@ -4,42 +4,50 @@
     ViewData["Title"] = "Create Owner Page";
 }
 
-<h1>WELCOME ADMIN @LoginState.activeUser?.Name </h1>
-<br>
+<h1 class="text-center my-4">WELCOME ADMIN @LoginState.activeUser?.Name</h1>
 
-<h2>Register New Owner</h2>
-<div class="login-form">
-    <form asp-controller="Admin" asp-action="SubmitNewOwner" method="post">
-        <label for="email">Email:</label>
-        <input class="m-1" type="email" id="email" name="email" required>
-        <br>
-        <label for="vat">VAT:</label>
-        <input class="m-1" type="text" id="vat" name="vat" required>
-        <br>
+<h2 class="text-center my-3">Register New Owner</h2>
 
-        <label for="name">Name:</label>
-        <input class="m-1" type="text" id="name" name="name" required>
-        <br>
+<div class="container d-flex justify-content-center">
+    <form asp-controller="Admin" asp-action="SubmitNewOwner" method="post" class="w-50 p-4 border rounded shadow">
+        <div class="form-group mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
 
-        <label for="surname">Surname:</label>
-        <input class="m-1" type="text" id="surname" name="surname" required>
-        <br>
+        <div class="form-group mb-3">
+            <label for="vat" class="form-label">VAT:</label>
+            <input type="text" id="vat" name="vat" class="form-control" required>
+        </div>
 
-        <label for="address">Address:</label>
-        <input class="m-1" type="text" id="address" name="address" required>
-        <br>
+        <div class="form-group mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
 
-        <label for="phone">Phone:</label>
-        <input class="m-1" type="text" id="phone" name="phone" required>
-        <br>
+        <div class="form-group mb-3">
+            <label for="surname" class="form-label">Surname:</label>
+            <input type="text" id="surname" name="surname" class="form-control" required>
+        </div>
 
-        <label for="password">Password:</label>
-        <input class="m-1" type="password" id="password" name="password" required>
-        <br>
+        <div class="form-group mb-3">
+            <label for="address" class="form-label">Address:</label>
+            <input type="text" id="address" name="address" class="form-control" required>
+        </div>
 
-        <button class="m-1" type="submit">Register</button>
+        <div class="form-group mb-3">
+            <label for="phone" class="form-label">Phone:</label>
+            <input type="text" id="phone" name="phone" class="form-control" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-success px-4">Register</button>
+            <a class="btn btn-secondary px-4" asp-area="" asp-controller="Admin" asp-action="OwnersAndProperties">Back to Owners and Properties</a>
+        </div>
     </form>
-</div>
-<div class="container m-2">
-    <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="OwnersAndProperties">Back to Owners and Properties</a>
 </div>

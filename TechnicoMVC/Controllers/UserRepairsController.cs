@@ -243,13 +243,6 @@ public class UserRepairsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateRepairCallback(RepairDTO pendingUpdateRepair)
     {
-        //// Front end validation of the model
-        //if (!ModelState.IsValid)
-        //{
-        //    // Return to the form view with data annotation error messages
-        //    return View("UserUpdateRepair", pendingUpdateRepair);
-        //}
-
         ResponseApi<RepairDTO>? createdRepair = await UpdateUserToRedirectController(pendingUpdateRepair);
 
         if (createdRepair?.Value != null)

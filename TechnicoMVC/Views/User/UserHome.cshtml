@@ -48,7 +48,7 @@
 
 
 
-<div style="display:flex; justify-content:center; align-items: center; margin-top: 10px;"><h1><b>HomePage. Hello @LoginState.activeUser?.Name</b></h1></div>
+<div style="display:flex; justify-content:center; align-items: center; margin-top: 25px;"><h1><b>HomePage. Hello @LoginState.activeUser?.Name 😎</b></h1></div>
 <br>
 
 <div><h2>Upcoming Repairs</h2></div>
@@ -64,8 +64,8 @@
                         aria-expanded="false"
                         aria-controls="collapse-@i">
                     <div>
-                        <strong>@repairDTOs[i].RType.ToString()</strong>
-                        on: <strong>@repairDTOs[i].ScheduledDate.ToString()</strong>
+                        You have scheduled a repair of type <strong>@repairDTOs[i].RType.ToString()</strong>
+                        on <strong>@repairDTOs[i].ScheduledDate.ToString()</strong>
                     </div>
                 </button>
             </h2>

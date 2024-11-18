@@ -26,7 +26,7 @@
                                      }).ToList();
 }
 
-<h1 class="d-flex align-items-center">
+<h1 class="d-flex align-items-center mt-4">
     <img src="~/images/tools.png" alt="Repair Icon" class="header-icon mr-2" />
     Repairs
 </h1>
@@ -35,6 +35,7 @@
 <br />
 <p>
     <a asp-action="UserCreateRepair" class="btn btn-primary">Create New</a>
+    <a class="btn btn-secondary px-4" asp-area="" asp-controller="User" asp-action="UserHome">Back to Homepage</a>
 </p>
 
 <form method="get" asp-action="GetAllRepairs" class="form-inline mb-3">

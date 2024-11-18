@@ -4,15 +4,17 @@
 @using TechnicoBackEnd.Auth;
 @model IEnumerable<TechnicoBackEnd.DTOs.PropertyDTO>;
 
+<br />
+<br />
 <h1 class="d-flex align-items-center">
     <img style="width:150px; height:auto;" src="~/images/property.jpg" alt="Property Icon" class="header-icon mr-2" />
     Properties
 </h1>
 <br />
 <br />
-<br />
 <p>
-    <a asp-action="UserCreateProperty" class="btn btn-primary">Create Property</a>
+    <a asp-action="UserCreateProperty" class="btn btn-primary">Create New Property</a>
+    <a class="btn btn-secondary px-4" asp-area="" asp-controller="User" asp-action="UserHome">Back to Homepage</a>
 </p>
 
 <div class="row">

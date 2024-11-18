@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TechnicoBackEnd.DTOs;
 using TechnicoBackEnd.Responses;
+using TechnicoBackEnd.Helpers;
 
 namespace TechnicoMVC.Controllers;
 
@@ -140,21 +139,29 @@ public class AdminRepairsController : Controller
     // UPDATE
 
     [HttpGet]
-    public async Task<ResponseApi<RepairAdminCreateUpdateDTO>?> GetUpdatePageRedirect(int id)
+    public async Task<ResponseApi<RepairWithoutAnnotationsAdminDTO>?> GetUpdatePageRedirect(int id)
     {
         string url = $"{sourcePrefix}repairs/get_repair_details/{id}";
         var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
-        ResponseApi<RepairAdminCreateUpdateDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairAdminCreateUpdateDTO>>(responseBody);
+        ResponseApi<RepairWithoutAnnotationsAdminDTO>? targetRepair = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<RepairWithoutAnnotationsAdminDTO>>(responseBody);
         return targetRepair;
     }
 
-    public async Task<IActionResult> GetUpdatePageCallback(RepairAdminCreateUpdateDTO pendingRepairDetails)
+    public async Task<IActionResult> GetUpdatePageCallback(RepairWithoutAnnotationsAdminDTO pendingRepairDetails)
     {
-        ResponseApi<RepairAdminCreateUpdateDTO>? repairDetails = await GetUpdatePageRedirect(pendingRepairDetails.Id);
+        ResponseApi<RepairWithoutAnnotationsAdminDTO>? repairDetails = await GetUpdatePageRedirect(pendingRepairDetails.Id);
 
-        return View("AdminUpdateRepair", repairDetails?.Value);
+        // Create a new ResponseApi<RepairDTO> by converting the Value
+        ResponseApi<RepairAdminCreateUpdateDTO> responseForView = new ResponseApi<RepairAdminCreateUpdateDTO>
+        {
+            Status = repairDetails?.Status ?? 0, // Copy the status
+            Description = repairDetails?.Description, // Copy the description
+            Value = repairDetails?.Value != null ? repairDetails.Value.ConvertToRepairAdminDTO() : null // Convert the Value
+        };
+
+        return View("AdminUpdateRepair", responseForView?.Value);
     }
 
 

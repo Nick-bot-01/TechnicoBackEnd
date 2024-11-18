@@ -4,55 +4,44 @@
     ViewData["Title"] = "Admin Home Page";
 }
 @model List<RepairDTO>
-<h1>Welcome Admin @LoginState.activeUser?.Name </h1>
+<div style="display:flex; justify-content:center; align-items: center; margin-top: 25px;">
+    <h1><b>Welcome Admin @LoginState.activeUser?.Name 😎</b></h1>
+</div>
 <br>
 
-<div class="row">
-    <div class="col">
-        <div class="container">
-            <a class="btn btn-primary" asp-area="" asp-controller="Admin" asp-action="OwnersAndProperties">Owners And Properties</a>
-        </div>
-    </div>
-    <div class="col">
-        <div class="container">
-            <a class="btn btn-primary" asp-area="" asp-controller="AdminRepairs" asp-action="GetAllUsersRepairs">Repairs</a> @*implement*@
-        </div>
+<!-- Interaction Buttons -->
+<div class="container interaction-container">
+    <div class="interaction-grid">
+        <a class="interaction-item" asp-controller="Admin" asp-action="OwnersAndProperties">
+            <img src="~/images/family.png" alt="Owners and Properties" class="interaction-icon">
+        </a>
+        <a class="interaction-item" asp-controller="AdminRepairs" asp-action="GetAllUsersRepairs">
+            <img src="~/images/repair.png" alt="Repairs" class="interaction-icon">
+        </a>
     </div>
 </div>
-<br />
 
-<div class="row">
-@foreach(var repair in Model)
-{
-    <div class="col m-2">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">@repair.RType.ToString()</h5>
-                <p class="card-text">@repair.Description</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">@repair.PropertyIdNum</li>
-                <li class="list-group-item">@repair.Cost</li>
-                <li class="list-group-item">@repair.ScheduledDate</li>
-            </ul>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                            <div class="container m-1">
-                                <a asp-controller="AdminRepairs" asp-action="GetUpdatePageCallback" asp-route-id="@repair.Id" class="btn btn-custom-edit btn-sm mr-1">Update</a>
-                            </div>
+<!-- Repairs Section -->
+<div class="container" style="margin-top: 50px;">
+    <h2>Today's Repairs in progress:</h2>
+    <div class="row" style="margin-top: 15px;">
+        @foreach (var repair in Model)
+        {
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header text-primary text-center">
+                        <h5 class="card-title mb-0">Scheduled Date: @repair.ScheduledDate.ToString("dd/MM/yyyy HH:mm")</h5>
                     </div>
-                    <div class="col">
-                            <div class="container m-1">
-                                <form asp-controller="AdminRepairs" asp-action="RemoveRepairCallback" method="post" style="display:inline;">
-                                    <input type="hidden" name="repairId" value="@repair.Id" />
-                                    <button type="submit" class="btn btn-custom-danger btn-sm">Delete</button>
-                                </form>
-                            </div>
-                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Owner VAT: </strong>@repair.OwnerVAT</li>
+                        <li class="list-group-item"><strong>Property ID: </strong>@repair.PropertyIdNum</li>
+                        <li class="list-group-item"><strong>Address: </strong>@repair.PropertyAddress</li>
+                        <li class="list-group-item"><strong>Repair Type: </strong>@repair.RType.ToString()</li>
+                        <li class="list-group-item"><strong>Description: </strong>@repair.Description</li>
+                        <li class="list-group-item"><strong>Cost: </strong>@repair.Cost.ToString("C")</li>
+                    </ul>
                 </div>
             </div>
-        </div>
+        }
     </div>
-}
 </div>

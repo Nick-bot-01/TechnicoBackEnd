@@ -7,7 +7,7 @@
 }
 
 <form method="get" asp-action="SearchProperties" class="form-inline mb-3">
-    <div class="form-group mr-2">
+    <div class="form-group mr-2 mt-4">
         <label for="searchDate">Property Identification Number:</label>
         <input type="text" name="PIN" class="form-control" value="@ViewBag.PIN" />
     </div>
@@ -15,8 +15,11 @@
         <label for="vat">VAT Number:</label>
         <input type="text" name="VAT" class="form-control" value="@ViewBag.VAT" />
     </div>
-    <button type="submit" class="btn btn-primary mr-2">Search</button>
-    <a asp-action="SearchProperties" class="btn btn-secondary">Clear</a>
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary mr-2">Search</button>
+        <a asp-action="SearchProperties" class="btn btn-secondary">Clear</a>
+        <a class="btn btn-secondary px-4" asp-area="" asp-controller="Admin" asp-action="OwnersAndProperties">Back to Owners and Properties</a>
+    </div>
 </form>
 
 <div class="row">

@@ -27,12 +27,10 @@
 </head>
 
 
-<div class="text-center my-4">
+<div class="container d-flex justify-content-center flex-column align-items-center my-4">
     <h1><b>Personal Details</b></h1>
-</div>
-<div class="d-flex justify-content-center">
-    <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="~/images/user.jpg" alt="Card image cap">
+    <div class="card mt-4" style="width: 18rem;">
+        <img class="card-img-top" src="~/images/user.jpg" alt="User image">
         <div class="card-body">
             <h5 class="card-title text-center">User Details</h5>
         </div>
@@ -47,9 +45,12 @@
             }
         </ul>
         <div class="card-body text-center">
-            <a class="card-link" asp-area="" asp-controller="User" asp-action="UserUpdate">Update Details</a>
+            <form asp-controller="User" asp-action="UserUpdate" method="get">
+                <button type="submit" class="btn btn-primary">Update Details</button>
+            </form>
         </div>
     </div>
+    <a class="btn btn-secondary mt-4 px-4" asp-area="" asp-controller="User" asp-action="UserHome">Back to Homepage</a>
 </div>
 
 
