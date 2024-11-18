@@ -42,6 +42,15 @@ public class UserPropertiesController : Controller
         return View("Error");
     }
 
+    [HttpGet]
+    public async Task<ResponseApi<PropertyDTO>?> GetUserPropertyByID(int id)
+    {
+        string url = $"{sourcePrefix}Property/properties/id/{id}";
+        var response = await client.GetAsync(url);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var targetProperty = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<PropertyDTO>>(responseBody);
+        return targetProperty;
+    }
 
     //Delete Property
     public async Task<ResponseApi<PropertyDTO>?> DeletePropertyToRedirectController(int propertyId)
@@ -94,10 +103,20 @@ public class UserPropertiesController : Controller
         return RedirectToAction("GetUserPropertiesByUID", new { id = LoginState.UserId });
     }
 
-    public IActionResult UserCreateProperty()
-    {
+
+    //Views
+    public IActionResult UserCreateProperty(){
         if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
         return View();
+    }
+
+    public async Task<IActionResult> UserUpdateProperty(int id){
+        if (!LoginState.IsLoggedIn) return RedirectToAction("LandingPage");
+        var result = await GetUserPropertyByID(id);
+        if(result?.Value == null) return RedirectToAction("LandingPage");
+        if(result.Value.OwnerId != LoginState.UserId) return RedirectToAction("LandingPage");
+        PropertyDTO resultDTO = result.Value;
+        return View(resultDTO);
     }
 
     //Create Property
@@ -115,6 +134,21 @@ public class UserPropertiesController : Controller
     {
         pendingCreationProperty.OwnerId = LoginState.UserId;
         var createdProperty = await CreatePropertyToRedirectController(pendingCreationProperty);
+        return RedirectToAction("GetUserPropertiesByUID", new { id = LoginState.UserId });
+    }
+
+    //Update Property
+    [HttpPatch]
+    public async Task<ResponseApi<PropertyDTO>?> UpdatePropertyToRedirectController(PropertyDTO property){
+        string url = $"{sourcePrefix}Property/update_property";
+        var response = await client.PatchAsJsonAsync(url, property);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var targetProperty = System.Text.Json.JsonSerializer.Deserialize<ResponseApi<PropertyDTO>>(responseBody);
+        return targetProperty;
+    }
+
+    public async Task<IActionResult> UpdatePropertyCallback(PropertyDTO pendingUpdateProperty){
+        var updatedProperty = await UpdatePropertyToRedirectController(pendingUpdateProperty);
         return RedirectToAction("GetUserPropertiesByUID", new { id = LoginState.UserId });
     }
 }
