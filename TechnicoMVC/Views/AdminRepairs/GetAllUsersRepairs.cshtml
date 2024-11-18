@@ -29,10 +29,13 @@
             <div class="card h-100 card-custom">
                 <div class="card-body">
                     <h5 class="card-title text-primary">Scheduled Date: @item.ScheduledDate</h5>
+                    <p class="card-text"><strong>Status:</strong> @Html.DisplayFor(modelItem => item.Status)</p>
                     <p class="card-text"><strong>Owner Name:</strong> @Html.DisplayFor(modelItem => item.FullName)</p>
+                    <p class="card-text"><strong>Owner VAT:</strong> @Html.DisplayFor(modelItem => item.OwnerVAT)</p>
+                    <p class="card-text"><strong>PIN:</strong> @Html.DisplayFor(modelItem => item.PropertyIdNum)</p>
                     <p class="card-text"><strong>Address:</strong> @Html.DisplayFor(modelItem => item.PropertyAddress)</p>
                     <p class="card-text"><strong>Repair Type:</strong> @Html.DisplayFor(modelItem => item.RType)</p>
-                    <p class="card-text"><strong>Status:</strong> @Html.DisplayFor(modelItem => item.Status)</p>
+                    <p class="card-text"><strong>Description:</strong> @Html.DisplayFor(modelItem => item.Description)</p>
                     <p class="card-text"><strong>Cost:</strong> @Html.DisplayFor(modelItem => item.Cost)</p>
                 </div>
                 <div class="card-footer text-center">
