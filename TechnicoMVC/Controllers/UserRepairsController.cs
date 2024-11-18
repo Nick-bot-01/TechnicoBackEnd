@@ -64,7 +64,7 @@ public class UserRepairsController : Controller
             return View("Error");
         }
         // Define the API endpoint for retrieving repairs
-        string url = $"{sourcePrefix}Repair/properties/vat/{VATNum}";
+        string url = $"{sourcePrefix}Repair/repairs/get_all_by_vat/{VATNum}";
         var response = await client.GetAsync(url);
 
         if (response.IsSuccessStatusCode)

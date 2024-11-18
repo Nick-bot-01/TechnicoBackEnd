@@ -32,122 +32,73 @@
     string updateCallbackName = "UserUpdateButtonCallback";
 }
 
-<div class="col">
-    <div><h1><b>Update Personal Details</b></h1></div>
+<div class="text-center my-4">
+    <h1><b>Update Personal Details</b></h1>
 </div>
 
-
-<div class="card" style="width: 18rem; height:fit-content">
-    <img class="card-img-top" src="~/images/user.jpg" alt="Card image cap">
-    <div class="card-body">
-        <h5 class="card-title">User Details</h5>
-    </div>
-    @using (Html.BeginForm(updateCallbackName, "User", FormMethod.Post))
-    {
-        <div class="form-group">
-            <div>
-                <label for="Email"> Email: </label>
-                @Html.TextBoxFor(m => m.Email, new { @disabled = "disabled", @Value = Model.Email })
-                @Html.HiddenFor(m => m.Email)
+<div class="d-flex justify-content-center">
+    <div class="card" style="width: 20rem;">
+        <!-- Smaller Image -->
+        <img class="card-img-top" src="~/images/user.jpg" alt="User Image" style="width: 40%; margin: 15px auto; border-radius: 50%;">
+        <div class="card-body text-center">
+            <h5 class="card-title mb-3"><b>User Details</b></h5>
+        </div>
+        @using (Html.BeginForm(updateCallbackName, "User", FormMethod.Post))
+        {
+            <div class="px-4">
+                <div class="mb-2">
+                    <label for="Email"><strong>Email:</strong></label>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @disabled = "disabled" })
+                    @Html.HiddenFor(m => m.Email)
+                </div>
+                <div class="mb-2">
+                    <label for="VAT"><strong>VAT:</strong></label>
+                    @Html.TextBoxFor(m => m.VAT, new { @class = "form-control", @disabled = "disabled" })
+                    @Html.HiddenFor(m => m.VAT)
+                </div>
+                <div class="mb-2">
+                    <label for="Name"><strong>Name:</strong></label>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                </div>
+                <div class="mb-2">
+                    <label for="Surname"><strong>Surname:</strong></label>
+                    @Html.TextBoxFor(m => m.Surname, new { @class = "form-control" })
+                </div>
+                <div class="mb-2">
+                    <label for="Phone"><strong>Phone:</strong></label>
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                </div>
+                <div class="mb-2">
+                    <label for="Address"><strong>Address:</strong></label>
+                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                </div>
             </div>
-
-            <div>
-                <label for="VAT"> VAT: </label>
-                @Html.TextBoxFor(m => m.VAT, new { @disabled = "disabled", @Value = Model.VAT })
-                @Html.HiddenFor(m => m.VAT)
+            <div class="card-body text-center">
+                <button type="submit" class="btn btn-success me-2">Save Changes</button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
             </div>
+        }
 
-            <div>
-                <label for="Name"> Name: </label>
-                @Html.TextBoxFor(m => m.Name, new { @Value = Model.Name })
-            </div>
-
-            <div>
-                <label for="Surname"> Surname: </label>
-                @Html.TextBoxFor(m => m.Surname, new { @Value = Model.Surname })
-            </div>
-
-            <div>
-                <label for="Phone"> Phone: </label>
-                @Html.TextBoxFor(m => m.Phone, new { @Value = Model.Phone })
-            </div>
-
-            <div>
-                <label for="Address"> Address: </label>
-                @Html.TextBoxFor(m => m.Address, new { @Value = Model.Address })
-            </div>
-            <div class="card-body">
-                <button type="submit" class="btn btn-secondary">Save Changes</button>
-
-                <!-- Delete Account -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Delete</button>
-            </div>
-            <!-- Soft Delete Window -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Warning</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            You are about to delete you account. This action cannot be reverted. Make sure this is correct before your proceed.
-                        </div>
-                        <div class="modal-footer">
-                            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" formaction=@deleteCallbackName>Confirm</button>
-                        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete your account? This action is irreversible.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" formaction="@deleteCallbackName">Confirm</button>
                     </div>
                 </div>
             </div>
         </div>
-    }
-</div>
-
-
-<!--
-    <div class="d-flex justify-content-center my-4">
-    <div>
-        <div class="text-center mb-4">
-            <h1><b>Update Personal Details</b></h1>
-        </div>
-        <div class="card shadow" style="width: 22rem;">
-            <div class="card-body">
-                <img class="rounded-circle mx-auto d-block mb-3" src="~/images/user.jpg" alt="User Image" style="width: 120px; height: 120px;">
-                <form method="post" asp-action="@updateCallbackName" asp-controller="User">
-                    <div class="mb-3">
-                        <label for="Email" class="form-label"><strong>Email:</strong></label>
-                        <input type="email" class="form-control" id="Email" value="@Model.Email" disabled>
-@Html.HiddenFor(m => m.Email)
-                    </div>
-                    <div class="mb-3">
-                        <label for="VAT" class="form-label"><strong>VAT:</strong></label>
-                        <input type="text" class="form-control" id="VAT" value="@Model.VAT" disabled>
-@Html.HiddenFor(m => m.VAT)
-                    </div>
-                    <div class="mb-3">
-                        <label for="Name" class="form-label"><strong>Name:</strong></label>
-                        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="Surname" class="form-label"><strong>Surname:</strong></label>
-                        <input type="text" class="form-control" id="Surname" name="Surname" value="@Model.Surname">
-                    </div>
-                    <div class="mb-3">
-                        <label for="Phone" class="form-label"><strong>Phone:</strong></label>
-                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.Phone">
-                    </div>
-                    <div class="mb-3">
-                        <label for="Address" class="form-label"><strong>Address:</strong></label>
-                        <input type="text" class="form-control" id="Address" name="Address" value="@Model.Address">
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary w-100 mb-2">Save Changes</button>
-                        <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Delete Account</button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
--->
+<div class="text-center mt-4">
+    <a class="btn btn-secondary px-4" asp-area="" asp-controller="User" asp-action="UserHome">Back to Homepage</a>
+</div>
