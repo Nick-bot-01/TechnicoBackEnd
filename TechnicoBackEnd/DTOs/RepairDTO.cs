@@ -10,13 +10,6 @@ namespace TechnicoBackEnd.DTOs;
 public class RepairDTO
 {
     public int Id { get; set; }
-    //public DateTime ScheduledDate { get; set; }
-    //public RepairType RType { get; set; }
-    //public string? Description { get; set; }
-    //public RepairStatus Status { get; set; }
-    //public decimal Cost { get; set; }
-    //public string? PropertyIdNum { get; set; }
-
 
     [Required(ErrorMessage = "Scheduled date is required.")]
     public DateTime ScheduledDate { get; set; }
@@ -37,7 +30,6 @@ public class RepairDTO
 
     public string? PropertyAddress { get; set; }
 
-    //[Required(ErrorMessage = "Owner VAT is required.")]
     public string? OwnerVAT { get; set; }
 
     public string? ErrorDescription { get; set; }

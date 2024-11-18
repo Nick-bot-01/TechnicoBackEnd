@@ -52,6 +52,38 @@ public static class DTOConverters
         };
     }
 
+    public static RepairWithoutAnnotationsDTO ConvertRepairWithoutAnnotations(this Repair repair)
+    {
+        return new RepairWithoutAnnotationsDTO()
+        {
+            Id = repair.Id,
+            ScheduledDate = repair.ScheduledDate,
+            RType = repair.RType,
+            Description = repair.Description,
+            Status = repair.Status,
+            Cost = repair.Cost,
+            PropertyIdNum = repair.Property.PIN,
+            OwnerVAT = repair.Owner?.VATNum,
+            PropertyAddress = repair.Property?.Address
+        };
+    }
+
+    public static RepairDTO ConvertToRepairDTO(this RepairWithoutAnnotationsDTO repair)
+    {
+        return new RepairDTO
+        {
+            Id = repair.Id,
+            ScheduledDate = repair.ScheduledDate,
+            RType = repair.RType,
+            Description = repair.Description,
+            Status = repair.Status,
+            Cost = repair.Cost,
+            PropertyIdNum = repair.PropertyIdNum,
+            OwnerVAT = repair.OwnerVAT,
+            PropertyAddress = repair.PropertyAddress
+        };
+    }
+
     public static RepairAdminCreateUpdateDTO ConvertRepairAdmin(this Repair repair)
     {
         return new RepairAdminCreateUpdateDTO()
